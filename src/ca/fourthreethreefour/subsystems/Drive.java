@@ -13,8 +13,12 @@ public interface Drive extends Settings {
 	//TODO CANTalonSRX for right wheels. Call it 'right'
 	
 	//method drivetrain with inputs reversed left and right. Needs reversed so they move in same direction
+	//TODO find out which side needs to be reversed
 	Drivetrain drivetrain = new Drivetrain(new InversedSpeedController(left), right);
 	
+	/**
+	 * Function that squares inputs.
+	 */
 	Function speedFunction = new Function() {
 		@Override
 		public double F(double in) {
