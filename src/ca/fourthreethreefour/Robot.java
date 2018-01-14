@@ -6,7 +6,10 @@ import edu.first.robot.IterativeRobotAdapter;
 
 public class Robot extends IterativeRobotAdapter {
 	
-	//Creates Subsystems AUTO and TELEOP that contains the code for whatever in the {}'s
+	/*
+	 * Creates Subsystems AUTO and TELEOP to separate modules required to be enabled in autonomous and 
+	 * modules required to be enabled in teleoperated mode.
+	 */
 	private final Subsystem AUTO_MODULES = new Subsystem(
 			new Module[] { arm, drive });
 	
@@ -16,8 +19,11 @@ public class Robot extends IterativeRobotAdapter {
 	//Puts the above two subsystems into this subsystem. Subsystemception
 	private final Subsystem ALL_MODULES =  new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 	
-	/*	Constructor for the custom Robot class. Needed because IterativeRobotAdapter 
-		needs a name for some reason. */
+	/*
+	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter 
+	 * requires a string for some reason. 
+	 * TODO Name the robot!
+	 */
 	public Robot() {
 		super("ATA 2018");
 	}
@@ -25,6 +31,7 @@ public class Robot extends IterativeRobotAdapter {
 	@Override
 	public void init() {
 		ALL_MODULES.init();
+		//TODO add controls
 	}
 	
 	@Override
@@ -46,4 +53,5 @@ public class Robot extends IterativeRobotAdapter {
 	public void periodicTeleoperated() {
 		
 	}
+
 }

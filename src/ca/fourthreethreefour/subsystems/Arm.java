@@ -6,8 +6,10 @@ import edu.first.module.subsystems.Subsystem;
 
 public interface Arm extends Settings {
 	
-	/*Creates DualActionSolenoidModules called armSolenoid, grabSolenoid, 
-	and motorSolenoid, with ports specified. */
+	/*
+	 * Creates DualActionSolenoidModules called armSolenoid, grabSolenoid, 
+	 * and motorSolenoid, with ports specified. 
+	 */
 	DualActionSolenoidModule 
 		grabSolenoid = new DualActionSolenoidModule(GRAB_SOLENOID_1, GRAB_SOLENOID_2),
 		motorSolenoid = new DualActionSolenoidModule(MOTOR_SOLENOID_1, MOTOR_SOLENOID_2),

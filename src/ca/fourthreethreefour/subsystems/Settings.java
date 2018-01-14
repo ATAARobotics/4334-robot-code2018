@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * Contains all values {@link SettingsFile} can parse, as well as their keys and default values.
  * @author Trevor, but also Joel
- *
+ * 
  */
 public interface Settings {
 
