@@ -1,5 +1,7 @@
 package edu.first.main;
 
+import ca.fourthreethreefour.subsystems.Arm;
+
 /**
  * The central repository for all constant values. Values here are expected to
  * be accessible to the entire program, and for anyone to view.
@@ -40,5 +42,5 @@ package edu.first.main;
  * @since May 07 13
  * @author Joel Gallant
  */
-public interface Constants {
+public interface Constants extends Arm {
 }
