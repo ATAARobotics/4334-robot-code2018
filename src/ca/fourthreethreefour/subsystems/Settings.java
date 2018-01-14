@@ -25,5 +25,7 @@ public interface Settings {
 	int MOTOR_SOLENOID_2 = settingsFile.getIntProperty("MOTOR_SOLENOID_2", 3);
 	int ARM_SOLENOID_1 = settingsFile.getIntProperty("ARM_SOLENOID_1", 4);
 	int ARM_SOLENOID_2 = settingsFile.getIntProperty("ARM_SOLENOID_2", 5);
+	int XBOXCONTROLLER_1 = settingsFile.getIntProperty("XBOXCONTROLLER_1", 0);
+	int XBOXCONTROLLER_2 = settingsFile.getIntProperty("XBOXCONTROLLER_1", 1);
 
 }
