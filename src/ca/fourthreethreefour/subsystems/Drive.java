@@ -29,14 +29,14 @@ public interface Drive extends Settings {
 	/**
 	 * Function that squares inputs.
 	 */
-	Function speedFunction = new Function() {
-		@Override
-		public double F(double in) {
-			return in > 0 ? in * in : -(in * in);
-		}
-	};
-	
-	//TODO turnFunction goes here
+	Function 
+		speedFunction = new Function() {
+			@Override
+			public double F(double in) {
+				return in > 0 ? in * in : -(in * in);
+			}
+		};
+		//TODO turnFunction goes here
 	
 	//creates subsystem called drive, with drivetrain, left, and right
 	public Subsystem drive = new Subsystem(new Module[] { drivetrain, left, right });
