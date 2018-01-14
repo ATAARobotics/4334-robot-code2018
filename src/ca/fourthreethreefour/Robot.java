@@ -12,10 +12,11 @@ public class Robot extends IterativeRobotAdapter {
 	
 	private final Subsystem TELEOP_MODULES = new Subsystem(
 			new Module[] { arm, drive });
+	
 	//Puts the above two subsystems into this subsystem. Subsystemception
 	private final Subsystem ALL_MODULES =  new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 	
-	//constructor
+	//Constructor for the custom Robot class. Needed so GamePeriods accepts this class, or something.
 	public Robot() {
 		super("ATA 2018");
 	}
