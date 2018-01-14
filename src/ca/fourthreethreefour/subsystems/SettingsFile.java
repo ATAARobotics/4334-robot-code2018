@@ -9,11 +9,13 @@ import java.util.Properties;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
- * Parser for the settings file.
- * @author Trevor, but probably Joel
+ * Reads the specified .txt file, parses the values in said .txt file, then returns those values to be used
+ * in the rest of the code.
+ * @author Trevor, but probably Joel actually
  *
  */
 public class SettingsFile extends Properties {
+	//this line only exists so Eclipse would shut up about it
 	private static final long serialVersionUID = -6308390915164135156L;
 	
 	DriverStation driverStation = DriverStation.getInstance();
@@ -32,6 +34,13 @@ public class SettingsFile extends Properties {
 		}
 	}
 	
+	/**
+	 * Returns an int specified by the "key" string in the settings file. If the value of the key 
+	 * cannot be found, returns the default value specified in the constructor.
+	 * @param key The string used to locate the value
+	 * @param defaultValue The value returned if no value is found
+	 * @return Value read from the settings file, or the default value if the specified key cannot be found
+	 */
 	int getIntProperty(String key, int defaultValue) {
 		if (stringPropertyNames().contains(key)) {
 			return Integer.parseInt(getProperty(key));
@@ -39,7 +48,14 @@ public class SettingsFile extends Properties {
 			return defaultValue;
 		}
 	}
-
+	
+	/**
+	 * Returns a double specified by the "key" string in the settings file. If the value of the key 
+	 * cannot be found, returns the default value specified in the constructor.
+	 * @param key The string used to locate the value
+	 * @param defaultValue The value returned if no value is found
+	 * @return Value read from the settings file, or the default value if the specified key cannot be found
+	 */
 	double getDoubleProperty(String key, double defaultValue) {
 		if (stringPropertyNames().contains(key)) {
 			return Double.parseDouble(getProperty(key));
@@ -48,6 +64,13 @@ public class SettingsFile extends Properties {
 		}
 	}
 
+	/**
+	 * Returns a boolean specified by the "key" string in the settings file. If the value of the key 
+	 * cannot be found, returns the default value specified in the constructor.
+	 * @param key The string used to locate the value
+	 * @param defaultValue The value returned if no value is found
+	 * @return Value read from the settings file, or the default value if the specified key cannot be found
+	 */
 	boolean getBooleanProperty(String key, boolean defaultValue) {
 		if (stringPropertyNames().contains(key)) {
 			return Boolean.parseBoolean(getProperty(key));
