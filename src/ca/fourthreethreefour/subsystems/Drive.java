@@ -1,17 +1,32 @@
 package ca.fourthreethreefour.subsystems;
 
+import ca.fourthreethreefour.module.TalonSRXModule;
+import ca.fourthreethreefour.module.TalonSRXModuleGroup;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.first.identifiers.Function;
 import edu.first.identifiers.InversedSpeedController;
 import edu.first.module.Module;
 import edu.first.module.actuators.Drivetrain;
+import edu.first.module.actuators.TalonModule;
+import edu.first.module.actuators.TalonModuleGroup;
 import edu.first.module.subsystems.Subsystem;
 
 public interface Drive extends Settings {
 	
-	//TODO CANTalonSRX for left wheels. Call it 'left'
+	TalonSRXModule 
+		left1 = new TalonSRXModule(DRIVE_LEFT_1),
+		left2 = new TalonSRXModule(DRIVE_LEFT_2),
+		left3 = new TalonSRXModule(DRIVE_LEFT_3),
+		right1 = new TalonSRXModule(DRIVE_RIGHT_1),
+		right2 = new TalonSRXModule(DRIVE_RIGHT_2),
+		right3 = new TalonSRXModule(DRIVE_RIGHT_3);
 	
-	//TODO CANTalonSRX for right wheels. Call it 'right'
-	
+	TalonSRXModuleGroup 
+		left = new TalonSRXModuleGroup(new TalonSRXModule[] { left1, left2, left3 }),
+		right = new TalonSRXModuleGroup(new TalonSRXModule[] { right1, right2, right3 });
+
 	//method drivetrain with inputs reversed left and right. Needs reversed so they move in same direction
 	//TODO find out which side needs to be reversed
 	Drivetrain drivetrain = new Drivetrain(new InversedSpeedController(left), right);
