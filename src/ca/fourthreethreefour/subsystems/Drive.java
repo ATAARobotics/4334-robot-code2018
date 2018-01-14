@@ -6,7 +6,7 @@ import edu.first.module.Module;
 import edu.first.module.actuators.Drivetrain;
 import edu.first.module.subsystems.Subsystem;
 
-public interface Drive {
+public interface Drive extends Settings {
 	
 	//TODO CANTalonSRX for left wheels. Call it 'left'
 	
