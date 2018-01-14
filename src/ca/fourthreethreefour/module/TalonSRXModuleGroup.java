@@ -1,136 +1,80 @@
 package ca.fourthreethreefour.module;
 
-import edu.first.lang.OutOfSyncException;
 import edu.first.module.actuators.SpeedController;
 import edu.first.module.actuators.SpeedControllerGroup;
 import edu.first.module.subsystems.Subsystem;
 
-/**
- * A group of <s> talons </s> talon srxes. Performs actions on all of them. This group is a
- * {@link Subsystem}, meaning that it will perform the {@link Module} operations
- * on all of its elements.
- *
- * @since <s> June 15 13 </s> Jan 14 18
- * @author <s> Joel Gallant </s> Trevor, lol
- */
 public class TalonSRXModuleGroup extends Subsystem implements SpeedController {
 
-    private final SpeedControllerGroup group;
+	private final SpeedControllerGroup group;
+	
+	public TalonSRXModuleGroup(TalonSRXModule[] group) {
+		super(group);
+		this.group = new SpeedControllerGroup(group);
+	}
 
-    /**
-     * Constructs the group using an array of all the elements to use.
-     *
-     * @throws NullPointerException when array is null
-     * @param group all elements to apply things to
-     */
-    public TalonSRXModuleGroup(TalonSRXModule[] group) {
-        super(group);
-        this.group = new SpeedControllerGroup(group);
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public void setSpeed(double speed) {
+		group.setSpeed(speed);
+	}
 
-    /**
-     * Sets the speed of all the talons.
-     *
-     * @param speed speed to set
-     * @see SpeedController#setSpeed(double)
-     */
-    @Override
-    public void setSpeed(double speed) {
-        group.setSpeed(speed);
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public void setRawSpeed(int speed) {
+		group.setRawSpeed(speed);
+	}
 
-    /**
-     * Sets the raw speed of all the talons.
-     *
-     * @param speed speed to set
-     * @see SpeedController#setRawSpeed(int)
-     */
-    @Override
-    public void setRawSpeed(int speed) {
-        group.setRawSpeed(speed);
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public double getSpeed() {
+		return group.getSpeed();
+	}
 
-    /**
-     * Returns the speed of <i>every</i> controller. They must be in the same
-     * state.
-     *
-     * @throws OutOfSyncException when all talons are not in the same state
-     * @return speed of all the talons
-     * @see SpeedController#getSpeed()
-     */
-    @Override
-    public double getSpeed() throws OutOfSyncException {
-        return group.getSpeed();
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public int getRawSpeed() {
+		return 0;
+	}
 
-    /**
-     * Returns the raw speed of <i>every</i> controller. They must be in the
-     * same state.
-     *
-     * @throws OutOfSyncException when all talons are not in the same state
-     * @return speed of all the talons
-     * @see SpeedController#getRawSpeed()
-     */
-    @Override
-    public int getRawSpeed() throws OutOfSyncException {
-        return group.getRawSpeed();
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public void update() {
+	}
 
-    /**
-     * Updates every controller.
-     *
-     * @see SpeedController#update()
-     */
-    @Override
-    public void update() {
-        group.update();
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public void setRate(double rate) {
+	}
 
-    /**
-     * Sets the rate of every controller.
-     *
-     * @param rate rate to set
-     * @see SpeedController#setRate(double)
-     */
-    @Override
-    public void setRate(double rate) {
-        group.setRate(rate);
-    }
+	@Override
+	public void set(double value) {
+		group.set(value);
+	}
 
-    /**
-     * Sets every controller.
-     *
-     * @param value speed to set
-     * @see SpeedController#set(double)
-     */
-    @Override
-    public void set(double value) {
-        group.set(value);
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public double getRate() {
+		return 0;
+	}
 
-    /**
-     * Returns the rate of <i>every</i> controller. They must be in the same
-     * state.
-     *
-     * @throws OutOfSyncException when all talons are not in the same state
-     * @return current rate of all talons
-     * @see SpeedController#getRate()
-     */
-    @Override
-    public double getRate() {
-        return group.getRate();
-    }
-
-    /**
-     * Returns the state of <i>every</i> controller. They must be in the same
-     * state.
-     *
-     * @throws OutOfSyncException when all talons are not in the same state
-     * @return state of all talons
-     * @see SpeedController#get()
-     */
-    @Override
-    public double get() {
-        return group.get();
-    }
+	@Override
+	public double get() {
+		return group.get();
+	}
+	
 }

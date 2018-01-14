@@ -2,19 +2,13 @@ package ca.fourthreethreefour.subsystems;
 
 import ca.fourthreethreefour.module.TalonSRXModule;
 import ca.fourthreethreefour.module.TalonSRXModuleGroup;
-
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.first.identifiers.Function;
 import edu.first.identifiers.InversedSpeedController;
 import edu.first.module.Module;
 import edu.first.module.actuators.Drivetrain;
-import edu.first.module.actuators.TalonModule;
-import edu.first.module.actuators.TalonModuleGroup;
 import edu.first.module.subsystems.Subsystem;
 
 public interface Drive extends Settings {
-	
 	TalonSRXModule 
 		left1 = new TalonSRXModule(DRIVE_LEFT_1),
 		left2 = new TalonSRXModule(DRIVE_LEFT_2),

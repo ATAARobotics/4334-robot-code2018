@@ -1,165 +1,114 @@
 package ca.fourthreethreefour.module;
 
-import edu.first.module.Module;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.first.module.actuators.SpeedController;
-import edu.wpi.first.wpilibj.Talon;
+import edu.first.module.Module;
 
-/**
- * The general purpose class that manipulates <s> Talon </s> TalonSRX speed controllers made by
- * IFI / CTRE. Should work for all models <b> through <s> PWM </s> CAN </b>.
- *
- * @since <s> May 28 13 </s> Jan 14 18
- * @author <s> Joel Gallant </s> Trevor, lol
- */
 public class TalonSRXModule extends Module.StandardModule implements SpeedController {
-
-    private final Talon talon;
-
-    /**
-     * Constructs the module with the talon object underneath this class to call
-     * methods from.
-     *
-     * @throws NullPointerException when talon is null
-     * @param talon the composing instance which perform the functions
-     */
-    protected TalonSRXModule(Talon talon) {
-        if (talon == null) {
+	
+	private final WPI_TalonSRX talon;
+	
+	protected TalonSRXModule(WPI_TalonSRX talon) {
+		if(talon == null) {
             throw new NullPointerException("Null talon given");
-        }
-        this.talon = talon;
-    }
+		}
+		this.talon = talon;
+	}
+	
+	public TalonSRXModule(int channel) {
+		this(new WPI_TalonSRX(channel));
+	}
 
-    /**
-     * Constructs the module with the port on the digital sidecar.
-     *
-     * @param channel port on sidecar
-     */
-    public TalonSRXModule(int channel) {
-        this(new Talon(channel));
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public void setSpeed(double speed) {
+		talon.set(speed);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void enableModule() {
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public void setRawSpeed(int speed) {
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * Stops the talon from moving.
-     */
-    @Override
-    protected void disableModule() {
-        talon.disable();
-    }
+	@Override
+	public double getSpeed() {
+		return talon.get();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init() {
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public int getRawSpeed() {
+		return 0;
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalStateException when module is not enabled
-     */
-    @Override
-    public void setSpeed(double speed) {
-        ensureEnabled();
-        talon.set(speed);
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public void update() {
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalStateException when module is not enabled
-     */
-    @Override
-    public void setRawSpeed(int speed) {
-        ensureEnabled();
-        talon.setRaw(speed);
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public void setRate(double rate) {
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalStateException when module is not enabled
-     */
-    @Override
-    public double getSpeed() {
-        ensureEnabled();
-        return talon.getSpeed();
-    }
+	@Override
+	public void set(double value) {
+		talon.set(value);
+	}
+	
+	public void setInverted(boolean isInverted) {
+		talon.setInverted(isInverted);
+	}
+	
+	public boolean getInverted(boolean isInverted) {
+		return talon.getInverted();
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalStateException when module is not enabled
-     */
-    @Override
-    public int getRawSpeed() {
-        ensureEnabled();
-        return talon.getRaw();
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public double getRate() {
+		return 0;
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * This method does not need to be called on a {@code Talon}, but if
-     * something freezes it may help relieve it.
-     */
-    @Override
-    public void update() {
-        talon.Feed();
-    }
+	@Override
+	public double get() {
+		return talon.get();
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalStateException when module is not enabled
-     */
-    @Override
-    public void setRate(double rate) {
-        ensureEnabled();
-        talon.set(rate);
-    }
+	public void stopMotor() {
+		talon.stopMotor();
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	@Override
+	public void init() {
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalStateException when module is not enabled
-     */
-    @Override
-    public void set(double value) {
-        ensureEnabled();
-        talon.set(value);
-    }
+	/**
+	 * @deprecated
+	 */
+	@Override
+	protected void enableModule() {
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalStateException when module is not enabled
-     */
-    @Override
-    public double getRate() {
-        ensureEnabled();
-        return talon.getSpeed();
-    }
+	@Override
+	protected void disableModule() {
+		talon.disable();
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalStateException when module is not enabled
-     */
-    @Override
-    public double get() {
-        ensureEnabled();
-        return talon.getSpeed();
-    }
 }
