@@ -2,15 +2,10 @@ package ca.fourthreethreefour.subsystems;
 
 import ca.fourthreethreefour.module.TalonSRXModule;
 import ca.fourthreethreefour.module.TalonSRXModuleGroup;
-
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.first.identifiers.Function;
 import edu.first.identifiers.InversedSpeedController;
 import edu.first.module.Module;
 import edu.first.module.actuators.Drivetrain;
-import edu.first.module.actuators.TalonModule;
-import edu.first.module.actuators.TalonModuleGroup;
 import edu.first.module.subsystems.Subsystem;
 
 public interface Drive extends Settings {
@@ -34,14 +29,14 @@ public interface Drive extends Settings {
 	/**
 	 * Function that squares inputs.
 	 */
-	Function speedFunction = new Function() {
-		@Override
-		public double F(double in) {
-			return in > 0 ? in * in : -(in * in);
-		}
-	};
-	
-	//TODO turnFunction goes here
+	Function 
+		speedFunction = new Function() {
+			@Override
+			public double F(double in) {
+				return in > 0 ? in * in : -(in * in);
+			}
+		};
+		//TODO turnFunction goes here
 	
 	//creates subsystem called drive, with drivetrain, left, and right
 	public Subsystem drive = new Subsystem(new Module[] { drivetrain, left, right });
