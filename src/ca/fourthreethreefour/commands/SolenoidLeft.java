@@ -2,6 +2,7 @@ package ca.fourthreethreefour.commands;
 
 import edu.first.command.Command;
 import edu.first.module.actuators.DualActionSolenoid;
+import edu.first.module.actuators.DualActionSolenoid.Direction;
 
 /**
  * Sets the specified solenoid to LEFT
@@ -20,7 +21,9 @@ public final class SolenoidLeft implements Command {
 	
 	@Override
 	public void run() {
+		if (solenoid.get() == Direction.RIGHT) {
 		solenoid.set(DualActionSolenoid.Direction.LEFT);
+		}
 	}
 
 }
