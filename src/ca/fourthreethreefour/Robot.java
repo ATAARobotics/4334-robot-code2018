@@ -113,10 +113,12 @@ public class Robot extends IterativeRobotAdapter {
 	@Override
 	public void initAutonomous() { //when Autonomous is initialized
 		AUTO_MODULES.enable(); //Activate all auto_modules
+		drivetrain.setSafetyEnabled(false);//WE DONT NEED SAFETY
 	}
 
     @Override
     public void endAutonomous() { //when Autonomous is ended
+    	drivetrain.setSafetyEnabled(true); //Maybe we do...
     	AUTO_MODULES.disable(); //Disabled auto_modules
     }
 	
