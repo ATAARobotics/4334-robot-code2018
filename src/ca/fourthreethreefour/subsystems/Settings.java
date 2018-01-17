@@ -22,6 +22,8 @@ public interface Settings {
 	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 7);
 	int RAMP_LEFT = settingsFile.getIntProperty("RAMP_LEFT", 8);
 	int RAMP_RIGHT = settingsFile.getIntProperty("RAMP_RIGHT", 9);
+	int RAMP_RELEASE_SPEED = settingsFile.getIntProperty("RAMP_RELEASE_SPEED", 1);
+	int RAMP_RETRACT_SPEED = settingsFile.getIntProperty("RAMP_RETRACT_SPEED", -1);
 	int GRAB_SOLENOID_1 = settingsFile.getIntProperty("GRAB_SOLENOID_1", 0);
 	int GRAB_SOLENOID_2 = settingsFile.getIntProperty("GRAB_SOLENOID_2", 1);
 	int MOTOR_SOLENOID_1 = settingsFile.getIntProperty("MOTOR_SOLENOID_1", 2);
