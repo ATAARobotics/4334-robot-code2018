@@ -1,13 +1,13 @@
 package ca.fourthreethreefour;
 
 import ca.fourthreethreefour.commands.ReverseSolenoid;
-import edu.first.command.Command;
+import ca.fourthreethreefour.commands.SolenoidLeft;
+import ca.fourthreethreefour.commands.SolenoidRight;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
-import edu.first.module.actuators.SpeedController;
-import edu.first.module.joysticks.XboxController;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
+import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 
@@ -65,17 +65,25 @@ public class Robot extends IterativeRobotAdapter {
 		
 		//Controller 2/operator
 		
+		//When left bumper is pressed, it reverses the grabSolenoid
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(grabSolenoid));
+		
+		//When right bumper is pressed, it reverses the armSolenoid
+		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(armSolenoid));
+		
+		
+		controller2.addWhenPressed(XboxController.A, new SolenoidLeft(motorSolenoid)); //When pressed A, changes the solenoid to left
+		controller2.addWhenPressed(XboxController.B, new SolenoidRight(motorSolenoid)); //When pressed B, changed the solenoid to right
+
+		//Sets a deadband to prevent input less than 0.1
 		controller2.addDeadband(XboxController.LEFT_TRIGGER, 0.1);
 		controller2.addDeadband(XboxController.RIGHT_TRIGGER, 0.1);
-		
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(grabSolenoid));
-		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(armSolenoid));
-		//controller2.addWhenPressed(XboxController.A, highGear); //need something to change to high gear
-		//controller2.addWhenPressed(XboxController.B, lowGear); //need something to change to high gear
-		
-		controller2.addAxisBind(XboxController.LEFT_TRIGGER, armMotor);
-		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor);
+		//Inverts the axis of the left_trigger
 		controller2.invertAxis(XboxController.LEFT_TRIGGER);
+		
+		//Binds the axis to the motor
+		controller2.addAxisBind(XboxController.LEFT_TRIGGER, armMotor);
+		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor); //TODO Be careful. If only right trigger works, might want to create a dual axis bind
 	}
 	
 	@Override
