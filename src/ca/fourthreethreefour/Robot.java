@@ -1,13 +1,14 @@
 package ca.fourthreethreefour;
 
 import ca.fourthreethreefour.commands.ReverseSolenoid;
+import ca.fourthreethreefour.commands.SolenoidLeft;
+import ca.fourthreethreefour.commands.SolenoidRight;
 import edu.first.command.Command;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
-import edu.first.module.actuators.SpeedController;
-import edu.first.module.joysticks.XboxController;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
+import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 
@@ -21,7 +22,7 @@ public class Robot extends IterativeRobotAdapter {
 			new Module[] { 	arm, drive });
 	
 	private final Subsystem TELEOP_MODULES = new Subsystem(
-			new Module[] { arm, drive, controllers });
+			new Module[] { arm, drive, controllers, ramp });
 	
 	//Puts the above two subsystems into this subsystem. Subsystemception
 	private final Subsystem ALL_MODULES =  new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
@@ -61,21 +62,47 @@ public class Robot extends IterativeRobotAdapter {
 					drivetrain.arcadeDrive(speed, turn);
 				}
 			}
+            
 		});
+		
+		controller1.addWhilePressed(XboxController.X, new Command() { //I have no clue how this works
+			//TODO Check with drive team about this button
+			@Override
+			public void run() {
+				rampTrain.arcadeDrive(RAMP_RELEASE_SPEED, 0); //takes the RAMP_RELEASE_SPEED as the speed for motor
+				}
+			});
+		
+		controller1.addWhilePressed(XboxController.Y, new Command() { //I have no clue how this works either
+			//TODO Check with drive team about this button
+			@Override
+			public void run() {
+				rampTrain.arcadeDrive(RAMP_RETRACT_SPEED, 0); //takes the RAMP_RETRACT_SPEED as the speed for motor
+				}
+			});
+        //TODO add ramp controls
 		
 		//Controller 2/operator
 		
+		//When left bumper is pressed, it reverses the grabSolenoid
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(grabSolenoid));
+		
+		//When right bumper is pressed, it reverses the armSolenoid
+		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(armSolenoid));
+		
+		
+		controller2.addWhenPressed(XboxController.A, new SolenoidLeft(motorSolenoid)); //When pressed A, changes the solenoid to left
+		controller2.addWhenPressed(XboxController.B, new SolenoidRight(motorSolenoid)); //When pressed B, changed the solenoid to right
+
+		//Sets a deadband to prevent input less than 0.1
 		controller2.addDeadband(XboxController.LEFT_TRIGGER, 0.1);
 		controller2.addDeadband(XboxController.RIGHT_TRIGGER, 0.1);
-		
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(grabSolenoid));
-		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(armSolenoid));
-		//controller2.addWhenPressed(XboxController.A, highGear); //need something to change to high gear
-		//controller2.addWhenPressed(XboxController.B, lowGear); //need something to change to high gear
-		
-		controller2.addAxisBind(XboxController.LEFT_TRIGGER, armMotor);
-		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor);
+		//Inverts the axis of the left_trigger
 		controller2.invertAxis(XboxController.LEFT_TRIGGER);
+		
+		//Binds the axis to the motor
+		controller2.addAxisBind(XboxController.LEFT_TRIGGER, armMotor);
+		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor); 
 	}
 	
 	@Override
@@ -84,13 +111,18 @@ public class Robot extends IterativeRobotAdapter {
 	}
 	
 	@Override
-	public void initAutonomous() {
-		AUTO_MODULES.enable();
+	public void initAutonomous() { //when Autonomous is initialized
+		AUTO_MODULES.enable(); //Activate all auto_modules
 	}
+
+    @Override
+    public void endAutonomous() { //when Autonomous is ended
+    	AUTO_MODULES.disable(); //Disabled auto_modules
+    }
 	
 	@Override
-	public void initTeleoperated() {
-		TELEOP_MODULES.enable();
+	public void initTeleoperated() { //when Teleoperated in initalized
+		TELEOP_MODULES.enable(); //Enable all teleop_modules
 		if (grabSolenoid.get() == Direction.OFF) { //if it off, set it right
 			grabSolenoid.set(DualActionSolenoid.Direction.RIGHT);
 		}
@@ -103,10 +135,15 @@ public class Robot extends IterativeRobotAdapter {
 	}
 	
 	@Override
-	public void periodicTeleoperated() {
-		controller1.doBinds();
+	public void periodicTeleoperated() { //runs periodically during Teleoperated
+		controller1.doBinds();  //preforms every bind
 		controller2.doBinds();
 	}
+	
+	@Override
+    public void endTeleoperated() { //when Teleoperated is disabled
+        TELEOP_MODULES.disable(); //disable teleop_modules
+    }
 
 }
 
