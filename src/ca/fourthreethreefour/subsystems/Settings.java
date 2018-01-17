@@ -20,6 +20,8 @@ public interface Settings {
 	int DRIVE_RIGHT_2 = settingsFile.getIntProperty("DRIVE_RIGHT_2", 5);
 	int DRIVE_RIGHT_3 = settingsFile.getIntProperty("DRIVE_RIGHT_3", 6);
 	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 7);
+	int RAMP_LEFT = settingsFile.getIntProperty("RAMP_LEFT", 8);
+	int RAMP_RIGHT = settingsFile.getIntProperty("RAMP_RIGHT", 9);
 	int GRAB_SOLENOID_1 = settingsFile.getIntProperty("GRAB_SOLENOID_1", 0);
 	int GRAB_SOLENOID_2 = settingsFile.getIntProperty("GRAB_SOLENOID_2", 1);
 	int MOTOR_SOLENOID_1 = settingsFile.getIntProperty("MOTOR_SOLENOID_1", 2);

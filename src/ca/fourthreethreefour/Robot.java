@@ -21,7 +21,7 @@ public class Robot extends IterativeRobotAdapter {
 			new Module[] { 	arm, drive });
 	
 	private final Subsystem TELEOP_MODULES = new Subsystem(
-			new Module[] { arm, drive, controllers });
+			new Module[] { arm, drive, controllers, ramp });
 	
 	//Puts the above two subsystems into this subsystem. Subsystemception
 	private final Subsystem ALL_MODULES =  new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
@@ -61,6 +61,9 @@ public class Robot extends IterativeRobotAdapter {
 					drivetrain.arcadeDrive(speed, turn);
 				}
 			}
+            
+        //TODO add ramp controls
+            
 		});
 		
 		//Controller 2/operator
