@@ -111,28 +111,14 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor); 
 	}
 
-    @SuppressWarnings("unused") //Because it doesn't detect the code below
+    	@SuppressWarnings("unused") //Because it doesn't detect the code below
 	private Command autoCommand;
 	
 	@Override
-	public void periodicDisabled() { //TODO comment this area
-		//TODO Clean up useless code, as I don't know what is needed and what isn't.
+	public void periodicDisabled() { 
 		//TODO Robot should check settings file here
-		if (AUTO_TYPE == "") { return; }
-        String alliance = ""; /* AUTO_ALLIANCE_INDEPENDENT ? "" : (allianceSwitch.getPosition() ? "red-" : "blue-"); */
-        try {
-            autoCommand = new AutoFile(new File(alliance + AUTO_TYPE + ".txt")).toCommand();
-        } catch (IOException e) {
-            // try alliance independent as backup
-            try {
-                autoCommand = new AutoFile(new File(AUTO_TYPE + ".txt")).toCommand();
-            } catch (IOException i) {
-                throw new Error(e.getMessage());
-            }
-        }
-        
-        Timer.delay(1);
-    }
+		
+    	}
 	
 	@Override
 	public void initAutonomous() { //when Autonomous is initialized
@@ -140,11 +126,11 @@ public class Robot extends IterativeRobotAdapter {
 		drivetrain.setSafetyEnabled(false);//WE DONT NEED SAFETY
 	}
 
-    @Override
-    public void endAutonomous() { //when Autonomous is ended
-    	drivetrain.setSafetyEnabled(true); //Maybe we do...
-    	AUTO_MODULES.disable(); //Disabled auto_modules
-    }
+    	@Override
+    	public void endAutonomous() { //when Autonomous is ended
+    		drivetrain.setSafetyEnabled(true); //Maybe we do...
+    		AUTO_MODULES.disable(); //Disabled auto_modules
+   	 }
 	
 	@Override
 	public void initTeleoperated() { //when Teleoperated in initalized
@@ -167,9 +153,9 @@ public class Robot extends IterativeRobotAdapter {
 	}
 	
 	@Override
-    public void endTeleoperated() { //when Teleoperated is disabled
-        TELEOP_MODULES.disable(); //disable teleop_modules
-    }
+    	public void endTeleoperated() { //when Teleoperated is disabled
+        	TELEOP_MODULES.disable(); //disable teleop_modules
+    	}
 
 }
 
