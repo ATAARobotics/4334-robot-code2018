@@ -145,7 +145,7 @@ public class Robot extends IterativeRobotAdapter {
 	
 	@Override
 	public void periodicTeleoperated() { // runs periodically during Teleoperated
-		controller1.doBinds();  // preforms every bind
+		controller1.doBinds();  // Performs every bind
 		controller2.doBinds();
 	}
 	
