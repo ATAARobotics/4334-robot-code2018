@@ -44,21 +44,21 @@ public class Robot extends IterativeRobotAdapter {
 	//initializes robot
 	@Override
 	public void init() {
-		//Initalizes all modules
+		// Initalizes all modules
 		ALL_MODULES.init();
 		//TODO add controls
 		
-		//Controller 1/driver
+		// Controller 1/driver
 		
-		//set minimum distance from middle
+		// set minimum distance from middle
 		controller1.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.20);
 		controller1.changeAxis(XboxController.LEFT_FROM_MIDDLE, speedFunction);
 		
-		//set minimum distance from middle
+		// set minimum distance from middle
 		controller1.addDeadband(XboxController.RIGHT_X, 0.20);
 		controller1.invertAxis(XboxController.RIGHT_X);
 		
-		//Creates an axis bind for the left and right sticks
+		// Creates an axis bind for the left and right sticks
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
             @Override
 			public void doBind(double speed, double turn) {
@@ -71,7 +71,7 @@ public class Robot extends IterativeRobotAdapter {
             
 		});
 		
-		//When pressed X, run the arcadeDrive with speed RAMP_RELEASE_SPEED
+		// When pressed X, run the arcadeDrive with speed RAMP_RELEASE_SPEED
 		controller1.addWhilePressed(XboxController.X, new Command() { //I have no clue how this works
 			@Override
 			public void run() {
@@ -79,7 +79,7 @@ public class Robot extends IterativeRobotAdapter {
 				}
 			});
 		
-		//When pressed Y, Run the arcadeDrive with speed RAMP_RETRACT_SPEED
+		// When pressed Y, Run the arcadeDrive with speed RAMP_RETRACT_SPEED
 		controller1.addWhilePressed(XboxController.Y, new Command() { //I have no clue how this works either
 			@Override
 			public void run() {
@@ -88,25 +88,25 @@ public class Robot extends IterativeRobotAdapter {
 			});
         //TODO add ramp controls
 		
-		//Controller 2/operator
+		// Controller 2/operator
 		
-		//When left bumper is pressed, it reverses the grabSolenoid
+		// When left bumper is pressed, it reverses the grabSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(grabSolenoid));
 		
-		//When right bumper is pressed, it reverses the armSolenoid
+		// When right bumper is pressed, it reverses the armSolenoid
 		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(armSolenoid));
 		
-		//When button pressed, set the solenoid state as left or right
+		// When button pressed, set the solenoid state as left or right
 		controller2.addWhenPressed(XboxController.A, new SolenoidLeft(motorSolenoid)); //When pressed A, changes the solenoid to left
 		controller2.addWhenPressed(XboxController.B, new SolenoidRight(motorSolenoid)); //When pressed B, changed the solenoid to right
 
-		//Sets a deadband to prevent input less than 0.1
+		// Sets a deadband to prevent input less than 0.1
 		controller2.addDeadband(XboxController.LEFT_TRIGGER, 0.1);
 		controller2.addDeadband(XboxController.RIGHT_TRIGGER, 0.1);
-		//Inverts the axis of the left_trigger
+		// Inverts the axis of the left_trigger
 		controller2.invertAxis(XboxController.LEFT_TRIGGER);
 		
-		//Binds the axis to the motor
+		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.LEFT_TRIGGER, armMotor);
 		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor); 
 	}
@@ -118,40 +118,40 @@ public class Robot extends IterativeRobotAdapter {
     	}
 	
 	@Override
-	public void initAutonomous() { //when Autonomous is initialized
-		AUTO_MODULES.enable(); //Activate all auto_modules
-		drivetrain.setSafetyEnabled(false);//WE DONT NEED SAFETY
+	public void initAutonomous() { // when Autonomous is initialized
+		AUTO_MODULES.enable(); // Activate all auto_modules
+		drivetrain.setSafetyEnabled(false);// WE DONT NEED SAFETY
 	}
 
     	@Override
-    	public void endAutonomous() { //when Autonomous is ended
-    		drivetrain.setSafetyEnabled(true); //Maybe we do...
-    		AUTO_MODULES.disable(); //Disabled auto_modules
+    	public void endAutonomous() { // when Autonomous is ended
+    		drivetrain.setSafetyEnabled(true); // Maybe we do...
+    		AUTO_MODULES.disable(); // Disabled auto_modules
    	 }
 	
 	@Override
-	public void initTeleoperated() { //when Teleoperated in initalized
-		TELEOP_MODULES.enable(); //Enable all teleop_modules
-		if (grabSolenoid.get() == Direction.OFF) { //if it off, set it right
+	public void initTeleoperated() { // when Teleoperated in initalized
+		TELEOP_MODULES.enable(); // Enable all teleop_modules
+		if (grabSolenoid.get() == Direction.OFF) { // if it off, set it right
 			grabSolenoid.set(DualActionSolenoid.Direction.RIGHT);
 		}
-		if (armSolenoid.get() == Direction.OFF) { //if it off, set it right
+		if (armSolenoid.get() == Direction.OFF) { // if it off, set it right
 			armSolenoid.set(DualActionSolenoid.Direction.RIGHT);
 		}
-		if (motorSolenoid.get() == Direction.OFF) { //if it off, set it left
+		if (motorSolenoid.get() == Direction.OFF) { // if it off, set it left
 			motorSolenoid.set(DualActionSolenoid.Direction.LEFT);
 		}
 	}
 	
 	@Override
-	public void periodicTeleoperated() { //runs periodically during Teleoperated
-		controller1.doBinds();  //preforms every bind
+	public void periodicTeleoperated() { // runs periodically during Teleoperated
+		controller1.doBinds();  // preforms every bind
 		controller2.doBinds();
 	}
 	
 	@Override
-    	public void endTeleoperated() { //when Teleoperated is disabled
-        	TELEOP_MODULES.disable(); //disable teleop_modules
+    	public void endTeleoperated() { // when Teleoperated is disabled
+        	TELEOP_MODULES.disable(); // disable teleop_modules
     	}
 
 }
