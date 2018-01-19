@@ -28,11 +28,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 // TODO Comment all them code please
 
 public class AutoFile extends Robot implements Arm, Drive {
+	
 	public static final HashMap<String, RuntimeCommand> COMMANDS = new HashMap<>();
 
-	static {
-		COMMANDS.put("print", new PrintCommand());
-	}
+		static {
+			COMMANDS.put("print", new PrintCommand());
+		}
 
 	
 	// Timeout settings
@@ -59,10 +60,10 @@ public class AutoFile extends Robot implements Arm, Drive {
 	
 	// Makes a looping command to be used
 	private static abstract class LoopingCommandWithTimeout extends LoopingCommand {
-        private Timeout timeout;
+        	private Timeout timeout;
 
-        public LoopingCommandWithTimeout(Timeout timeout) {
-            this.timeout = timeout;
+        	public LoopingCommandWithTimeout(Timeout timeout) {
+           		this.timeout = timeout;
         }
 
         @Override
@@ -86,11 +87,11 @@ public class AutoFile extends Robot implements Arm, Drive {
 	// Commands section!
 	private static class PrintCommand implements RuntimeCommand {
         @Override
-        public Command getCommand(List<String> args) {
-            return new Command() {
-                @Override
-                public void run() {
-                    System.out.println(args.toString());
+        	public Command getCommand(List<String> args) {
+           	 return new Command() {
+              	  @Override
+              	  public void run() {
+               	     System.out.println(args.toString());
                 }
             };
         }
@@ -98,26 +99,26 @@ public class AutoFile extends Robot implements Arm, Drive {
 	
 	//TODO Comment this section
 	public static class Entry {
-        final String key, value;
+           final String key, value;
 
-        public Entry(String key, String value) {
-            this.key = key;
-            this.value = value;
+        	public Entry(String key, String value) {
+            		this.key = key;
+            		this.value = value;
         }
     }
 
-    private List<Entry> entries = new ArrayList<>();
-    private Map<String, String> variables = new HashMap<>();
+    	private List<Entry> entries = new ArrayList<>();
+    	private Map<String, String> variables = new HashMap<>();
 
-    public AutoFile(File file) throws IOException {
-        String contents;
-        try (FileInputStream fi = new FileInputStream(file)) {
-            StringBuilder builder = new StringBuilder();
-            int ch;
-            while ((ch = fi.read()) != -1) {
-                builder.append((char) ch);
-            }
-            contents = builder.toString();
+    	public AutoFile(File file) throws IOException {
+        	String contents;
+        	try (FileInputStream fi = new FileInputStream(file)) {
+            		StringBuilder builder = new StringBuilder();
+            		int ch;
+            		while ((ch = fi.read()) != -1) {
+                		builder.append((char) ch);
+            		}
+            	contents = builder.toString();
         }
 
         for (String line : contents.split("\n")) {
@@ -196,12 +197,12 @@ public class AutoFile extends Robot implements Arm, Drive {
     }
 
 	private interface RuntimeCommand {
-        public Command getCommand(List<String> args);
+        	public Command getCommand(List<String> args);
     }
 	
 	private static class CommandGroupFactory extends CommandGroup {
 		public CommandGroupFactory() {
-			
+			//I believe this allows other classes to access
 		}
 	}
 
