@@ -58,6 +58,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.addDeadband(XboxController.RIGHT_X, 0.20);
 		controller1.invertAxis(XboxController.RIGHT_X);
 		
+		//Creates an axis bind for the left and right sticks
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
             @Override
 			public void doBind(double speed, double turn) {
@@ -70,16 +71,16 @@ public class Robot extends IterativeRobotAdapter {
             
 		});
 		
+		//When pressed X, run the arcadeDrive with speed RAMP_RELEASE_SPEED
 		controller1.addWhilePressed(XboxController.X, new Command() { //I have no clue how this works
-			//TODO Check with drive team about this button
 			@Override
 			public void run() {
 				rampTrain.arcadeDrive(RAMP_RELEASE_SPEED, 0); //takes the RAMP_RELEASE_SPEED as the speed for motor
 				}
 			});
 		
+		//When pressed Y, Run the arcadeDrive with speed RAMP_RETRACT_SPEED
 		controller1.addWhilePressed(XboxController.Y, new Command() { //I have no clue how this works either
-			//TODO Check with drive team about this button
 			@Override
 			public void run() {
 				rampTrain.arcadeDrive(RAMP_RETRACT_SPEED, 0); //takes the RAMP_RETRACT_SPEED as the speed for motor
@@ -95,7 +96,7 @@ public class Robot extends IterativeRobotAdapter {
 		//When right bumper is pressed, it reverses the armSolenoid
 		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(armSolenoid));
 		
-		
+		//When button pressed, set the solenoid state as left or right
 		controller2.addWhenPressed(XboxController.A, new SolenoidLeft(motorSolenoid)); //When pressed A, changes the solenoid to left
 		controller2.addWhenPressed(XboxController.B, new SolenoidRight(motorSolenoid)); //When pressed B, changed the solenoid to right
 
