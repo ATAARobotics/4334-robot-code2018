@@ -110,9 +110,6 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addAxisBind(XboxController.LEFT_TRIGGER, armMotor);
 		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor); 
 	}
-
-    	@SuppressWarnings("unused") //Because it doesn't detect the code below
-	private Command autoCommand;
 	
 	@Override
 	public void periodicDisabled() { 
