@@ -199,11 +199,4 @@ public class AutoFile extends Robot implements Arm, Drive {
 	private interface RuntimeCommand {
         	public Command getCommand(List<String> args);
     }
-	
-	private static class CommandGroupFactory extends CommandGroup {
-		public CommandGroupFactory() {
-			//I believe this allows other classes to access
-		}
-	}
-
 }
