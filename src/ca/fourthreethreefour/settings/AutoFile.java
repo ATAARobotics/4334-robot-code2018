@@ -25,7 +25,7 @@ import edu.first.commands.CommandGroup;
 import edu.first.commands.common.LoopingCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 
-//TODO Comment all them code please
+// TODO Comment all them code please
 
 public class AutoFile extends Robot implements Arm, Drive {
 	public static final HashMap<String, RuntimeCommand> COMMANDS = new HashMap<>();
@@ -35,7 +35,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	}
 
 	
-	//Timeout settings
+	// Timeout settings
 	private static class Timeout {
 		private long start = 0;
 		private long timeout;
@@ -57,7 +57,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 		}
 	}
 	
-	//Makes a looping command to be used
+	// Makes a looping command to be used
 	private static abstract class LoopingCommandWithTimeout extends LoopingCommand {
         private Timeout timeout;
 
@@ -83,7 +83,7 @@ public class AutoFile extends Robot implements Arm, Drive {
         }
     }
 	
-	//Commands section!
+	// Commands section!
 	private static class PrintCommand implements RuntimeCommand {
         @Override
         public Command getCommand(List<String> args) {
@@ -96,9 +96,7 @@ public class AutoFile extends Robot implements Arm, Drive {
         }
     }
 	
-	/*
-	 *  Does a thing from last year this year. Someone comment this
-	 */	
+	//TODO Comment this section
 	public static class Entry {
         final String key, value;
 
