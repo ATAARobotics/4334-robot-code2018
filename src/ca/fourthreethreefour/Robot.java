@@ -1,8 +1,12 @@
 package ca.fourthreethreefour;
 
+import java.io.File;
+import java.io.IOException;
+
 import ca.fourthreethreefour.commands.ReverseSolenoid;
 import ca.fourthreethreefour.commands.SolenoidLeft;
 import ca.fourthreethreefour.commands.SolenoidRight;
+import ca.fourthreethreefour.settings.AutoFile;
 import edu.first.command.Command;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
@@ -11,6 +15,7 @@ import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends IterativeRobotAdapter {
 	
@@ -104,11 +109,29 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addAxisBind(XboxController.LEFT_TRIGGER, armMotor);
 		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor); 
 	}
+
+    @SuppressWarnings("unused") //Because it doesn't detect the code below
+	private Command autoCommand;
 	
 	@Override
-	public void periodicDisabled() {
+	public void periodicDisabled() { //TODO comment this area
+		//TODO Clean up useless code, as I don't know what is needed and what isn't.
 		//TODO Robot should check settings file here
-	}
+		if (AUTO_TYPE == "") { return; }
+        String alliance = ""; /* AUTO_ALLIANCE_INDEPENDENT ? "" : (allianceSwitch.getPosition() ? "red-" : "blue-"); */
+        try {
+            autoCommand = new AutoFile(new File(alliance + AUTO_TYPE + ".txt")).toCommand();
+        } catch (IOException e) {
+            // try alliance independent as backup
+            try {
+                autoCommand = new AutoFile(new File(AUTO_TYPE + ".txt")).toCommand();
+            } catch (IOException i) {
+                throw new Error(e.getMessage());
+            }
+        }
+        
+        Timer.delay(1);
+    }
 	
 	@Override
 	public void initAutonomous() { //when Autonomous is initialized
