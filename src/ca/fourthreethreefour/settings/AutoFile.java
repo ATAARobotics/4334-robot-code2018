@@ -12,12 +12,7 @@ import java.util.stream.Collectors;
 
 import ca.fourthreethreefour.Robot;
 import ca.fourthreethreefour.commands.debug.Logging;
-import ca.fourthreethreefour.settings.AutoFile.AutoFileCommand;
-import ca.fourthreethreefour.settings.AutoFile.CommandGroupFactory;
 import ca.fourthreethreefour.settings.AutoFile.Entry;
-import ca.fourthreethreefour.settings.AutoFile.PrintCommand;
-import ca.fourthreethreefour.settings.AutoFile.RuntimeCommand;
-import ca.fourthreethreefour.settings.AutoFile.Timeout;
 import ca.fourthreethreefour.subsystems.Arm;
 import ca.fourthreethreefour.subsystems.Drive;
 import edu.first.command.Command;
@@ -29,17 +24,32 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoFile extends Robot implements Arm, Drive {
 	
+	/**
+	 * List of all commands.
+	 */
 	public static final HashMap<String, RuntimeCommand> COMMANDS = new HashMap<>();
 
+	/*
+	 * Commands are registered in this section. To register a command, add it to the COMMANDS hashmap,
+	 * with the key being the string in the associated .txt file that is associated with the command 
+	 * and the value being an instance of the command you wish to run when that string is found. 
+	 * 
+	 * PrintCommand has been registered as an example.
+	 */
 		static {
 			COMMANDS.put("print", new PrintCommand());
 		}
 
 	
-	// Timeout settings
+	/**
+	 * A timer. Determines how much time has passed between the beginning of the timeout and the current time.
+	 * The timeout is how long the timer should run for.
+	 * @author Trevor Tsang, or maybe Joel
+	 * @since 2017, lol
+	 */
 	private static class Timeout {
 		private long start = 0;
-		private long timeout;
+		private long timeout; // how long the timer should run for
 		
 		public Timeout(long timeout) {
 			this.timeout = timeout;
@@ -50,15 +60,22 @@ public class AutoFile extends Robot implements Arm, Drive {
 		}
 		
 		public void start() {
+			// The time the timer starts at. Runs on Unix time.
 			start = System.currentTimeMillis();
 		}
 		
 		public boolean done() {
+			// If the time passed since the start of the timer is longer than the timeout value, return false
 			return System.currentTimeMillis() - start > timeout;
 		}
 	}
 	
-	// Makes a looping command to be used
+	/** 
+	 * Constructor for a looping command using {@link Timeout} above to determine how long the
+	 * command should run for.
+	 * @author Trevor, but maybe Joel actually
+	 * @since 2017, lol
+	 */
 	private static abstract class LoopingCommandWithTimeout extends LoopingCommand {
         	private Timeout timeout;
 
@@ -68,7 +85,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 
         @Override
         public boolean continueLoop() {
-            // not autonomous anymore
+            // If the driver station isn't in autonomous, or is disabled, stop the command from looping
             if (!DriverStation.getInstance().isAutonomous() || !DriverStation.getInstance().isEnabled()) {
                 Logging.log("command interrupted");
                 return false;
@@ -84,20 +101,39 @@ public class AutoFile extends Robot implements Arm, Drive {
         }
     }
 	
-	// Commands section!
+	/*
+	 *  Commands section! Add new commands here. To add new commands, create a new anonymous class
+	 *  that implements RuntimeCommand, and make getCommand() return a Command with your functionality in run().
+	 *  PrintCommand is here as an example.
+	 */
+	
+	/**
+	 * Prints to the console, with the argument being the string to print.
+	 * @author Trevor or Joel, I forget
+	 * @since 2017, lol
+	 */
 	private static class PrintCommand implements RuntimeCommand {
         @Override
-        	public Command getCommand(List<String> args) {
-           	 return new Command() {
-              	  @Override
-              	  public void run() {
-               	     System.out.println(args.toString());
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			System.out.println(args.toString());
                 }
             };
         }
+        
+        // Command goes here
+        
     }
 	
+	// End of commands section
+	
 	//TODO Comment this section
+	/**
+	 * A set of two strings, key and value. Used to store commands. 
+	 *  
+	 */
 	public static class Entry {
            final String key, value;
 
@@ -107,35 +143,52 @@ public class AutoFile extends Robot implements Arm, Drive {
         }
     }
 
-    	private List<Entry> entries = new ArrayList<>();
-    	private Map<String, String> variables = new HashMap<>();
+	/**
+	 * List of all objects of type {@link Entry}.
+	 */
+    private List<Entry> entries = new ArrayList<>();
+    /**
+     * List of all commands
+     */
+    private Map<String, String> variables = new HashMap<>();
 
-    	public AutoFile(File file) throws IOException {
-        	String contents;
-        	try (FileInputStream fi = new FileInputStream(file)) {
-            		StringBuilder builder = new StringBuilder();
-            		int ch;
-            		while ((ch = fi.read()) != -1) {
-                		builder.append((char) ch);
-            		}
-            	contents = builder.toString();
+    public AutoFile(File file) throws IOException {
+        String contents;
+        try (FileInputStream fi = new FileInputStream(file)) {
+            	StringBuilder builder = new StringBuilder();
+            	int ch;
+            	while ((ch = fi.read()) != -1) {
+                	builder.append((char) ch);
+            	}
+            contents = builder.toString();
         }
 
+        /*
+         *  Commands are separated by a new line. This means that every new line in the .txt file
+         *  is a separate command.
+         */
         for (String line : contents.split("\n")) {
-            if (line.trim().length() == 0) {
+        	if (line.trim().length() == 0) { // ignores blank lines
                 continue;
             } else if (line.contains("=")) {
+            	/*
+            	 * If the current line contains an '=' sign, everything before the '=' sign is
+            	 * the key, and everything after it is the value. Used to define values in the
+            	 * associated .txt file.
+            	 */
                 String key = line.substring(0, line.indexOf('=') + 1).trim().toLowerCase();
                 String value = line.substring(line.indexOf('=') + 1).trim().toLowerCase();
                 variables.put(key, value);
             } else {
+            	// everything from the beginning of the line to the first '(' is the key
                 String key = line.substring(0, line.indexOf('(')).trim().toLowerCase();
+                // everything from after the first '(' to the last ')' is the value
                 String value = line.substring(line.indexOf('(') + 1, line.lastIndexOf(')')).trim().toLowerCase();
 
+                // trims unnecessary brackets
                 if (value.startsWith("(")) {
                     value = value.substring(1);
                 }
-
                 if (value.endsWith(")")) {
                     value = value.substring(0, value.length() - 1);
                 }
@@ -145,19 +198,26 @@ public class AutoFile extends Robot implements Arm, Drive {
         }
     }
 
+    /**
+     * Converts Strings in the associated .txt into commands, and arranges them to run in the order 
+     * they are written in.
+     * @return The commands
+     */
     public Command toCommand() {
+    	// an ArrayList of AutoFileCommands
         ArrayList<AutoFileCommand> commands = new ArrayList<>();
-        for (Entry e : entries) {
+        for (Entry e : entries) { // for each Entry in the list of entries
             String value = e.value;
             for (Map.Entry<String, String> variable : variables.entrySet()) {
                 if (value.contains(variable.getKey())) {
                     value = value.replace(variable.getKey(), variable.getValue());
                 }
             }
-
             commands.add(new AutoFileCommand(e.key, value));
         }
 
+        // TODO make CommandGroupFactory (a copy of CommandGroup) again
+        // CommandGroupFactory is required because the constructor for CommandGroup is private
         CommandGroup group = new CommandGroupFactory();
         for (AutoFileCommand command : commands) {
             if (COMMANDS.containsKey(command.name)) {
@@ -170,28 +230,37 @@ public class AutoFile extends Robot implements Arm, Drive {
                 throw new Error(command.name + " not found");
             }
         }
-
         return group;
     }
 
+    /** 
+     * Reads the .txt file and turns lines into sets of commands and arguments.
+     * @author Joel, actually
+     * @since 2017, lol
+     *
+     */
     private static class AutoFileCommand {
         public final boolean concurrent;
         public final String name;
         public final List<String> arguments;
 
         public AutoFileCommand(String key, String arguments) {
-            if (key.startsWith("!")) {
+            if (key.startsWith("!")) { // if the line starts with '!', make it concurrent
+            	// concurrent commands run at the same time as the command before them
                 this.concurrent = true;
                 this.name = key.substring(1);
             } else {
+            	// if commands are not concurrent, they will run in the order they are written
                 this.concurrent = false;
                 this.name = key;
             }
 
+            // trims brackets
             String inner = arguments;
             if (arguments.contains("(") && arguments.contains(")")) {
                 inner = arguments.substring(arguments.indexOf('(') + 1, arguments.indexOf(')'));
             }
+            // arguments are separated by ',' 
             this.arguments = Arrays.asList(inner.split(",")).stream().map(String::trim).collect(Collectors.toList());
         }
     }
