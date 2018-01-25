@@ -1,12 +1,8 @@
 package ca.fourthreethreefour;
 
-import java.io.File;
-import java.io.IOException;
-
 import ca.fourthreethreefour.commands.ReverseSolenoid;
 import ca.fourthreethreefour.commands.SolenoidLeft;
 import ca.fourthreethreefour.commands.SolenoidRight;
-import ca.fourthreethreefour.settings.AutoFile;
 import edu.first.command.Command;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
@@ -15,7 +11,6 @@ import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
-import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends IterativeRobotAdapter {
 	
@@ -74,7 +69,7 @@ public class Robot extends IterativeRobotAdapter {
 		 *  While X is pressed, run the rampTrain with speed RAMP_RELEASE_SPEED and no value for rotation.
 		 *
 		 *  Creates an anonymous class of type Command and specifies what it does when the run() function
-		 *  is called. Cool got confused about this.
+		 *  is called.
 		 */
 		controller1.addWhilePressed(XboxController.X, new Command() {
 			@Override

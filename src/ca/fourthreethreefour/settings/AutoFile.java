@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import ca.fourthreethreefour.Robot;
 import ca.fourthreethreefour.commands.debug.Logging;
-import ca.fourthreethreefour.settings.AutoFile.Entry;
 import ca.fourthreethreefour.subsystems.Arm;
 import ca.fourthreethreefour.subsystems.Drive;
 import edu.first.command.Command;
@@ -36,8 +35,14 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * 
 	 * PrintCommand has been registered as an example.
 	 */
-		static {
+		static { //TODO Add drive commands, also the armMotor command.
 			COMMANDS.put("print", new PrintCommand());
+			COMMANDS.put("openarm", new OpenArm());
+			COMMANDS.put("closearm", new CloseArm());
+			COMMANDS.put("extendarm", new ExtendArm());
+			COMMANDS.put("retractarm", new RetractArm());
+			COMMANDS.put("motorslow", new MotorSlow());
+			COMMANDS.put("motorfast", new MotorFast());
 		}
 
 	
@@ -124,7 +129,107 @@ public class AutoFile extends Robot implements Arm, Drive {
         }
 	}
         // Command goes here
-        
+	
+	/**
+	 * Sets the grabSolenoid to be open.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class OpenArm implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			Arm.grabSolenoid.set(GRAB_OPEN);
+                }
+            };
+        }
+	}
+	
+	/**
+	 * Sets the grabSolenoid to be closed.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class CloseArm implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			Arm.grabSolenoid.set(GRAB_CLOSE);
+                }
+            };
+        }
+	}
+	
+	/**
+	 * Sets the motorSolenoid to be slow.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class MotorSlow implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			Arm.motorSolenoid.set(MOTOR_SLOW);
+                }
+            };
+        }
+	}
+	
+	/**
+	 * Sets the motorSolenoid to be fast.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class MotorFast implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			Arm.motorSolenoid.set(MOTOR_FAST);
+                }
+            };
+        }
+	}
+	/**
+	 * Sets the armSolenoid to extend.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class ExtendArm implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			Arm.armSolenoid.set(ARM_EXTEND);
+                }
+            };
+        }
+	}
+	
+	/**
+	 * Sets the armSolenoid to retract.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class RetractArm implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			Arm.armSolenoid.set(ARM_RETRACT);
+                }
+            };
+        }
+	}
 	
 	// End of commands section
 	
