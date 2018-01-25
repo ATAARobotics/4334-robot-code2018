@@ -122,10 +122,9 @@ public class AutoFile extends Robot implements Arm, Drive {
                 }
             };
         }
-        
+	}
         // Command goes here
         
-    }
 	
 	// End of commands section
 	
@@ -216,7 +215,6 @@ public class AutoFile extends Robot implements Arm, Drive {
             commands.add(new AutoFileCommand(e.key, value));
         }
 
-        // TODO make CommandGroupFactory (a copy of CommandGroup) again
         // CommandGroupFactory is required because the constructor for CommandGroup is private
         CommandGroup group = new CommandGroupFactory();
         for (AutoFileCommand command : commands) {
@@ -267,5 +265,11 @@ public class AutoFile extends Robot implements Arm, Drive {
 
 	private interface RuntimeCommand {
         	public Command getCommand(List<String> args);
+    }
+	
+    // CommandGroupFactory is required because the constructor for CommandGroup is private
+	private static class CommandGroupFactory extends CommandGroup {
+        public CommandGroupFactory() {
+        }
     }
 }
