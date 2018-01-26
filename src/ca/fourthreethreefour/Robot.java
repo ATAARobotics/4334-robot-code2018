@@ -5,7 +5,6 @@ import ca.fourthreethreefour.commands.SolenoidLeft;
 import ca.fourthreethreefour.commands.SolenoidRight;
 import edu.first.command.Command;
 import edu.first.module.Module;
-import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
 import edu.first.module.joysticks.XboxController;
@@ -100,8 +99,8 @@ public class Robot extends IterativeRobotAdapter {
 		
 		//When the A button is pressed, changes the solenoid state to left
 		//When the B button is pressed, changes the solenoid state to right
-		controller2.addWhenPressed(XboxController.A, new SolenoidLeft(motorSolenoid)); 
-		controller2.addWhenPressed(XboxController.B, new SolenoidRight(motorSolenoid)); 
+		controller2.addWhenPressed(XboxController.A, new SolenoidLeft(gearShifter)); 
+		controller2.addWhenPressed(XboxController.B, new SolenoidRight(gearShifter)); 
 
 		// Sets a deadband to prevent input less than 0.1
 		controller2.addDeadband(XboxController.LEFT_TRIGGER, 0.1);
@@ -144,13 +143,13 @@ public class Robot extends IterativeRobotAdapter {
 		 * TODO check the default positions for these
 		 */
 		if (grabSolenoid.get() == Direction.OFF) {
-			grabSolenoid.set(DualActionSolenoid.Direction.RIGHT);
+			grabSolenoid.set(GRAB_OPEN);
 		}
 		if (armSolenoid.get() == Direction.OFF) {
-			armSolenoid.set(DualActionSolenoid.Direction.RIGHT);
+			armSolenoid.set(ARM_EXTEND); //TODO decide if better to start extended or retracted
 		}
-		if (motorSolenoid.get() == Direction.OFF) {
-			motorSolenoid.set(DualActionSolenoid.Direction.LEFT);
+		if (gearShifter.get() == Direction.OFF) {
+			gearShifter.set(LOW_GEAR);
 		}
 	}
 	

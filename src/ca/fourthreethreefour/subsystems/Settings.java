@@ -35,8 +35,8 @@ public interface Settings {
 	int GRAB_SOLENOID_1 = settingsFile.getIntProperty("GRAB_SOLENOID_1", 0);
 	int GRAB_SOLENOID_2 = settingsFile.getIntProperty("GRAB_SOLENOID_2", 1);
 	
-	int MOTOR_SOLENOID_1 = settingsFile.getIntProperty("MOTOR_SOLENOID_1", 2);
-	int MOTOR_SOLENOID_2 = settingsFile.getIntProperty("MOTOR_SOLENOID_2", 3);
+	int GEAR_SHIFTER_SOLENOID_1 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_1", 2);
+	int GEAR_SHIFTER_SOLENOID_2 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_2", 3);
 	
 	int ARM_SOLENOID_1 = settingsFile.getIntProperty("ARM_SOLENOID_1", 4);
 	int ARM_SOLENOID_2 = settingsFile.getIntProperty("ARM_SOLENOID_2", 5);

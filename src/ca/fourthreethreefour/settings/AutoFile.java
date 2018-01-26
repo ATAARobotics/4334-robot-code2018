@@ -11,12 +11,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ca.fourthreethreefour.Robot;
+import ca.fourthreethreefour.commands.CommandGroupFactory;
 import ca.fourthreethreefour.commands.debug.Logging;
 import ca.fourthreethreefour.subsystems.Arm;
 import ca.fourthreethreefour.subsystems.Drive;
 import edu.first.command.Command;
 import edu.first.commands.CommandGroup;
 import edu.first.commands.common.LoopingCommand;
+import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
 
 // TODO Comment all them code please
@@ -41,8 +43,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 			COMMANDS.put("closearm", new closeArm());
 			COMMANDS.put("extendarm", new extendArm());
 			COMMANDS.put("retractarm", new retractArm());
-			COMMANDS.put("motorslow", new motorSlow()); //TODO Set to one command with arguments
-			COMMANDS.put("motorfast", new motorFast());
+			COMMANDS.put("setgear", new setGear());
 		}
 
 	
@@ -164,41 +165,36 @@ public class AutoFile extends Robot implements Arm, Drive {
         }
 	}
 	
-	//TODO Set speeds to one command with arguments
 	/**
-	 * Sets the motorSolenoid to be slow.
+	 * Takes arguments for setting the gear.
+	 * If 'low', then gearShifter will be set to LOW_GEAR.
+	 * If 'high', then gearShifter will be set to HIGH_GEAR.
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class motorSlow implements RuntimeCommand, Arm {
+	private static class setGear implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
+        	//boolean speed = Boolean.parseBoolean(args.get(0));
+        	String gear = (args.get(0)).toLowerCase(); // Sets speed to the args 0 (arrays start at 0 I do believe)
+        	// Sets gear to the args 0 (arrays start at 0 I do believe)
+        	// And sets it to lowercase so that no conflicts in capitalization.
         	return new Command() {
+        		
         		@Override
               	public void run() {
-        			Arm.motorSolenoid.set(MOTOR_SLOW);
+        			if (gear == "low") {
+        				Arm.gearShifter.set(LOW_GEAR);
+        			} else if (gear == "high") {
+        				Arm.gearShifter.set(HIGH_GEAR);
+        			} else /* backup incase error in inputting command */ {
+        				Arm.gearShifter.set(Direction.OFF);
+        			}
                 }
             };
         }
 	}
 	
-	//TODO Set speeds to one command with arguments
-	/**
-	 * Sets the motorSolenoid to be fast.
-	 * @author Cool, with reference from last year
-	 *
-	 */
-	private static class motorFast implements RuntimeCommand, Arm {
-        @Override
-        public Command getCommand(List<String> args) {
-        	return new Command() {
-        		@Override
-              	public void run() {
-        			Arm.motorSolenoid.set(MOTOR_FAST);
-                }
-            };
-        }
-	}
 	/**
 	 * Sets the armSolenoid to extend.
 	 * @author Cool, with reference from last year
@@ -374,9 +370,4 @@ public class AutoFile extends Robot implements Arm, Drive {
         	public Command getCommand(List<String> args);
     }
 	
-    // CommandGroupFactory is required because the constructor for CommandGroup is private
-	private static class CommandGroupFactory extends CommandGroup {
-        public CommandGroupFactory() {
-        }
-    }
 }
