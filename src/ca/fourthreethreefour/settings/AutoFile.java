@@ -36,13 +36,13 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * PrintCommand has been registered as an example.
 	 */
 		static { //TODO Add drive commands, also the armMotor command.
-			COMMANDS.put("print", new PrintCommand());
-			COMMANDS.put("openarm", new OpenArm());
-			COMMANDS.put("closearm", new CloseArm());
-			COMMANDS.put("extendarm", new ExtendArm());
-			COMMANDS.put("retractarm", new RetractArm());
-			COMMANDS.put("motorslow", new MotorSlow());
-			COMMANDS.put("motorfast", new MotorFast());
+			COMMANDS.put("print", new printCommand());
+			COMMANDS.put("openarm", new openArm());
+			COMMANDS.put("closearm", new closeArm());
+			COMMANDS.put("extendarm", new extendArm());
+			COMMANDS.put("retractarm", new retractArm());
+			COMMANDS.put("motorslow", new motorSlow()); //TODO Set to one command with arguments
+			COMMANDS.put("motorfast", new motorFast());
 		}
 
 	
@@ -117,7 +117,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Trevor or Joel, I forget
 	 * @since 2017, lol
 	 */
-	private static class PrintCommand implements RuntimeCommand {
+	private static class printCommand implements RuntimeCommand {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -135,7 +135,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class OpenArm implements RuntimeCommand, Arm {
+	private static class openArm implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -152,7 +152,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class CloseArm implements RuntimeCommand, Arm {
+	private static class closeArm implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -164,12 +164,13 @@ public class AutoFile extends Robot implements Arm, Drive {
         }
 	}
 	
+	//TODO Set speeds to one command with arguments
 	/**
 	 * Sets the motorSolenoid to be slow.
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class MotorSlow implements RuntimeCommand, Arm {
+	private static class motorSlow implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -181,12 +182,13 @@ public class AutoFile extends Robot implements Arm, Drive {
         }
 	}
 	
+	//TODO Set speeds to one command with arguments
 	/**
 	 * Sets the motorSolenoid to be fast.
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class MotorFast implements RuntimeCommand, Arm {
+	private static class motorFast implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -202,7 +204,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class ExtendArm implements RuntimeCommand, Arm {
+	private static class extendArm implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -219,7 +221,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class RetractArm implements RuntimeCommand, Arm {
+	private static class retractArm implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
