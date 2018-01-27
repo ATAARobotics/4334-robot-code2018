@@ -37,13 +37,13 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * 
 	 * PrintCommand has been registered as an example.
 	 */
-		static { //TODO Add drive commands, also the armMotor command.
-			COMMANDS.put("print", new printCommand());
-			COMMANDS.put("openarm", new openArm());
-			COMMANDS.put("closearm", new closeArm());
-			COMMANDS.put("extendarm", new extendArm());
-			COMMANDS.put("retractarm", new retractArm());
-			COMMANDS.put("setgear", new setGear());
+		static { //TODO Add drive commands, also the ArmMotor command.
+			COMMANDS.put("print", new PrintCommand());
+			COMMANDS.put("openArm", new OpenArm());
+			COMMANDS.put("closeArm", new CloseArm());
+			COMMANDS.put("extendArm", new ExtendArm());
+			COMMANDS.put("retractArm", new RetractArm());
+			COMMANDS.put("setGear", new SetGear());
 		}
 
 	
@@ -118,7 +118,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Trevor or Joel, I forget
 	 * @since 2017, lol
 	 */
-	private static class printCommand implements RuntimeCommand {
+	private static class PrintCommand implements RuntimeCommand {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -136,7 +136,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class openArm implements RuntimeCommand, Arm {
+	private static class OpenArm implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -153,7 +153,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class closeArm implements RuntimeCommand, Arm {
+	private static class CloseArm implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -172,7 +172,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class setGear implements RuntimeCommand, Arm {
+	private static class SetGear implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	//boolean speed = Boolean.parseBoolean(args.get(0));
@@ -180,7 +180,6 @@ public class AutoFile extends Robot implements Arm, Drive {
         	// Sets gear to the args 0 (arrays start at 0 I do believe)
         	// And sets it to lowercase so that no conflicts in capitalization.
         	return new Command() {
-        		
         		@Override
               	public void run() {
         			if (gear == "low") {
@@ -200,7 +199,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class extendArm implements RuntimeCommand, Arm {
+	private static class ExtendArm implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -217,7 +216,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Cool, with reference from last year
 	 *
 	 */
-	private static class retractArm implements RuntimeCommand, Arm {
+	private static class RetractArm implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
