@@ -35,10 +35,10 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * with the key being the string in the associated .txt file that is associated with the command 
 	 * and the value being an instance of the command you wish to run when that string is found. 
 	 * 
-	 * PrintCommand has been registered as an example.
 	 */
 		static { //TODO Add drive commands, also the ArmMotor command.
 			COMMANDS.put("print", new PrintCommand());
+			COMMANDS.put("blindDrive", new BlindDrive());
 			COMMANDS.put("openArm", new OpenArm());
 			COMMANDS.put("closeArm", new CloseArm());
 			COMMANDS.put("extendArm", new ExtendArm());
@@ -46,7 +46,6 @@ public class AutoFile extends Robot implements Arm, Drive {
 			COMMANDS.put("setGear", new SetGear());
 		}
 
-	
 	/**
 	 * A timer. Determines how much time has passed between the beginning of the timeout and the current time.
 	 * The timeout is how long the timer should run for.
@@ -84,7 +83,6 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 */
 	private static abstract class LoopingCommandWithTimeout extends LoopingCommand {
         	private Timeout timeout;
-
         	public LoopingCommandWithTimeout(Timeout timeout) {
            		this.timeout = timeout;
         }
@@ -129,7 +127,31 @@ public class AutoFile extends Robot implements Arm, Drive {
             };
         }
 	}
-        // Command goes here
+
+	/**
+	 * Tank drive command without sensor input. Use only if the sensors are broken.
+	 * Arguments are (in order):
+	 * @author Trevor
+	 *
+	 */
+	private static class BlindDrive implements RuntimeCommand {
+		@Override
+		public Command getCommand(List<String> args) {
+			double left = Double.parseDouble(args.get(0)),
+					right = Double.parseDouble(args.get(1));
+			long time = Long.parseLong(args.get(2));
+			return new LoopingCommandWithTimeout(new Timeout(time)) {	
+				@Override
+				public void runLoop() {
+					drivetrain.tankDrive(left, right);	
+				}
+				@Override
+				public void end() {
+					drivetrain.stopMotor();
+				}
+			};
+		}
+	}
 	
 	/**
 	 * Sets the grabSolenoid to be open.
@@ -209,7 +231,7 @@ public class AutoFile extends Robot implements Arm, Drive {
                 }
             };
         }
-	}
+    }
 	
 	/**
 	 * Sets the armSolenoid to retract.

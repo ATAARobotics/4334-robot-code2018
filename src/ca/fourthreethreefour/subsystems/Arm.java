@@ -33,7 +33,7 @@ public interface Arm extends Settings {
 	
 	DualActionSolenoid.Direction LOW_GEAR = Direction.LEFT;
 	DualActionSolenoid.Direction HIGH_GEAR = Direction.RIGHT;
-	// gearShiter ^
+	// gearShifter ^
 	
 	DualActionSolenoid.Direction ARM_EXTEND = Direction.LEFT;
 	DualActionSolenoid.Direction ARM_RETRACT = Direction.RIGHT;	
