@@ -1,6 +1,6 @@
 package ca.fourthreethreefour.commands.debug;
 
-import ca.fourthreethreefour.subsystems.Settings;
+import ca.fourthreethreefour.settings.Settings;
 
 public class Logging implements Settings {
 

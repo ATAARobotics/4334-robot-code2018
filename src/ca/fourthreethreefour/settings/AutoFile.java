@@ -11,13 +11,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ca.fourthreethreefour.Robot;
+import ca.fourthreethreefour.commands.CommandGroupFactory;
 import ca.fourthreethreefour.commands.debug.Logging;
-import ca.fourthreethreefour.settings.AutoFile.Entry;
 import ca.fourthreethreefour.subsystems.Arm;
 import ca.fourthreethreefour.subsystems.Drive;
 import edu.first.command.Command;
 import edu.first.commands.CommandGroup;
 import edu.first.commands.common.LoopingCommand;
+import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
 
 // TODO Comment all them code please
@@ -34,13 +35,17 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * with the key being the string in the associated .txt file that is associated with the command 
 	 * and the value being an instance of the command you wish to run when that string is found. 
 	 * 
-	 * PrintCommand has been registered as an example.
 	 */
-		static {
+		static { //TODO Add drive commands, also the ArmMotor command.
 			COMMANDS.put("print", new PrintCommand());
+			COMMANDS.put("blindDrive", new BlindDrive());
+			COMMANDS.put("openArm", new OpenArm());
+			COMMANDS.put("closeArm", new CloseArm());
+			COMMANDS.put("extendArm", new ExtendArm());
+			COMMANDS.put("retractArm", new RetractArm());
+			COMMANDS.put("setGear", new SetGear());
 		}
 
-	
 	/**
 	 * A timer. Determines how much time has passed between the beginning of the timeout and the current time.
 	 * The timeout is how long the timer should run for.
@@ -78,7 +83,6 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 */
 	private static abstract class LoopingCommandWithTimeout extends LoopingCommand {
         	private Timeout timeout;
-
         	public LoopingCommandWithTimeout(Timeout timeout) {
            		this.timeout = timeout;
         }
@@ -122,10 +126,129 @@ public class AutoFile extends Robot implements Arm, Drive {
                 }
             };
         }
-        
-        // Command goes here
-        
+	}
+
+	/**
+	 * Tank drive command without sensor input. Use only if the sensors are broken.
+	 * Arguments are (in order):
+	 * @author Trevor
+	 *
+	 */
+	private static class BlindDrive implements RuntimeCommand {
+		@Override
+		public Command getCommand(List<String> args) {
+			double left = Double.parseDouble(args.get(0)),
+					right = Double.parseDouble(args.get(1));
+			long time = Long.parseLong(args.get(2));
+			return new LoopingCommandWithTimeout(new Timeout(time)) {	
+				@Override
+				public void runLoop() {
+					drivetrain.tankDrive(left, right);	
+				}
+				@Override
+				public void end() {
+					drivetrain.stopMotor();
+				}
+			};
+		}
+	}
+	
+	/**
+	 * Sets the grabSolenoid to be open.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class OpenArm implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			Arm.grabSolenoid.set(GRAB_OPEN);
+                }
+            };
+        }
+	}
+	
+	/**
+	 * Sets the grabSolenoid to be closed.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class CloseArm implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			Arm.grabSolenoid.set(GRAB_CLOSE);
+                }
+            };
+        }
+	}
+	
+	/**
+	 * Takes arguments for setting the gear.
+	 * If 'low', then gearShifter will be set to LOW_GEAR.
+	 * If 'high', then gearShifter will be set to HIGH_GEAR.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class SetGear implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	//boolean speed = Boolean.parseBoolean(args.get(0));
+        	String gear = (args.get(0)).toLowerCase(); // Sets speed to the args 0 (arrays start at 0 I do believe)
+        	// Sets gear to the args 0 (arrays start at 0 I do believe)
+        	// And sets it to lowercase so that no conflicts in capitalization.
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			if (gear == "low") {
+        				Arm.gearShifter.set(LOW_GEAR);
+        			} else if (gear == "high") {
+        				Arm.gearShifter.set(HIGH_GEAR);
+        			} else /* backup incase error in inputting command */ {
+        				Arm.gearShifter.set(Direction.OFF);
+        			}
+                }
+            };
+        }
+	}
+	
+	/**
+	 * Sets the armSolenoid to extend.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class ExtendArm implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			Arm.armSolenoid.set(ARM_EXTEND);
+                }
+            };
+        }
     }
+	
+	/**
+	 * Sets the armSolenoid to retract.
+	 * @author Cool, with reference from last year
+	 *
+	 */
+	private static class RetractArm implements RuntimeCommand, Arm {
+        @Override
+        public Command getCommand(List<String> args) {
+        	return new Command() {
+        		@Override
+              	public void run() {
+        			Arm.armSolenoid.set(ARM_RETRACT);
+                }
+            };
+        }
+	}
 	
 	// End of commands section
 	
@@ -216,7 +339,6 @@ public class AutoFile extends Robot implements Arm, Drive {
             commands.add(new AutoFileCommand(e.key, value));
         }
 
-        // TODO make CommandGroupFactory (a copy of CommandGroup) again
         // CommandGroupFactory is required because the constructor for CommandGroup is private
         CommandGroup group = new CommandGroupFactory();
         for (AutoFileCommand command : commands) {
@@ -268,4 +390,5 @@ public class AutoFile extends Robot implements Arm, Drive {
 	private interface RuntimeCommand {
         	public Command getCommand(List<String> args);
     }
+	
 }
