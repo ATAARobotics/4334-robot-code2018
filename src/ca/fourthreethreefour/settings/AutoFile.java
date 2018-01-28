@@ -39,11 +39,8 @@ public class AutoFile extends Robot implements Arm, Drive {
 		static { //TODO Add drive commands, also the ArmMotor command.
 			COMMANDS.put("print", new PrintCommand());
 			COMMANDS.put("blindDrive", new BlindDrive());
-			COMMANDS.put("openArm", new OpenArm());
-			COMMANDS.put("closeArm", new CloseArm());
-			COMMANDS.put("extendArm", new ExtendArm());
-			COMMANDS.put("retractArm", new RetractArm());
 			COMMANDS.put("setGear", new SetGear());
+			COMMANDS.put("setArm", new SetArm());
 		}
 
 	/**
@@ -154,37 +151,35 @@ public class AutoFile extends Robot implements Arm, Drive {
 	}
 	
 	/**
-	 * Sets the grabSolenoid to be open.
-	 * @author Cool, with reference from last year
+	 * Takes arguments for setting the arm
+	 * If 'open', then grabSolenoid will be set to GRAB_OPEN
+	 * If 'close', then grabSolenoid will be set to GRAB_OPEN
+	 * If 'extend', then armSolenoid will be set to ARM_EXTEND
+	 * If 'retract', then armSolenoid will be set to ARM_RETRACT
+	 * @author Cool
 	 *
 	 */
-	private static class OpenArm implements RuntimeCommand, Arm {
-        @Override
-        public Command getCommand(List<String> args) {
-        	return new Command() {
-        		@Override
-              	public void run() {
-        			Arm.grabSolenoid.set(GRAB_OPEN);
-                }
-            };
-        }
-	}
-	
-	/**
-	 * Sets the grabSolenoid to be closed.
-	 * @author Cool, with reference from last year
-	 *
-	 */
-	private static class CloseArm implements RuntimeCommand, Arm {
-        @Override
-        public Command getCommand(List<String> args) {
-        	return new Command() {
-        		@Override
-              	public void run() {
-        			Arm.grabSolenoid.set(GRAB_CLOSE);
-                }
-            };
-        }
+	private static class SetArm implements RuntimeCommand, Arm {
+		@Override
+		public Command getCommand(List<String> args) {
+			String cmd = ((args.get(0)).toLowerCase());
+			return new Command() {
+				@Override
+				public void run() {
+					if (cmd == "open") {
+	        			Arm.grabSolenoid.set(GRAB_OPEN);
+					} else if (cmd == "close") {
+						Arm.grabSolenoid.set(GRAB_CLOSE);
+					} else if (cmd == "extend") {
+						Arm.armSolenoid.set(ARM_EXTEND);
+					} else if (cmd == "retract") {
+						Arm.armSolenoid.set(ARM_RETRACT);
+					} else {
+						return;
+					}
+				}
+			};
+		}
 	}
 	
 	/**
@@ -211,40 +206,6 @@ public class AutoFile extends Robot implements Arm, Drive {
         			} else /* backup incase error in inputting command */ {
         				Arm.gearShifter.set(Direction.OFF);
         			}
-                }
-            };
-        }
-	}
-	
-	/**
-	 * Sets the armSolenoid to extend.
-	 * @author Cool, with reference from last year
-	 *
-	 */
-	private static class ExtendArm implements RuntimeCommand, Arm {
-        @Override
-        public Command getCommand(List<String> args) {
-        	return new Command() {
-        		@Override
-              	public void run() {
-        			Arm.armSolenoid.set(ARM_EXTEND);
-                }
-            };
-        }
-    }
-	
-	/**
-	 * Sets the armSolenoid to retract.
-	 * @author Cool, with reference from last year
-	 *
-	 */
-	private static class RetractArm implements RuntimeCommand, Arm {
-        @Override
-        public Command getCommand(List<String> args) {
-        	return new Command() {
-        		@Override
-              	public void run() {
-        			Arm.armSolenoid.set(ARM_RETRACT);
                 }
             };
         }
