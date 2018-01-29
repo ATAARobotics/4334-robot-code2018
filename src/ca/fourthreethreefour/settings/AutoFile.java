@@ -41,6 +41,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 			COMMANDS.put("blindDrive", new BlindDrive());
 			COMMANDS.put("setGear", new SetGear());
 			COMMANDS.put("setArm", new SetArm());
+			COMMANDS.put("turnArm", new TurnArm());
 		}
 
 	/**
@@ -80,6 +81,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 */
 	private static abstract class LoopingCommandWithTimeout extends LoopingCommand {
         	private Timeout timeout;
+        	
         	public LoopingCommandWithTimeout(Timeout timeout) {
            		this.timeout = timeout;
         }
@@ -209,6 +211,35 @@ public class AutoFile extends Robot implements Arm, Drive {
                 }
             };
         }
+	}
+	
+	/**
+	 * Turn the arm with set speed for set time.
+	 * First argument is speed between -1 and 1.
+	 * Second argument is time that it will last for.
+	 * @author Cool, with reference to last year.
+	 *
+	 */
+	
+	private static class TurnArm implements RuntimeCommand {
+		@Override
+		public Command getCommand(List<String> args) {
+			
+			Double speed = Double.parseDouble(args.get(0));
+			
+			Long time = Long.parseLong(args.get(1));
+			
+			return new LoopingCommandWithTimeout(new Timeout(time)) {
+				@Override
+				public void runLoop() {
+					armMotor.setSpeed(speed);
+				}
+				
+				public void end() {
+					armMotor.setSpeed(0);
+				}
+			};
+		}
 	}
 	
 	// End of commands section
