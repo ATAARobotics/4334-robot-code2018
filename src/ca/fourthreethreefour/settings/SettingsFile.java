@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.subsystems;
+package ca.fourthreethreefour.settings;
 
 import java.io.File;
 import java.io.FileInputStream;

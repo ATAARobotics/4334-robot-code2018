@@ -18,6 +18,7 @@ public abstract class LoopingCommand implements Command {
         while (continueLoop()) {
             runLoop();
         }
+        end();
     }
 
     /**
@@ -31,4 +32,6 @@ public abstract class LoopingCommand implements Command {
      * Runs the actual instructions of the command.
      */
     public abstract void runLoop();
+    
+    public abstract void end();
 }

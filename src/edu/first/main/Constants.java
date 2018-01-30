@@ -1,8 +1,10 @@
 package edu.first.main;
 
+import ca.fourthreethreefour.settings.Settings;
 import ca.fourthreethreefour.subsystems.Arm;
+import ca.fourthreethreefour.subsystems.Controllers;
 import ca.fourthreethreefour.subsystems.Drive;
-import ca.fourthreethreefour.subsystems.Settings;
+import ca.fourthreethreefour.subsystems.Ramp;
 
 /**
  * The central repository for all constant values. Values here are expected to
@@ -46,5 +48,5 @@ import ca.fourthreethreefour.subsystems.Settings;
  */
 
 //Make sure to add whatever subsystem you add to here
-public interface Constants extends Settings, Drive, Arm {
+public interface Constants extends Settings, Drive, Arm, Controllers, Ramp {
 }
