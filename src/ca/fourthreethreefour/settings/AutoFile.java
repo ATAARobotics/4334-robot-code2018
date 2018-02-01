@@ -168,16 +168,19 @@ public class AutoFile extends Robot implements Arm, Drive {
 			return new Command() {
 				@Override
 				public void run() {
-					if (cmd == "open") {
-	        			Arm.grabSolenoid.set(GRAB_OPEN);
-					} else if (cmd == "close") {
-						Arm.grabSolenoid.set(GRAB_CLOSE);
-					} else if (cmd == "extend") {
-						Arm.armSolenoid.set(ARM_EXTEND);
-					} else if (cmd == "retract") {
-						Arm.armSolenoid.set(ARM_RETRACT);
-					} else {
-						return;
+					switch (cmd) {
+					case "open": Arm.grabSolenoid.set(GRAB_OPEN);
+						break;
+					case "close": Arm.grabSolenoid.set(GRAB_CLOSE);
+						break;
+					case "extend": Arm.armSolenoid.set(ARM_EXTEND);
+						break;
+					case "retract": Arm.armSolenoid.set(ARM_RETRACT);
+						break;
+					case "": System.out.println("Error in SetArm: No solenoid set");
+						break;
+					default: System.out.println("Error in SetArm: Solenoid set incorrectly");
+						break;
 					}
 				}
 			};
@@ -201,12 +204,23 @@ public class AutoFile extends Robot implements Arm, Drive {
         	return new Command() {
         		@Override
               	public void run() {
-        			if (gear == "low") {
+        			/*if (gear == "low") {
         				Arm.gearShifter.set(LOW_GEAR);
         			} else if (gear == "high") {
         				Arm.gearShifter.set(HIGH_GEAR);
-        			} else /* backup incase error in inputting command */ {
+        			} else { // backup incase error in inputting command
         				Arm.gearShifter.set(Direction.OFF);
+        			} */
+        			switch (gear) {
+        			case "low": Arm.gearShifter.set(LOW_GEAR);
+        				break;
+        			case "high": Arm.gearShifter.set(HIGH_GEAR);
+        				break;
+        			case "": System.out.println("Error in SetGear: No gear set");
+        				Arm.gearShifter.set(Direction.OFF);
+        				break;
+        			default: System.out.println("Error in SetGear: Gear set incorrectly");
+        				break;
         			}
                 }
             };
