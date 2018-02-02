@@ -10,6 +10,7 @@ import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class Robot extends IterativeRobotAdapter {
 	
@@ -25,6 +26,12 @@ public class Robot extends IterativeRobotAdapter {
 	
 	// Puts the above two subsystems into this subsystem. Subsystemception!
 	private final Subsystem ALL_MODULES =  new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
+
+	/* 
+	 * The current instance of the driver station. Needed in order to send and receive information
+	 * (not controller inputs) from the driver station.
+	 */
+	DriverStation ds = DriverStation.getInstance();
 	
 	/*
 	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter 
@@ -122,6 +129,9 @@ public class Robot extends IterativeRobotAdapter {
 	@Override
 	public void initAutonomous() { 
 		AUTO_MODULES.enable();
+		// Gets game-specific information (switch and scale orientations) from FMS. 
+		// TODO use this in selecting autonomous routine
+		ds.getGameSpecificMessage(); 
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
 	}
 
