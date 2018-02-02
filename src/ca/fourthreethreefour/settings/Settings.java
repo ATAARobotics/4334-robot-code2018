@@ -49,4 +49,14 @@ public interface Settings {
 	int XBOXCONTROLLER_1 = settingsFile.getIntProperty("XBOXCONTROLLER_1", 0);
 	int XBOXCONTROLLER_2 = settingsFile.getIntProperty("XBOXCONTROLLER_2", 1);
 
+	// PID values
+	// TODO get default values
+	int SPEED_P = settingsFile.getIntProperty("SPEED_P", 0);
+	int SPEED_I = settingsFile.getIntProperty("SPEED_I", 0);
+	int SPEED_D = settingsFile.getIntProperty("SPEED_D", 0);
+	
+	int TURN_P = settingsFile.getIntProperty("TURN_P", 0);
+	int TURN_I = settingsFile.getIntProperty("TURN_I", 0);
+	int TURN_D = settingsFile.getIntProperty("TURN_D", 0);
+	
 }
