@@ -18,12 +18,12 @@ public class Robot extends IterativeRobotAdapter {
 	 * modules required to be enabled in teleoperated mode.
 	 */
 	private final Subsystem AUTO_MODULES = new Subsystem(
-			new Module[] { 	arm, drive });
+			new Module[] { arm, drive });
 	
 	private final Subsystem TELEOP_MODULES = new Subsystem(
 			new Module[] { arm, drive, controllers, ramp });
 	
-	//Puts the above two subsystems into this subsystem. Subsystemception
+	// Puts the above two subsystems into this subsystem. Subsystemception!
 	private final Subsystem ALL_MODULES =  new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 	
 	/*
@@ -35,7 +35,7 @@ public class Robot extends IterativeRobotAdapter {
 		super("ATA 2018");
 	}
 	
-	//initializes robot
+	// runs when the robot is first turned on
 	@Override
 	public void init() {
 		// Initalizes all modules
@@ -85,7 +85,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.addWhilePressed(XboxController.Y, new Command() {
 			@Override
 			public void run() {
-				//takes RAMP_RETRACT_SPEED, specified in settings.txt, as the speed for motor 
+				// takes RAMP_RETRACT_SPEED, specified in settings.txt, as the speed for motor 
 				rampTrain.arcadeDrive(RAMP_RETRACT_SPEED, 0); 
 				}
 			});
@@ -122,7 +122,7 @@ public class Robot extends IterativeRobotAdapter {
 	@Override
 	public void initAutonomous() { 
 		AUTO_MODULES.enable();
-		drivetrain.setSafetyEnabled(false); // WE DONT NEED SAFETY
+		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
 	}
 
 	// Runs at the end of autonomous
@@ -138,15 +138,15 @@ public class Robot extends IterativeRobotAdapter {
     	drivetrain.setSafetyEnabled(true); // Maybe we do...
 		/* 
 		 * If any of these solenoids are are in the OFF position, set them to a default position.
-		 * Necessary because most of our code for the solenoids reverses them, which cannot be done
+		 * Necessary because most of our code for operating solenoids reverses them, which cannot be done
 		 * for solenoids in the OFF position.
-		 * TODO check the default positions for these
+		 * TODO check which positions these solenoids should be set to when initiating teleop
 		 */
 		if (grabSolenoid.get() == Direction.OFF) {
 			grabSolenoid.set(GRAB_OPEN);
 		}
 		if (armSolenoid.get() == Direction.OFF) {
-			armSolenoid.set(ARM_EXTEND); //TODO decide if better to start extended or retracted
+			armSolenoid.set(ARM_EXTEND); 
 		}
 		if (gearShifter.get() == Direction.OFF) {
 			gearShifter.set(LOW_GEAR);
@@ -168,4 +168,3 @@ public class Robot extends IterativeRobotAdapter {
    	}
 
 }
-

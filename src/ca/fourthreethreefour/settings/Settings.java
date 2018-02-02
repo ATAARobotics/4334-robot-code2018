@@ -11,12 +11,11 @@ public interface Settings {
 
 	SettingsFile settingsFile = new SettingsFile(new File("/settings.txt"));
 
-
-    	String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "");
+    String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "");
 	
-    	boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
+    boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
 	
-	//TODO ports
+	//TODO get default ports
 	//int EXAMPLE_PORT = settingsFile.getIntProperty("EXAMPLE_PORT", [default port])
 	int DRIVE_LEFT_1 = settingsFile.getIntProperty("DRIVE_LEFT_1", 1);
 	int DRIVE_LEFT_2 = settingsFile.getIntProperty("DRIVE_LEFT_2", 2);
