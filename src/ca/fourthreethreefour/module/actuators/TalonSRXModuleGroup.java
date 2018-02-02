@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.module;
+package ca.fourthreethreefour.module.actuators;
 
 import edu.first.lang.OutOfSyncException;
 import edu.first.module.actuators.SpeedController;

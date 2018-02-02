@@ -15,8 +15,9 @@ public interface Settings {
 	
     boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
 	
-	//TODO get default ports
-	//int EXAMPLE_PORT = settingsFile.getIntProperty("EXAMPLE_PORT", [default port])
+    // Ports
+	// TODO get default ports
+	// int EXAMPLE_PORT = settingsFile.getIntProperty("EXAMPLE_PORT", [default port])
 	int DRIVE_LEFT_1 = settingsFile.getIntProperty("DRIVE_LEFT_1", 1);
 	int DRIVE_LEFT_2 = settingsFile.getIntProperty("DRIVE_LEFT_2", 2);
 	int DRIVE_LEFT_3 = settingsFile.getIntProperty("DRIVE_LEFT_3", 3);

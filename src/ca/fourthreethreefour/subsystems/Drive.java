@@ -1,7 +1,7 @@
 package ca.fourthreethreefour.subsystems;
 
-import ca.fourthreethreefour.module.TalonSRXModule;
-import ca.fourthreethreefour.module.TalonSRXModuleGroup;
+import ca.fourthreethreefour.module.actuators.TalonSRXModule;
+import ca.fourthreethreefour.module.actuators.TalonSRXModuleGroup;
 import ca.fourthreethreefour.settings.Settings;
 import edu.first.identifiers.Function;
 import edu.first.identifiers.InversedSpeedController;

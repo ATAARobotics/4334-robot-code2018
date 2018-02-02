@@ -129,7 +129,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 
 	/**
 	 * Tank drive command without sensor input. Use only if the sensors are broken.
-	 * Arguments are (in order):
+	 * Arguments are (in order): value of left side, value of right side, duration of command
 	 * @author Trevor
 	 *
 	 */
@@ -177,9 +177,9 @@ public class AutoFile extends Robot implements Arm, Drive {
 						break;
 					case "retract": Arm.armSolenoid.set(ARM_RETRACT);
 						break;
-					case "": System.out.println("Error in SetArm: No solenoid set");
+					case "": System.out.println("Error in SetArm: No direction set");
 						break;
-					default: System.out.println("Error in SetArm: Solenoid set incorrectly");
+					default: System.out.println("Error in SetArm: Direction set incorrectly");
 						break;
 					}
 				}
@@ -244,6 +244,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 			Long time = Long.parseLong(args.get(1));
 			
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
+				
 				@Override
 				public void runLoop() {
 					armMotor.setSpeed(speed);
