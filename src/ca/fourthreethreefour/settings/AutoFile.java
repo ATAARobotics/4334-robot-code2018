@@ -41,13 +41,14 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * and the value being an instance of the command you wish to run when that string is found. 
 	 * 
 	 */
-		static { //TODO Add drive commands. Current commands that 2017 had that isn't here is 'drivedistance', 'waituntil'. Unsure if all of these are needed.
+		static { //TODO Add drive commands. Current commands that 2017 had that isn't here is 'drivedistance'
 			COMMANDS.put("print", new Print());
 			COMMANDS.put("blindDrive", new BlindDrive());
 	        COMMANDS.put("driveStraight", new DriveStraight());
 	        COMMANDS.put("turn", new Turn());
 	        COMMANDS.put("stop", new Stop());
 	        COMMANDS.put("wait", new Wait());
+	        COMMANDS.put("waitUntil", new WaitUntil());
 			COMMANDS.put("setGear", new SetGear());
 			COMMANDS.put("setArm", new SetArm());
 			COMMANDS.put("turnArm", new TurnArm());
@@ -309,7 +310,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	}
 	
 	/**
-	 * Waits (double)
+	 * Waits with set value (double) ticks?
 	 * @author Cool, but likely either Trevor, or more likely Joel
 	 *
 	 */
@@ -321,6 +322,33 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			} else {
 				return new WaitCommand(Double.parseDouble(args.get(0))); // Runs the WaitCommand with value set.
 			}
+		}
+	}
+	
+	/**
+	 * Waits until set time (double) of match.
+	 * Likely best used at beginning of match or end of match.
+	 * Beginning to wait for other teams to move out of our way.
+	 * End to end autonomous for the start of teleop.
+	 * @author Cool, but really either Trevor or Joel
+	 *
+	 */
+	private static class WaitUntil implements RuntimeCommand {
+		
+		@Override
+		public Command getCommand(List<String> args) {
+			double time = Double.parseDouble(args.get(0));
+			return new Command() {
+				
+				@Override
+				public void run() {
+					// getMatchTime gives the time left in the current period, not how much time has passed.
+					// That is why it's 15 - *.getMatchTime(), if the time left was 14, then it would be 1 second gone.
+					while (15 - DriverStation.getInstance().getMatchTime() < time) {
+						drivetrain.stopMotor();
+					}
+				}
+			};
 		}
 	}
 	
