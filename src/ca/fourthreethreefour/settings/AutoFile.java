@@ -14,6 +14,7 @@ import ca.fourthreethreefour.Robot;
 import ca.fourthreethreefour.commands.CommandGroupFactory;
 import ca.fourthreethreefour.commands.debug.Logging;
 import ca.fourthreethreefour.subsystems.Arm;
+import ca.fourthreethreefour.subsystems.DriveSensors;
 import ca.fourthreethreefour.subsystems.Drive;
 import edu.first.command.Command;
 import edu.first.commands.CommandGroup;
@@ -23,7 +24,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 // TODO Comment all them code please
 
-public class AutoFile extends Robot implements Arm, Drive {
+public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	
 	/**
 	 * List of all commands.
@@ -36,9 +37,10 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * and the value being an instance of the command you wish to run when that string is found. 
 	 * 
 	 */
-		static { //TODO Add drive commands, also the ArmMotor command.
-			COMMANDS.put("print", new PrintCommand());
+		static { //TODO Add drive commands. Current commands that 2017 had that isn't here is 'drivedistance', 'turn', 'stop', 'wait', 'waituntil'. Unsure if all of these are needed.
+			COMMANDS.put("print", new Print());
 			COMMANDS.put("blindDrive", new BlindDrive());
+	        COMMANDS.put("driveStraight", new DriveStraight());
 			COMMANDS.put("setGear", new SetGear());
 			COMMANDS.put("setArm", new SetArm());
 			COMMANDS.put("turnArm", new TurnArm());
@@ -115,7 +117,7 @@ public class AutoFile extends Robot implements Arm, Drive {
 	 * @author Trevor or Joel, I forget
 	 * @since 2017, lol
 	 */
-	private static class PrintCommand implements RuntimeCommand {
+	private static class Print implements RuntimeCommand {
         @Override
         public Command getCommand(List<String> args) {
         	return new Command() {
@@ -151,6 +153,80 @@ public class AutoFile extends Robot implements Arm, Drive {
 			};
 		}
 	}
+	
+	/**
+	 * Arcade drive designed for going straight.
+	 * Arguments are: value of int distance, int of how long to wait to see if in correct spot, long value for timeout, and double for speed.
+	 * @author Cool, but probably Trevor, yet more likely Joel
+	 *
+	 */
+	
+	private static class DriveStraight implements RuntimeCommand {
+		@Override
+		public Command getCommand(List<String> args) {
+			int distance = Integer.parseInt(args.get(0)); // Sets distance to the first arg
+			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10; // If there is more than one argument (.size) then grabs the value, else by default it's 10
+			long timeout = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000; // Same as above. L at the end of 8000 sets it to long.
+			double speed = args.size() > 3 ? Double.parseDouble(args.get(3)) : 1; // Same as above, but for speed.
+			
+			return new LoopingCommandWithTimeout(new Timeout(timeout)) {
+				int correctIterations = 0;
+				
+				@Override
+				public boolean continueLoop() {
+					
+					if (!super.continueLoop()) { // If this continueLoop isn't original continueLoop, return false? Am I right?
+						return false;
+					}
+					
+					if (distancePID.isEnabled() && distancePID.onTarget()) { // If it's enabled and on target
+						correctIterations++; // Add one per loop when at the Target.
+						Logging.logf("error", distancePID.getError());
+						Logging.logf("threshold", distancePID.getTolerance());
+					} else { // If it's not on target
+						correctIterations = 0; // Set the amount to 0
+					}
+					
+					return correctIterations < threshold; // If it hasn't reached the threshold, return.
+				}
+				
+				@Override
+				public void firstLoop() {
+					leftEncoder.reset(); // Resets the encoders
+					rightEncoder.reset();
+					distancePID.setSetpoint(distance); // Sets the distance
+					distancePID.enable(); // Enables the distance PID
+					
+					double angle = navx.getAngle(); // Sets angle to the current angle.
+					turnPID.setSetpoint(angle); // Sets the angle
+					turnPID.setSetpoint(angle); // Enables the turn PID
+					
+					Logging.logf("drivestraight setpoint", distancePID.getSetpoint());
+				}
+				
+				@Override
+				public void runLoop() {
+					synchronized (distancePID) { // Lets it read any changes done elsewhere
+						try {
+							distancePID.wait(20); // Waits 20 ticks?
+						} catch (InterruptedException e) {}
+					}
+					
+					Logging.put("Distance Error", distancePID.getError());
+					drivetrain.arcadeDrive(speedOutput.get() * speed, turningOutput.get());
+					// Sets speed and turn to speedOutput and turningOutput. Unsure where values are set
+				}
+				
+				@Override
+				public void end() {
+					Logging.log("drivestraight ended");
+					distancePID.disable();
+					turnPID.disable();
+				}
+			};
+		}
+	}
+	
 	
 	/**
 	 * Takes arguments for setting the arm
