@@ -19,11 +19,14 @@ import ca.fourthreethreefour.subsystems.Drive;
 import edu.first.command.Command;
 import edu.first.commands.CommandGroup;
 import edu.first.commands.common.LoopingCommand;
+import edu.first.commands.common.SetOutput;
+import edu.first.commands.common.WaitCommand;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
 
 // TODO Comment all them code please
 // TODO Formattings
+// TODO Add backup code incase values not set. Use Wait as an example
 
 public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	
@@ -38,11 +41,13 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * and the value being an instance of the command you wish to run when that string is found. 
 	 * 
 	 */
-		static { //TODO Add drive commands. Current commands that 2017 had that isn't here is 'drivedistance', 'stop', 'wait', 'waituntil'. Unsure if all of these are needed.
+		static { //TODO Add drive commands. Current commands that 2017 had that isn't here is 'drivedistance', 'waituntil'. Unsure if all of these are needed.
 			COMMANDS.put("print", new Print());
 			COMMANDS.put("blindDrive", new BlindDrive());
 	        COMMANDS.put("driveStraight", new DriveStraight());
 	        COMMANDS.put("turn", new Turn());
+	        COMMANDS.put("stop", new Stop());
+	        COMMANDS.put("wait", new Wait());
 			COMMANDS.put("setGear", new SetGear());
 			COMMANDS.put("setArm", new SetArm());
 			COMMANDS.put("turnArm", new TurnArm());
@@ -288,6 +293,34 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					turnPID.disable();
 				}
 			};
+		}
+	}
+	
+	/**
+	 * Stops the bot
+	 * @author Cool, but likely either Trevor, or more likely Joel
+	 *
+	 */
+	private static class Stop implements RuntimeCommand {
+		@Override
+		public Command getCommand(List<String> args) {
+			return new SetOutput(drivetrain.getDriveStraight(), 0); // Stops by setting drivetrain's drivestraight to 0.
+		}
+	}
+	
+	/**
+	 * Waits (double)
+	 * @author Cool, but likely either Trevor, or more likely Joel
+	 *
+	 */
+	private static class Wait implements RuntimeCommand {
+		@Override
+		public Command getCommand(List<String> args) {
+			if (args.size() != 1) {
+				throw new IllegalArgumentException("Error in Wait: Invalid arguments"); // In case no arguments put for Wait.
+			} else {
+				return new WaitCommand(Double.parseDouble(args.get(0))); // Runs the WaitCommand with value set.
+			}
 		}
 	}
 	
