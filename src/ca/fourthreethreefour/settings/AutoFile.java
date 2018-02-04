@@ -23,6 +23,7 @@ import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
 
 // TODO Comment all them code please
+// TODO Formattings
 
 public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	
@@ -37,10 +38,11 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * and the value being an instance of the command you wish to run when that string is found. 
 	 * 
 	 */
-		static { //TODO Add drive commands. Current commands that 2017 had that isn't here is 'drivedistance', 'turn', 'stop', 'wait', 'waituntil'. Unsure if all of these are needed.
+		static { //TODO Add drive commands. Current commands that 2017 had that isn't here is 'drivedistance', 'stop', 'wait', 'waituntil'. Unsure if all of these are needed.
 			COMMANDS.put("print", new Print());
 			COMMANDS.put("blindDrive", new BlindDrive());
 	        COMMANDS.put("driveStraight", new DriveStraight());
+	        COMMANDS.put("turn", new Turn());
 			COMMANDS.put("setGear", new SetGear());
 			COMMANDS.put("setArm", new SetArm());
 			COMMANDS.put("turnArm", new TurnArm());
@@ -175,7 +177,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				@Override
 				public boolean continueLoop() {
 					
-					if (!super.continueLoop()) { // If this continueLoop isn't original continueLoop, return false? Am I right?
+					if (!super.continueLoop()) { // If this continueLoop isn't original continueLoop, return false
 						return false;
 					}
 					
@@ -227,6 +229,67 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		}
 	}
 	
+	/**
+	 * Arcade drive designed for turning.
+	 * Arguments are: angle in double, int of how long to wait to see if in correct spot, Long value for timeout.
+	 * @author Cool, but probably Trevor, yet more likely Joel
+	 *
+	 */
+	// Mainly the same commenting as above DriveStraight
+	public static class Turn implements RuntimeCommand {
+		@Override
+		public Command getCommand(List<String> args) {
+			double angle = Double.parseDouble(args.get(0));
+			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10;
+			long timeout = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000;
+			
+			return new LoopingCommandWithTimeout(new Timeout(timeout)) {
+				int correctIterations = 0;
+				
+				@Override
+				public boolean continueLoop() {
+					if (!super.continueLoop()) {
+						return false;
+					}
+					
+					if (turnPID.isEnabled() && turnPID.onTarget()) {
+						Logging.logf("error", turnPID.getError());
+						Logging.logf("threshold", turnPID.getTolerance());
+						correctIterations++;
+					} else {
+						correctIterations = 0;
+					}
+					
+					return correctIterations < threshold;
+				}
+				
+				@Override
+				public void firstLoop() {
+					navx.reset();
+					turnPID.setSetpoint(angle);
+					turnPID.enable();
+					Logging.log("turn started");
+				}
+				
+				@Override
+				public void runLoop() {
+					synchronized (turnPID) {
+						try {
+							turnPID.wait(20);
+						} catch (InterruptedException e) {} //no? (look at 2017)
+					}
+					drivetrain.arcadeDrive(0, turningOutput.get()); // Turns it by the turningOutput, but doesn't move.
+						Logging.put("Turning Error", turnPID.getError());
+				}
+				
+				@Override
+				public void end() {
+					Logging.log("turn ended");
+					turnPID.disable();
+				}
+			};
+		}
+	}
 	
 	/**
 	 * Takes arguments for setting the arm
