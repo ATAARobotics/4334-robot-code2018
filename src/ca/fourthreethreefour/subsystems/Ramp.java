@@ -9,6 +9,8 @@ import edu.first.module.subsystems.Subsystem;
 
 public interface Ramp extends Settings {
 
+	//TODO Redo Ramp. (2 more ground ports, 2 rope release solenoids)
+	
 	TalonSRXModule //Creates a TalonSRXModule for the left side and right
 		leftRamp = new TalonSRXModule(RAMP_LEFT),	//not sure if having it as just left and right would be a conflict with drive, just incase
 		rightRamp = new TalonSRXModule(RAMP_RIGHT);

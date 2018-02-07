@@ -24,11 +24,13 @@ public interface Settings {
 	int DRIVE_RIGHT_1 = settingsFile.getIntProperty("DRIVE_RIGHT_1", 4);
 	int DRIVE_RIGHT_2 = settingsFile.getIntProperty("DRIVE_RIGHT_2", 5);
 	int DRIVE_RIGHT_3 = settingsFile.getIntProperty("DRIVE_RIGHT_3", 6);
+	//TODO Update to 4 ports (2 ports each)
 	
 	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 7);
 	
 	int RAMP_LEFT = settingsFile.getIntProperty("RAMP_LEFT", 8);
 	int RAMP_RIGHT = settingsFile.getIntProperty("RAMP_RIGHT", 9);
+	//TODO Redo Ramp. (2 more ground ports, 2 rope release solenoids)
 	int RAMP_RELEASE_SPEED = settingsFile.getIntProperty("RAMP_RELEASE_SPEED", 1);
 	int RAMP_RETRACT_SPEED = settingsFile.getIntProperty("RAMP_RETRACT_SPEED", -1);
 	

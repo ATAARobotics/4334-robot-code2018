@@ -97,9 +97,12 @@ public class Robot extends IterativeRobotAdapter {
 				}
 			});
         
+		//TODO LEFT_BUMPER LOW_GEAR, RIGHT_BUMPER HIGH_GEAR
+		
 		// Controller 2/operator
 		// When left bumper is pressed, it reverses the grabSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(grabSolenoid));
+		//TODO LEFT_BUMPER close, RIGHt_BUMBER open
 		
 		// When right bumper is pressed, it reverses the armSolenoid
 		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(armSolenoid));
@@ -108,7 +111,8 @@ public class Robot extends IterativeRobotAdapter {
 		//When the B button is pressed, changes the solenoid state to right
 		controller2.addWhenPressed(XboxController.A, new SolenoidLeft(gearShifter)); 
 		controller2.addWhenPressed(XboxController.B, new SolenoidRight(gearShifter)); 
-
+		//TODO B Extend, A Retract
+		
 		// Sets a deadband to prevent input less than 0.1
 		controller2.addDeadband(XboxController.LEFT_TRIGGER, 0.1);
 		controller2.addDeadband(XboxController.RIGHT_TRIGGER, 0.1);
