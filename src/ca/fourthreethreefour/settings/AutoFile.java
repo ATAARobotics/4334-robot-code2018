@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 // TODO Comment all them code please
 // TODO Formattings
-// TODO Add backup code incase values not set. Use Wait as an example
 
 public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	
@@ -41,9 +40,10 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * and the value being an instance of the command you wish to run when that string is found. 
 	 * 
 	 */
-		static { //TODO Add drive commands. Current commands that 2017 had that isn't here is 'drivedistance'
+		static {
 			COMMANDS.put("print", new Print());
 			COMMANDS.put("blindDrive", new BlindDrive());
+	        COMMANDS.put("driveDistance", new DriveDistance());
 	        COMMANDS.put("driveStraight", new DriveStraight());
 	        COMMANDS.put("turn", new Turn());
 	        COMMANDS.put("stop", new Stop());
@@ -163,6 +163,70 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	}
 	
 	/**
+	 * DriveStraight command without sensor input. Easier to use than BlindDrive, but not as easy as DriveStraight.
+	 * Use only if the sensors are broken.
+	 * Arguments are: int distance, double compensation, int threshold, time.
+	 * @author Cool, but most certainly by Trevor or Joel
+	 *
+	 */
+	// Very similar to DriveStraight below. Check that for comments.
+	private static class DriveDistance implements RuntimeCommand {
+		@Override
+		public Command getCommand(List<String> args) {
+			int distance = Integer.parseInt(args.get(0));
+			double compensation = Double.parseDouble(args.get(1));
+			final int threshold = args.size() > 2 ? Integer.parseInt(args.get(2)) : 10;
+			long time = args.size() > 3 ? Integer.parseInt(args.get(3)) : 8000;
+			
+			return new LoopingCommandWithTimeout(new Timeout(time)) {
+				int correctIterations = 0;
+				
+				@Override
+				public boolean continueLoop() {
+					if (!super.continueLoop()) {
+						return false;
+					}
+					
+					if (distancePID.isEnabled() && distancePID.onTarget()) {
+						correctIterations++;
+						Logging.logf("error", distancePID.getError());
+						Logging.logf("threshold", distancePID.getTolerance());
+					} else {
+						correctIterations = 0;
+					}
+					
+					return correctIterations < threshold;
+				}
+				
+				@Override
+				public void firstLoop() {
+					distancePID.setSetpoint(distance);
+					distancePID.enable();
+					Logging.log("drivedistance started");
+				}
+				
+				@Override
+				public void runLoop() {
+					try {
+						distancePID.wait(20);
+					} catch (InterruptedException e) {}
+					Logging.put("Distance Error", distancePID.getError());
+					double output = speedOutput.get();
+					drivetrain.set(output + compensation, output - compensation);
+				}
+				
+				@Override
+				public void end() {
+					distancePID.disable();
+					leftEncoder.reset();
+					rightEncoder.reset();
+					Logging.log("drivedistance ended");
+				}
+			};
+		}
+	}
+	
+	/**
 	 * Arcade drive designed for going straight.
 	 * Arguments are: value of int distance, int of how long to wait to see if in correct spot, long value for timeout, and double for speed.
 	 * @author Cool, but probably Trevor, yet more likely Joel
@@ -174,10 +238,10 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		public Command getCommand(List<String> args) {
 			int distance = Integer.parseInt(args.get(0)); // Sets distance to the first arg
 			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10; // If there is more than one argument (.size) then grabs the value, else by default it's 10
-			long timeout = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000; // Same as above. L at the end of 8000 sets it to long.
+			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000; // Same as above. L at the end of 8000 sets it to long.
 			double speed = args.size() > 3 ? Double.parseDouble(args.get(3)) : 1; // Same as above, but for speed.
 			
-			return new LoopingCommandWithTimeout(new Timeout(timeout)) {
+			return new LoopingCommandWithTimeout(new Timeout(time)) {
 				int correctIterations = 0;
 				
 				@Override
@@ -247,9 +311,9 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		public Command getCommand(List<String> args) {
 			double angle = Double.parseDouble(args.get(0));
 			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10;
-			long timeout = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000;
+			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000;
 			
-			return new LoopingCommandWithTimeout(new Timeout(timeout)) {
+			return new LoopingCommandWithTimeout(new Timeout(time)) {
 				int correctIterations = 0;
 				
 				@Override
@@ -394,6 +458,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * @author Cool, with reference from last year
 	 *
 	 */
+	
+	//TODO Update for Drive.java
 	private static class SetGear implements RuntimeCommand, Arm {
         @Override
         public Command getCommand(List<String> args) {
@@ -404,13 +470,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
         	return new Command() {
         		@Override
               	public void run() {
-        			/*if (gear == "low") {
-        				Arm.gearShifter.set(LOW_GEAR);
-        			} else if (gear == "high") {
-        				Arm.gearShifter.set(HIGH_GEAR);
-        			} else { // backup incase error in inputting command
-        				Arm.gearShifter.set(Direction.OFF);
-        			} */
         			switch (gear) {
         			case "low": Arm.gearShifter.set(LOW_GEAR);
         				break;
