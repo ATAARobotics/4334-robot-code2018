@@ -113,7 +113,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			}
 
 			if (timeout.done()) {
-				Logging.log("command timed out");
+				Logging.log("Command timed out");
 			}
 			return !timeout.done();
 		}
@@ -155,7 +155,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	private static class BlindDrive implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {
-			double left = Double.parseDouble(args.get(0)), right = Double.parseDouble(args.get(1));
+			double left = Double.parseDouble(args.get(0)),
+					right = Double.parseDouble(args.get(1));
 			long time = Long.parseLong(args.get(2));
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
 				@Override
@@ -176,10 +177,12 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * but not as easy as DriveStraight. Use only if the sensors are broken.
 	 * Arguments are: int distance, double compensation, int threshold, time.
 	 * 
-	 * @author Cool, but most certainly by Trevor or Joel
+	 * @author Cool, but originally either Trevor or Joel
+	 * @since 2017
 	 *
 	 */
 	// Very similar to DriveStraight below. Check that for comments.
+	//TODO Replace compensation with individual left and right values
 	private static class DriveDistance implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {
@@ -212,7 +215,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				public void firstLoop() {
 					distancePID.setSetpoint(distance);
 					distancePID.enable();
-					Logging.log("drivedistance started");
+					Logging.log("DriveDistance Started");
 				}
 
 				@Override
@@ -231,7 +234,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					distancePID.disable();
 					leftEncoder.reset();
 					rightEncoder.reset();
-					Logging.log("drivedistance ended");
+					Logging.log("DriveDistance Ended");
 				}
 			};
 		}
@@ -242,7 +245,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * distance, int of how long to wait to see if in correct spot, long value for
 	 * timeout, and double for speed.
 	 * 
-	 * @author Cool, but probably Trevor, yet more likely Joel
+	 * @author Cool, but originally either Trevor or Joel
+	 * @since 2017
 	 *
 	 */
 
@@ -250,12 +254,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 			int distance = Integer.parseInt(args.get(0)); // Sets distance to the first arg
-			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10; // If there is more than one
-																						// argument (.size) then grabs
-																						// the value, else by default
-																						// it's 10
-			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000; // Same as above. L at the end of 8000
-																				// sets it to long.
+			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10; // If there is more than one argument (.size) then grabs the value, else by default it's 10
+			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000; // Same as above.
 			double speed = args.size() > 3 ? Double.parseDouble(args.get(3)) : 1; // Same as above, but for speed.
 
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
@@ -288,9 +288,9 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 					double angle = navx.getAngle(); // Sets angle to the current angle.
 					turnPID.setSetpoint(angle); // Sets the angle
-					turnPID.setSetpoint(angle); // Enables the turn PID
+					turnPID.setSetpoint(angle); // Enables the turn PID TODO Fix
 
-					Logging.logf("drivestraight setpoint", distancePID.getSetpoint());
+					Logging.logf("DriveStraight Setpoint", distancePID.getSetpoint());
 				}
 
 				@Override
@@ -304,13 +304,12 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 					Logging.put("Distance Error", distancePID.getError());
 					drivetrain.arcadeDrive(speedOutput.get() * speed, turningOutput.get());
-					// Sets speed and turn to speedOutput and turningOutput. Unsure where values are
-					// set
+					// Sets speed and turn to speedOutput and turningOutput. These values are set by the PID controllers.
 				}
 
 				@Override
 				public void end() {
-					Logging.log("drivestraight ended");
+					Logging.log("DriveStraight Ended");
 					distancePID.disable();
 					turnPID.disable();
 				}
@@ -322,7 +321,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * Arcade drive designed for turning. Arguments are: angle in double, int of how
 	 * long to wait to see if in correct spot, Long value for timeout.
 	 * 
-	 * @author Cool, but probably Trevor, yet more likely Joel
+	 * @author Cool, but originally either Trevor or Joel
+	 * @since 2017
 	 *
 	 */
 	// Mainly the same commenting as above DriveStraight
@@ -358,7 +358,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					navx.reset();
 					turnPID.setSetpoint(angle);
 					turnPID.enable();
-					Logging.log("turn started");
+					Logging.log("Turn Started");
 				}
 
 				@Override
@@ -366,8 +366,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					synchronized (turnPID) {
 						try {
 							turnPID.wait(20);
-						} catch (InterruptedException e) {
-						} // no? (look at 2017)
+						} catch (InterruptedException e) {} // no? (look at 2017)
 					}
 					drivetrain.arcadeDrive(0, turningOutput.get()); // Turns it by the turningOutput, but doesn't move.
 					Logging.put("Turning Error", turnPID.getError());
@@ -375,7 +374,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 				@Override
 				public void end() {
-					Logging.log("turn ended");
+					Logging.log("Turn Ended");
 					turnPID.disable();
 				}
 			};
@@ -385,7 +384,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	/**
 	 * Stops the bot
 	 * 
-	 * @author Cool, but likely either Trevor, or more likely Joel
+	 * @author Cool, but originally either Trevor or Joel
+	 * @since 2017
 	 *
 	 */
 	private static class Stop implements RuntimeCommand {
@@ -398,7 +398,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	/**
 	 * Waits with set value (double) ticks?
 	 * 
-	 * @author Cool, but likely either Trevor, or more likely Joel
+	 * @author Cool, but originally either Trevor or Joel
+	 * @since 2017
 	 *
 	 */
 	private static class Wait implements RuntimeCommand {
@@ -419,6 +420,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * way. End to end autonomous for the start of teleop.
 	 * 
 	 * @author Cool, but really either Trevor or Joel
+	 * @since 2017
 	 *
 	 */
 	private static class WaitUntil implements RuntimeCommand {
@@ -430,10 +432,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 				@Override
 				public void run() {
-					// getMatchTime gives the time left in the current period, not how much time has
-					// passed.
-					// That is why it's 15 - *.getMatchTime(), if the time left was 14, then it
-					// would be 1 second gone.
+					// getMatchTime gives the time left in the current period, not how much time has passed.
+					// That is why it's 15 - *.getMatchTime(), if the time left was 14, then it would be 1 second gone.
 					while (15 - DriverStation.getInstance().getMatchTime() < time) {
 						drivetrain.stopMotor();
 					}
@@ -443,14 +443,17 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	}
 
 	/**
-	 * Takes arguments for setting the arm If 'open', then grabSolenoid will be set
-	 * to GRAB_OPEN If 'close', then grabSolenoid will be set to GRAB_OPEN If
-	 * 'extend', then armSolenoid will be set to ARM_EXTEND If 'retract', then
-	 * armSolenoid will be set to ARM_RETRACT
+	 * Takes arguments for setting the arm.
+	 * If 'open', then grabSolenoid will be set to GRAB_OPEN. 
+	 * If 'close', then grabSolenoid will be set to GRAB_OPEN.
+	 * If 'extend', then armSolenoid will be set to ARM_EXTEND.
+	 * If 'retract', then armSolenoid will be set to ARM_RETRACT
 	 * 
 	 * @author Cool
+	 * @since 2018
 	 *
 	 */
+	//TODO Make them actually throw errors to prevent running a command without arguments.
 	private static class SetArm implements RuntimeCommand, Arm {
 		@Override
 		public Command getCommand(List<String> args) {
@@ -484,21 +487,19 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	}
 
 	/**
-	 * Takes arguments for setting the gear. If 'low', then gearShifter will be set
-	 * to LOW_GEAR. If 'high', then gearShifter will be set to HIGH_GEAR.
+	 * Takes arguments for setting the gear.
+	 * If 'low', then gearShifter will be set to LOW_GEAR.
+	 * If 'high', then gearShifter will be set to HIGH_GEAR.
 	 * 
-	 * @author Cool, with reference from last year
+	 * @author Cool
+	 * @since 2018
 	 *
 	 */
 
-	// TODO Update for Drive.java
 	private static class SetGear implements RuntimeCommand, Drive {
 		@Override
 		public Command getCommand(List<String> args) {
-			// boolean speed = Boolean.parseBoolean(args.get(0));
-			String gear = (args.get(0)).toLowerCase(); // Sets speed to the args 0 (arrays start at 0 I do believe)
-			// Sets gear to the args 0 (arrays start at 0 I do believe)
-			// And sets it to lowercase so that no conflicts in capitalization.
+			String gear = (args.get(0)).toLowerCase(); // Sets gear to the args 0 (arrays start at 0 I do believe) and sets it to lowercase so that no conflicts in capitalization.
 			return new Command() {
 				@Override
 				public void run() {
@@ -523,13 +524,16 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	}
 
 	/**
-	 * Turn the arm with set speed for set time. First argument is speed between -1
-	 * and 1. Second argument is time that it will last for.
+	 * Turn the arm with set speed for set time.
+	 * First argument is speed that the arm will turn at between -1 and 1.
+	 * Second argument is time that it will last for.
 	 * 
 	 * @author Cool, with reference to last year.
+	 * @since 2018
 	 *
 	 */
 
+	//TODO May be getting a sensor for this motor. Would require another PID controller.
 	private static class TurnArm implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {

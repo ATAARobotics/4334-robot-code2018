@@ -49,7 +49,7 @@ public interface Drive extends Settings {
 		};
 		// TODO decide if we need a function for turning, and add it if we do
 	
-	// Creates subsystem called drive, with Modules drivetrain, left, and right.
+	// Creates subsystem called drive, with Modules drivetrain, left, right, and gearShifter
 	public Subsystem drive = new Subsystem(new Module[] { drivetrain, left, right, gearShifter });
 
 }
