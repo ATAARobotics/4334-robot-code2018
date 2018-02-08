@@ -25,15 +25,15 @@ public class Robot extends IterativeRobotAdapter {
 	// Puts the above two subsystems into this subsystem. Subsystemception!
 	private final Subsystem ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 
-	/*
+	/* 
 	 * The current instance of the driver station. Needed in order to send and
 	 * receive information (not controller inputs) from the driver station.
 	 */
 	DriverStation ds = DriverStation.getInstance();
 
 	/*
-	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter
-	 * requires a string for some reason. TODO Name the robot!
+	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter requires a string for some reason.
+	 * TODO Name the robot!
 	 */
 	public Robot() {
 		super("ATA 2018");
@@ -169,10 +169,10 @@ public class Robot extends IterativeRobotAdapter {
 		TELEOP_MODULES.enable();
 		drivetrain.setSafetyEnabled(true); // Maybe we do...
 		/*
-		 * If any of these solenoids are are in the OFF position, set them to a default
-		 * position. Necessary because most of our code for operating solenoids reverses
-		 * them, which cannot be done for solenoids in the OFF position. TODO check
-		 * which positions these solenoids should be set to when initiating teleop
+		 * If any of these solenoids are are in the OFF position, set them to a default position.
+		 * Necessary because most of our code for operating solenoids reverses them,
+		 * which cannot be done for solenoids in the OFF position.
+		 * TODO check which positions these solenoids should be set to when initiating teleop
 		 */
 		if (grabSolenoid.get() == Direction.OFF) {
 			grabSolenoid.set(GRAB_OPEN);
