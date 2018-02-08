@@ -475,11 +475,11 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						Arm.armSolenoid.set(ARM_RETRACT);
 						break;
 					case "":
-						System.out.println("Error in SetArm: No direction set");
-						break;
+						//System.out.println("Error in SetArm: No direction set");
+						throw new Error("Error in SetArm: No direction set");
 					default:
-						System.out.println("Error in SetArm: Direction set incorrectly");
-						break;
+						//System.out.println("Error in SetArm: Direction set incorrectly");
+						throw new Error("Error in SetArm: Direction set incorrectly");
 					}
 				}
 			};
@@ -511,12 +511,12 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						Drive.gearShifter.set(HIGH_GEAR);
 						break;
 					case "":
-						System.out.println("Error in SetGear: No gear set");
+						//System.out.println("Error in SetGear: No gear set");
 						Drive.gearShifter.set(Direction.OFF);
-						break;
+						throw new Error("Error in SetGear: No gear set");
 					default:
-						System.out.println("Error in SetGear: Gear set incorrectly");
-						break;
+						//System.out.println("Error in SetGear: Gear set incorrectly");
+						throw new Error("Error in SetGear: Gear set incorrectly");
 					}
 				}
 			};
