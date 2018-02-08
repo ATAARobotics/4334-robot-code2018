@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import ca.fourthreethreefour.Robot;
 import ca.fourthreethreefour.commands.CommandGroupFactory;
 import ca.fourthreethreefour.commands.debug.Logging;
@@ -19,6 +21,8 @@ import edu.first.command.Command;
 import edu.first.commands.CommandGroup;
 import edu.first.commands.common.LoopingCommand;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
+import edu.first.module.sensors.Encoder;
+import edu.first.module.sensors.EncoderModule;
 import edu.wpi.first.wpilibj.DriverStation;
 
 // TODO Comment all them code please
