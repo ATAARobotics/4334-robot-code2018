@@ -256,7 +256,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			int distance = Integer.parseInt(args.get(0)); // Sets distance to the first arg
 			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10; // If there is more than one argument (.size) then grabs the value, else by default it's 10
 			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000; // Same as above.
-			double speed = args.size() > 3 ? Double.parseDouble(args.get(3)) : 1; // Same as above, but for speed.
+			double speed = args.size() > 3 ? Double.parseDouble(args.get(3)) : 1; // Used as a coefficient for speedOutput
 
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
 				int correctIterations = 0;
@@ -288,7 +288,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 					double angle = navx.getAngle(); // Sets angle to the current angle.
 					turnPID.setSetpoint(angle); // Sets the angle
-					turnPID.setSetpoint(angle); // Enables the turn PID TODO Fix
+					turnPID.enable(); // Enables the turn PID
 
 					Logging.logf("DriveStraight Setpoint", distancePID.getSetpoint());
 				}
