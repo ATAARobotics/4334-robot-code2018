@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.swing.DebugGraphics;
+
+import com.kauailabs.navx.frc.AHRS;
+
 import ca.fourthreethreefour.Robot;
 import ca.fourthreethreefour.commands.CommandGroupFactory;
 import ca.fourthreethreefour.commands.debug.Logging;
@@ -22,6 +26,8 @@ import edu.first.commands.common.LoopingCommand;
 import edu.first.commands.common.SetOutput;
 import edu.first.commands.common.WaitCommand;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
+import edu.first.module.sensors.Encoder;
+import edu.first.module.sensors.EncoderModule;
 import edu.wpi.first.wpilibj.DriverStation;
 
 // TODO Fix the spelling and capitalization.
@@ -52,6 +58,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		COMMANDS.put("setGear", new SetGear());
 		COMMANDS.put("setArm", new SetArm());
 		COMMANDS.put("turnArm", new TurnArm());
+		COMMANDS.put("driveupto", new DriveUpTo());
 	}
 
 	/**
@@ -554,7 +561,69 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			};
 		}
 	}
-
+	
+	/*
+	 * An attempt at using sensors to drive
+	 * Drives up to an object in front of the robot
+	 * @author Aidan
+	 */
+	
+	private static class DriveUpTo implements RuntimeCommand {
+		@Override
+		public Command getCommand(List<String> args) {
+			Double speed = Double.parseDouble(args.get(0));
+			Double Distance = Double.parseDouble(args.get(1));
+			return new LoopingCommand() {
+				
+				String direction = "";
+				
+				@Override
+				public void runLoop() {
+					switch (direction.toLowerCase()) {
+					case "straight":
+						drivetrain.tankDrive(speed, speed);
+						break;
+					case "left":
+						drivetrain.tankDrive(-speed, speed);
+						break;
+					case "right":
+						drivetrain.tankDrive(speed, -speed);
+						break;
+					case "":
+						throw new Error ("Error in DriveUpTo: unable to determine direction");
+						break;
+					default:
+						throw new Error ("Error in DriveUpTo: direction broke");
+						break;
+					}
+				}
+				
+				@Override
+				public boolean continueLoop() {
+					if (leftEncoder.get() > Distance && rightEncoder.get() > Distance) {
+						direction = "straight";
+						return true;
+					}
+					else if (leftEncoder.get() > Distance && rightEncoder.get() <= Distance) {
+						direction = "left";
+						return true;
+					}
+					else if (leftEncoder.get() <= Distance && leftEncoder.get() > Distance) {
+						direction = "right";
+						return true;
+					}
+					else
+						return false;
+				}
+				
+				@Override
+				public void end() {
+					drivetrain.stopMotor();
+				}
+			};
+		}
+	}
+	
 	// End of commands section
 
 	// TODO Comment this section
@@ -562,7 +631,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * A set of two strings, key and value. Used to store commands.
 	 * 
 	 */
-	public static class Entry {
+c	public static class Entry {
 		final String key, value;
 
 		public Entry(String key, String value) {
