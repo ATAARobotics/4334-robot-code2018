@@ -182,7 +182,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 *
 	 */
 	// Very similar to DriveStraight below. Check that for comments.
-	//TODO Replace compensation with individual left and right values
+	//TODO Might want to replace compensation with individual left and right values later.
 	private static class DriveDistance implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {
@@ -453,7 +453,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * @since 2018
 	 *
 	 */
-	//TODO Make them actually throw errors to prevent running a command without arguments.
 	private static class SetArm implements RuntimeCommand, Arm {
 		@Override
 		public Command getCommand(List<String> args) {
