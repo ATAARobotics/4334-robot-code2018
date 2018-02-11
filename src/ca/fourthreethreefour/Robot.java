@@ -4,6 +4,7 @@ import ca.fourthreethreefour.commands.RampRetract;
 import ca.fourthreethreefour.commands.SolenoidLeft;
 import ca.fourthreethreefour.commands.SolenoidRight;
 import edu.first.command.Command;
+import edu.first.command.Commands;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
@@ -132,9 +133,27 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor);
 	}
 
+	private Command commandLRL;
+	private Command commandRLR;
+	private Command commandLLL;
+	private Command commandRRR;
+	
 	@Override
 	public void periodicDisabled() {
-		// TODO Robot should check settings file here
+		
+		/*if (AUTO_TYPE == "") { return; }
+		try {
+			autoCommand = new AutoFile(new File(AUTO_TYPE + ".txt")).toCommand();
+		} catch (IOException e) {
+			throw new Error(e.getMessage());
+		}
+		
+		Timer.delay(1);*/
+		/* 
+		 * TODO Set up above for each of the four states.
+		 * There must be an easy way other than just copy pasting 4 times.
+		 * TODO Robot should check settings file here.
+		 */
 
 	}
 
@@ -144,8 +163,25 @@ public class Robot extends IterativeRobotAdapter {
 		AUTO_MODULES.enable();
 		// Gets game-specific information (switch and scale orientations) from FMS.
 		// TODO use this in selecting autonomous routine
-		ds.getGameSpecificMessage();
+		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
+		if(gameData.length() > 0)
+		{
+			switch (gameData) {
+			case "LRL":
+				Commands.run(commandLRL);
+				break;
+			case "RLR":
+				Commands.run(commandRLR);
+				break;
+			case "LLL":
+				Commands.run(commandLLL);
+				break;
+			case "RRR":
+				Commands.run(commandRRR);
+				break;
+			}
+		}
 	}
 
 	// Runs at the end of autonomous
