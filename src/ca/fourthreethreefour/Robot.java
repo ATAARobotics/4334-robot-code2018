@@ -1,5 +1,6 @@
 package ca.fourthreethreefour;
 
+import ca.fourthreethreefour.commands.RampRetract;
 import ca.fourthreethreefour.commands.SolenoidLeft;
 import ca.fourthreethreefour.commands.SolenoidRight;
 import edu.first.command.Command;
@@ -71,19 +72,9 @@ public class Robot extends IterativeRobotAdapter {
 
 		});
 
-		leftRampRetractionBind = new WhilePressed(controller1.getX(), new Command() {
-			@Override
-			public void run() {
-				leftRamp.arcadeDrive(RAMP_RETRACT_SPEED, 0);
-			}
-		});
-
-		rightRampRetractionBind = new WhilePressed(controller1.getY(), new Command() {
-			@Override
-			public void run() {
-				rightRamp.arcadeDrive(RAMP_RETRACT_SPEED, 0);
-			}
-		});
+		// Creates a bind to be used, with button and command RampRetract
+		leftRampRetractionBind = new WhilePressed(controller1.getX(), new RampRetract(leftRamp));
+		rightRampRetractionBind = new WhilePressed(controller1.getY(), new RampRetract(rightRamp));
 
 		/*
 		 * When X/Y is pressed first time, set respective Release solenoid to true
