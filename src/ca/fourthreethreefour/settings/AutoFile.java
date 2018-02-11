@@ -10,24 +10,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.swing.DebugGraphics;
-
-import com.kauailabs.navx.frc.AHRS;
-
 import ca.fourthreethreefour.Robot;
 import ca.fourthreethreefour.commands.CommandGroupFactory;
 import ca.fourthreethreefour.commands.debug.Logging;
 import ca.fourthreethreefour.subsystems.Arm;
-import ca.fourthreethreefour.subsystems.DriveSensors;
 import ca.fourthreethreefour.subsystems.Drive;
+import ca.fourthreethreefour.subsystems.DriveSensors;
 import edu.first.command.Command;
 import edu.first.commands.CommandGroup;
 import edu.first.commands.common.LoopingCommand;
 import edu.first.commands.common.SetOutput;
 import edu.first.commands.common.WaitCommand;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
-import edu.first.module.sensors.Encoder;
-import edu.first.module.sensors.EncoderModule;
 import edu.wpi.first.wpilibj.DriverStation;
 
 // TODO Fix the spelling and capitalization.
@@ -591,10 +585,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						break;
 					case "":
 						throw new Error ("Error in DriveUpTo: unable to determine direction");
-						break;
 					default:
 						throw new Error ("Error in DriveUpTo: direction broke");
-						break;
 					}
 				}
 				
@@ -631,7 +623,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * A set of two strings, key and value. Used to store commands.
 	 * 
 	 */
-c	public static class Entry {
+	public static class Entry {
 		final String key, value;
 
 		public Entry(String key, String value) {
