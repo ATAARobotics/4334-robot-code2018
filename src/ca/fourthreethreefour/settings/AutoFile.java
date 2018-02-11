@@ -52,7 +52,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		COMMANDS.put("setGear", new SetGear());
 		COMMANDS.put("setArm", new SetArm());
 		COMMANDS.put("turnArm", new TurnArm());
-		COMMANDS.put("driveupto", new DriveUpTo());
+		//COMMANDS.put("driveupto", new DriveUpTo());
 	}
 
 	/**
@@ -561,8 +561,9 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * Drives up to an object in front of the robot
 	 * @author Aidan
 	 */
+	// Commented out until we actually have the sensors. Don't want it to accidentlly be called upon, and break the code.
 	
-	private static class DriveUpTo implements RuntimeCommand {
+	/*private static class DriveUpTo implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {
 			Double speed = Double.parseDouble(args.get(0));
@@ -614,7 +615,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				}
 			};
 		}
-	}
+	}*/
 	
 	// End of commands section
 
