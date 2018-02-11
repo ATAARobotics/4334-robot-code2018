@@ -1,8 +1,12 @@
 package ca.fourthreethreefour;
 
+import java.io.File;
+import java.io.IOException;
+
 import ca.fourthreethreefour.commands.RampRetract;
 import ca.fourthreethreefour.commands.SolenoidLeft;
 import ca.fourthreethreefour.commands.SolenoidRight;
+import ca.fourthreethreefour.settings.AutoFile;
 import edu.first.command.Command;
 import edu.first.command.Commands;
 import edu.first.module.Module;
@@ -13,6 +17,7 @@ import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends IterativeRobotAdapter {
 
@@ -141,14 +146,14 @@ public class Robot extends IterativeRobotAdapter {
 	@Override
 	public void periodicDisabled() {
 		
-		/*if (AUTO_TYPE == "") { return; }
+		if (AUTO_TYPE == "") { return; }
 		try {
-			autoCommand = new AutoFile(new File(AUTO_TYPE + ".txt")).toCommand();
+			commandLRL = new AutoFile(new File("LRL" + AUTO_TYPE + ".txt")).toCommand();
 		} catch (IOException e) {
 			throw new Error(e.getMessage());
 		}
 		
-		Timer.delay(1);*/
+		Timer.delay(1);
 		/* 
 		 * TODO Set up above for each of the four states.
 		 * There must be an easy way other than just copy pasting 4 times.
