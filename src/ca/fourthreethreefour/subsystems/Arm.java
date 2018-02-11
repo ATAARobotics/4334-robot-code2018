@@ -16,12 +16,11 @@ public interface Arm extends Settings {
 	 */
 	DualActionSolenoidModule 
 		grabSolenoid = new DualActionSolenoidModule(GRAB_SOLENOID_1, GRAB_SOLENOID_2),
-		gearShifter = new DualActionSolenoidModule(GEAR_SHIFTER_SOLENOID_1, GEAR_SHIFTER_SOLENOID_2),
 		armSolenoid = new DualActionSolenoidModule(ARM_SOLENOID_1, ARM_SOLENOID_2);
 	
 	VictorModule armMotor = new VictorModule(ARM_MOTOR);
 	// Creates subsystem of above for use in Robot.java
-	Subsystem arm = new Subsystem(new Module[] {  grabSolenoid, gearShifter, armSolenoid, armMotor });
+	Subsystem arm = new Subsystem(new Module[] {  grabSolenoid, armSolenoid, armMotor });
 
 	/*
 	 *  Creates two direction (functions?) that can be used in Autonomous for easy setting of their solenoid.
@@ -30,10 +29,6 @@ public interface Arm extends Settings {
 	DualActionSolenoid.Direction GRAB_CLOSE = Direction.LEFT;
 	DualActionSolenoid.Direction GRAB_OPEN = Direction.RIGHT;
 	// grabSolenoid ^
-	
-	DualActionSolenoid.Direction LOW_GEAR = Direction.LEFT;
-	DualActionSolenoid.Direction HIGH_GEAR = Direction.RIGHT;
-	// gearShifter ^
 	
 	DualActionSolenoid.Direction ARM_EXTEND = Direction.LEFT;
 	DualActionSolenoid.Direction ARM_RETRACT = Direction.RIGHT;	
