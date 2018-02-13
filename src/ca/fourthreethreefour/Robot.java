@@ -149,17 +149,13 @@ public class Robot extends IterativeRobotAdapter {
 		if (AUTO_TYPE == "") { return; }
 		try {
 			commandLRL = new AutoFile(new File("LRL" + AUTO_TYPE + ".txt")).toCommand();
+			commandRLR = new AutoFile(new File("RLR" + AUTO_TYPE + ".txt")).toCommand();
+			commandLLL = new AutoFile(new File("LLL" + AUTO_TYPE + ".txt")).toCommand();
+			commandRRR = new AutoFile(new File("RRR" + AUTO_TYPE + ".txt")).toCommand();
 		} catch (IOException e) {
 			throw new Error(e.getMessage());
 		}
-		
 		Timer.delay(1);
-		/* 
-		 * TODO Set up above for each of the four states.
-		 * There must be an easy way other than just copy pasting 4 times.
-		 * TODO Robot should check settings file here.
-		 */
-
 	}
 
 	// Runs at the beginning of autonomous
@@ -167,11 +163,9 @@ public class Robot extends IterativeRobotAdapter {
 	public void initAutonomous() {
 		AUTO_MODULES.enable();
 		// Gets game-specific information (switch and scale orientations) from FMS.
-		// TODO use this in selecting autonomous routine
 		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
-		if(gameData.length() > 0)
-		{
+		if(gameData.length() > 0) {
 			switch (gameData) {
 			case "LRL":
 				Commands.run(commandLRL);
