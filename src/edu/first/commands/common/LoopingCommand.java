@@ -9,17 +9,40 @@ import edu.first.command.Command;
  * @author Joel Gallant
  */
 public abstract class LoopingCommand implements Command {
+    private boolean first = true;
 
     /**
-     * Runs {@link #runLoop()} until {@link #continueLoop()} returns false.
+     * Runs {@link #firstLoop()}, then runs {@link #runLoop()} until
+     * {@link #continueLoop()} returns false.
      */
     @Override
     public final void run() {
         while (continueLoop()) {
-            runLoop();
+            if (first) {
+                first = false;
+                try {
+                    /*
+                     *  This checks if the firstLoop method has been overwritten by a subclass. 
+                     *  If firstLoop has not been overwritten, it will run a default runLoop iteration.
+                     */
+                    if (this.getClass().getMethod("firstLoop").getDeclaringClass().getTypeName().endsWith("LoopingCommand")) {
+                        runLoop();
+                    } else {
+                        firstLoop();
+                    }
+                } catch (NoSuchMethodException | SecurityException e1) {
+                    throw new RuntimeException(e1);
+                }
+            } else {
+                runLoop();
+            }
         }
+        
         end();
     }
+
+    public void firstLoop() {}
+    public void end() {}
 
     /**
      * Returns whether the loop should run again.
@@ -32,6 +55,4 @@ public abstract class LoopingCommand implements Command {
      * Runs the actual instructions of the command.
      */
     public abstract void runLoop();
-    
-    public abstract void end();
 }
