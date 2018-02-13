@@ -104,9 +104,8 @@ public class Robot extends IterativeRobotAdapter {
 		});
 
 		// TODO Set to right direction
-		// TODO LEFT_BUMPER LOW_GEAR, RIGHT_BUMPER HIGH_GEAR
-		// When the LEFT_BUMPER is pressed, changes the solenoid state to low
-		// When the RIGHT_BUMPER is pressed, changes the solenoid state to high
+		// When the LEFT_BUMPER is pressed, changes the solenoid state to low gear
+		// When the RIGHT_BUMPER is pressed, changes the solenoid state to high gear
 		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidLeft(gearShifter));
 		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidRight(gearShifter));
 
@@ -115,14 +114,12 @@ public class Robot extends IterativeRobotAdapter {
 		 */
 
 		// TODO Set to right direction
-		// TODO LEFT_BUMPER close, RIGHT_BUMBER open
 		// When left bumper is pressed, it closes the grabSolenoid
 		// When right bumper is pressed, it opens the grabSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidLeft(grabSolenoid));
 		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidRight(grabSolenoid));
 
 		// TODO Set to right direction
-		// TODO B Extend, A Retract
 		// When the B button is pressed, it extends the armSolenoid
 		// When the A button is pressed, it retracts the armSolenoid
 		controller2.addWhenPressed(XboxController.B, new SolenoidLeft(armSolenoid));
