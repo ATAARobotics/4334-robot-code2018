@@ -20,19 +20,14 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 		this(new WPI_TalonSRX(channel));
 	}
 
-	/**
-	 * @deprecated
-	 */
 	@Override
 	public void setSpeed(double speed) {
 		talon.set(speed);
 	}
 
-	/**
-	 * @deprecated
-	 */
 	@Override
 	public void setRawSpeed(int speed) {
+		talon.set((speed - 127) / 127);
 	}
 
 	@Override
@@ -40,26 +35,18 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 		return talon.get();
 	}
 
-	/**
-	 * @deprecated
-	 */
 	@Override
 	public int getRawSpeed() {
-		return 0;
+		return (int) (talon.get() * 127 + 127);
 	}
 
-	/**
-	 * @deprecated
-	 */
 	@Override
 	public void update() {
 	}
 
-	/**
-	 * @deprecated
-	 */
 	@Override
 	public void setRate(double rate) {
+		talon.set(rate);
 	}
 
 	@Override
@@ -75,12 +62,9 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 		return talon.getInverted();
 	}
 
-	/**
-	 * @deprecated
-	 */
 	@Override
 	public double getRate() {
-		return 0;
+		return talon.get();
 	}
 
 	@Override
@@ -92,23 +76,17 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 		talon.stopMotor();
 	}
 	
-	/**
-	 * @deprecated
-	 */
 	@Override
 	public void init() {
 	}
 
-	/**
-	 * @deprecated
-	 */
 	@Override
 	protected void enableModule() {
 	}
 
 	@Override
 	protected void disableModule() {
-		talon.disable();
+		this.set(0);
 	}
 
 }
