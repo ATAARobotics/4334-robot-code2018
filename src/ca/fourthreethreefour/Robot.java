@@ -131,8 +131,18 @@ public class Robot extends IterativeRobotAdapter {
 		// Inverts the axis of the left_trigger
 		controller2.invertAxis(XboxController.LEFT_TRIGGER);
 		// Binds the axis to the motor
+		// TODO When arm is in set range, needs to automatically retract. armSolenoid. 
 		controller2.addAxisBind(XboxController.LEFT_TRIGGER, armMotor);
 		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor);
+		
+		controller2.addWhilePressed(XboxController.RIGHT_TRIGGER, new Command () {
+			@Override
+			public void run() {
+				if (armMotor.isEnabled()) {
+					
+				};
+			}
+		});
 	}
 
 	private Command commandLRL;
