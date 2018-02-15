@@ -3,6 +3,8 @@ package ca.fourthreethreefour;
 import java.io.File;
 import java.io.IOException;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import ca.fourthreethreefour.commands.RampRetract;
 import ca.fourthreethreefour.commands.SolenoidLeft;
 import ca.fourthreethreefour.commands.SolenoidRight;
@@ -38,6 +40,11 @@ public class Robot extends IterativeRobotAdapter {
 	 */
 	DriverStation ds = DriverStation.getInstance();
 
+	
+	//TODO Attach this to the actual part in Arm.java
+	TalonSRX armMotorSRX = new TalonSRX(ARM_MOTOR);
+	double armAngle = armMotorSRX.getSensorCollection().getAnalogIn();
+	
 	/*
 	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter requires a string for some reason.
 	 * TODO Name the robot!
@@ -138,8 +145,8 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addWhilePressed(XboxController.RIGHT_TRIGGER, new Command () {
 			@Override
 			public void run() {
-				if (armMotor.isEnabled()) {
-					
+				if (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX) {
+					armSolenoid.set(ARM_RETRACT);
 				};
 			}
 		});

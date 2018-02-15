@@ -6,7 +6,6 @@ import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.actuators.DualActionSolenoidModule;
-import edu.first.module.sensors.EncoderModule;
 import edu.first.module.subsystems.Subsystem;
 
 public interface Arm extends Settings {
@@ -20,7 +19,6 @@ public interface Arm extends Settings {
 		armSolenoid = new DualActionSolenoidModule(ARM_SOLENOID_1, ARM_SOLENOID_2);
 	
 	TalonSRXModule armMotor = new TalonSRXModule(ARM_MOTOR);
-	
 	
 	// Creates subsystem of above for use in Robot.java
 	Subsystem arm = new Subsystem(new Module[] {  grabSolenoid, armSolenoid, armMotor });
