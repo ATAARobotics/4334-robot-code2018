@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.commands.debug;
+package main.java.ca.fourthreethreefour.commands.debug;
 
 import ca.fourthreethreefour.settings.Settings;
 

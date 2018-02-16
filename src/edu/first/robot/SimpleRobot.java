@@ -1,7 +1,7 @@
 package edu.first.robot;
 
-import edu.first.main.GamePeriods;
 import edu.first.util.DriverstationInfo;
+import main.java.ca.fourthreethreefour.GamePeriods;
 
 /**
  * Main class representing a "Simple" style robot mode. This is basically the

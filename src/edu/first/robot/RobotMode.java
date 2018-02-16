@@ -1,7 +1,7 @@
 package edu.first.robot;
 
 import edu.first.main.Constants;
-import edu.first.main.GamePeriods;
+import main.java.ca.fourthreethreefour.GamePeriods;
 
 /**
  * The framework for all "modes" a robot can perform, this is the basic class

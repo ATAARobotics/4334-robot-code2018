@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.commands;
+package main.java.ca.fourthreethreefour.commands;
 
 import edu.first.commands.CommandGroup;
 

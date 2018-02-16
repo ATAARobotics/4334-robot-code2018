@@ -1,8 +1,5 @@
-package ca.fourthreethreefour;
+package main.java.ca.fourthreethreefour;
 
-import ca.fourthreethreefour.commands.RampRetract;
-import ca.fourthreethreefour.commands.SolenoidLeft;
-import ca.fourthreethreefour.commands.SolenoidRight;
 import edu.first.command.Command;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
@@ -12,6 +9,9 @@ import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.DriverStation;
+import main.java.ca.fourthreethreefour.commands.RampRetract;
+import main.java.ca.fourthreethreefour.commands.SolenoidLeft;
+import main.java.ca.fourthreethreefour.commands.SolenoidRight;
 
 public class Robot extends IterativeRobotAdapter {
 

@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import ca.fourthreethreefour.Robot;
-import ca.fourthreethreefour.commands.CommandGroupFactory;
-import ca.fourthreethreefour.commands.debug.Logging;
 import ca.fourthreethreefour.subsystems.Arm;
 import ca.fourthreethreefour.subsystems.Drive;
 import ca.fourthreethreefour.subsystems.DriveSensors;
@@ -23,6 +20,9 @@ import edu.first.commands.common.SetOutput;
 import edu.first.commands.common.WaitCommand;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
+import main.java.ca.fourthreethreefour.Robot;
+import main.java.ca.fourthreethreefour.commands.CommandGroupFactory;
+import main.java.ca.fourthreethreefour.commands.debug.Logging;
 
 // TODO Fix the spelling and capitalization.
 

@@ -2,9 +2,8 @@
  * This software was created by Alberta Tech Alliance, Team 4334, in 
  * Calgary, Alberta. This version is a fork by FRC Western Canada.
  */
-package edu.first.main;
+package main.java.ca.fourthreethreefour;
 
-import ca.fourthreethreefour.Robot;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.first.robot.RobotMode;
 import edu.first.robot.SafeRobotMode;

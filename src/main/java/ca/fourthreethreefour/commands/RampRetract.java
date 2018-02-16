@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.commands;
+package main.java.ca.fourthreethreefour.commands;
 
 import ca.fourthreethreefour.settings.Settings;
 import ca.fourthreethreefour.subsystems.Ramp.RampWinch;

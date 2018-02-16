@@ -1,7 +1,7 @@
 package edu.first.robot;
 
-import edu.first.main.GamePeriods;
 import edu.first.util.log.Logger;
+import main.java.ca.fourthreethreefour.GamePeriods;
 
 /**
  * An implementation of {@link RobotMode} that catches all exceptions in every
