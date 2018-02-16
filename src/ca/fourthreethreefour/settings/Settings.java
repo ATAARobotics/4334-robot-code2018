@@ -15,6 +15,8 @@ public interface Settings {
 	
     boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
 	
+    double TURN_CURVE = settingsFile.getDoubleProperty("TURN_CURVE", 1.5);
+    double TURN_CONSTANT = settingsFile.getDoubleProperty("TURN_CONSTANT", 1);
     // Ports
 	// TODO get default ports
 	// int EXAMPLE_PORT = settingsFile.getIntProperty("EXAMPLE_PORT", [default port])
