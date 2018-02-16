@@ -183,7 +183,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 *
 	 */
 	// Very similar to DriveStraight below. Check that for comments.
-	//TODO Might want to replace compensation with individual left and right values later.
+	// TODO Might want to replace compensation with individual left and right values later.
 	private static class DriveDistance implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {
@@ -277,7 +277,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						correctIterations = 0; // Set the amount to 0
 					}
 
-					return correctIterations < threshold; // If it hasn't reached the threshold, return.
+					return correctIterations < threshold; // If it hasn't reached the threshold, return true.
 				}
 
 				@Override
@@ -326,7 +326,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * @since 2017
 	 *
 	 */
-	// Mainly the same commenting as above DriveStraight
+	// Mainly the same commenting as DriveStraight above
 	public static class Turn implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {
@@ -369,7 +369,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 							turnPID.wait(20);
 						} catch (InterruptedException e) {} // no? (look at 2017)
 					}
-					drivetrain.arcadeDrive(0, turningOutput.get()); // Turns it by the turningOutput, but doesn't move.
+					// Turns it by the turningOutput, but doesn't move forwards.
+					drivetrain.arcadeDrive(0, turningOutput.get()); 
 					Logging.put("Turning Error", turnPID.getError());
 				}
 
@@ -407,8 +408,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 			if (args.size() != 1) {
-				throw new IllegalArgumentException("Error in Wait: Invalid arguments"); // In case no arguments put for
-																						// Wait.
+				// In case no arguments are put for Wait.
+				throw new IllegalArgumentException("Error in Wait: Invalid arguments"); 
 			} else {
 				return new WaitCommand(Double.parseDouble(args.get(0))); // Runs the WaitCommand with value set.
 			}
@@ -533,7 +534,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 *
 	 */
 
-	//TODO May be getting a sensor for this motor. Would require another PID controller.
+	// TODO May be getting a sensor for this motor. Would require another PID controller.
 	private static class TurnArm implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {

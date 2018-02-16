@@ -1,9 +1,14 @@
 package ca.fourthreethreefour;
 
+import java.io.File;
+import java.io.IOException;
+
 import ca.fourthreethreefour.commands.RampRetract;
 import ca.fourthreethreefour.commands.SolenoidLeft;
 import ca.fourthreethreefour.commands.SolenoidRight;
+import ca.fourthreethreefour.settings.AutoFile;
 import edu.first.command.Command;
+import edu.first.command.Commands;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
@@ -12,6 +17,7 @@ import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends IterativeRobotAdapter {
 
@@ -99,9 +105,8 @@ public class Robot extends IterativeRobotAdapter {
 		});
 
 		// TODO Set to right direction
-		// TODO LEFT_BUMPER LOW_GEAR, RIGHT_BUMPER HIGH_GEAR
-		// When the LEFT_BUMPER is pressed, changes the solenoid state to low
-		// When the RIGHT_BUMPER is pressed, changes the solenoid state to high
+		// When the LEFT_BUMPER is pressed, changes the solenoid state to low gear
+		// When the RIGHT_BUMPER is pressed, changes the solenoid state to high gear
 		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidLeft(gearShifter));
 		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidRight(gearShifter));
 
@@ -110,14 +115,12 @@ public class Robot extends IterativeRobotAdapter {
 		 */
 
 		// TODO Set to right direction
-		// TODO LEFT_BUMPER close, RIGHT_BUMBER open
 		// When left bumper is pressed, it closes the grabSolenoid
 		// When right bumper is pressed, it opens the grabSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidLeft(grabSolenoid));
 		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidRight(grabSolenoid));
 
 		// TODO Set to right direction
-		// TODO B Extend, A Retract
 		// When the B button is pressed, it extends the armSolenoid
 		// When the A button is pressed, it retracts the armSolenoid
 		controller2.addWhenPressed(XboxController.B, new SolenoidLeft(armSolenoid));
@@ -133,10 +136,24 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor);
 	}
 
+	private Command commandLRL;
+	private Command commandRLR;
+	private Command commandLLL;
+	private Command commandRRR;
+	
 	@Override
 	public void periodicDisabled() {
-		// TODO Robot should check settings file here
-
+		
+		if (AUTO_TYPE == "") { return; }
+		try {
+			commandLRL = new AutoFile(new File("LRL" + AUTO_TYPE + ".txt")).toCommand();
+			commandRLR = new AutoFile(new File("RLR" + AUTO_TYPE + ".txt")).toCommand();
+			commandLLL = new AutoFile(new File("LLL" + AUTO_TYPE + ".txt")).toCommand();
+			commandRRR = new AutoFile(new File("RRR" + AUTO_TYPE + ".txt")).toCommand();
+		} catch (IOException e) {
+			throw new Error(e.getMessage());
+		}
+		Timer.delay(1);
 	}
 
 	// Runs at the beginning of autonomous
@@ -144,9 +161,24 @@ public class Robot extends IterativeRobotAdapter {
 	public void initAutonomous() {
 		AUTO_MODULES.enable();
 		// Gets game-specific information (switch and scale orientations) from FMS.
-		// TODO use this in selecting autonomous routine
-		ds.getGameSpecificMessage();
+		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
+		if(gameData.length() > 0) {
+			switch (gameData) {
+			case "LRL":
+				Commands.run(commandLRL);
+				break;
+			case "RLR":
+				Commands.run(commandRLR);
+				break;
+			case "LLL":
+				Commands.run(commandLLL);
+				break;
+			case "RRR":
+				Commands.run(commandRRR);
+				break;
+			}
+		}
 	}
 
 	// Runs at the end of autonomous
