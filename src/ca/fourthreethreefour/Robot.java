@@ -71,6 +71,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.changeAxis(XboxController.LEFT_FROM_MIDDLE, speedFunction);
 		controller1.addDeadband(XboxController.RIGHT_X, 0.20);
 		controller1.invertAxis(XboxController.RIGHT_X);
+		controller1.changeAxis(XboxController.RIGHT_X, turnFunction);
 
 		// Creates an axis bind for the left and right sticks
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {

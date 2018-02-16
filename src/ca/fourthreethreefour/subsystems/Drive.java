@@ -3,6 +3,7 @@ package ca.fourthreethreefour.subsystems;
 import ca.fourthreethreefour.module.actuators.TalonSRXModule;
 import ca.fourthreethreefour.module.actuators.TalonSRXModuleGroup;
 import ca.fourthreethreefour.settings.Settings;
+
 import edu.first.identifiers.Function;
 import edu.first.identifiers.InversedSpeedController;
 import edu.first.module.Module;
@@ -46,8 +47,21 @@ public interface Drive extends Settings {
 				return in > 0 ? in * in : -(in * in); //if in is greater than 0, multiply it by itself
 				//^ otherwise multiply by itself and make it negative
 			}
-		};
-		// TODO decide if we need a function for turning, and add it if we do
+	};
+	
+	/**
+	 * Function used in driving controls that brings the input of the joysticks on the controller to a power.
+	 * This is done to make controls more intuitive.
+	 */
+	Function
+		turnFunction = new Function() { //makes a function for turn
+			@Override
+			public double F(double in) { //sets the function to return a double
+				double turn = in > 0 ? Math.pow(in, TURN_CURVE) : -Math.pow(Math.abs(in), TURN_CURVE); //if in is greater than 0, bring it to the power of the value of the turn curve variable
+				//^ otherwise bring its absolute value to the power of the value of the turn curve variable and make it negative
+	            return turn * TURN_CONSTANT; //multiplies the value obtained by the turn constant variable
+			}
+	};
 	
 	// Creates subsystem called drive, with Modules drivetrain, left, right, and gearShifter
 	public Subsystem drive = new Subsystem(new Module[] { drivetrain, left, right, gearShifter });
