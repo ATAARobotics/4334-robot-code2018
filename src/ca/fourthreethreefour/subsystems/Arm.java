@@ -11,27 +11,25 @@ import edu.first.module.subsystems.Subsystem;
 public interface Arm extends Settings {
 	
 	/*
-	 * Creates DualActionSolenoidModules called armSolenoid, grabSolenoid, 
-	 * and motorSolenoid, with ports specified. 
+	 * Creates DualActionSolenoidModules called clawSolenoid and flexSolenoid, with ports specified. 
 	 */
 	DualActionSolenoidModule 
 		clawSolenoid = new DualActionSolenoidModule(CLAW_SOLENOID_1, CLAW_SOLENOID_2),
 		flexSolenoid = new DualActionSolenoidModule(FLEX_SOLENOID_1, FLEX_SOLENOID_2);
 	
-	TalonSRXModule armMotor = new TalonSRXModule(ARM_MOTOR);
+	TalonSRXModule
+		armMotor = new TalonSRXModule(ARM_MOTOR);
 	
 	// Creates subsystem of above for use in Robot.java
 	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, armMotor });
 
 	/*
-	 *  Creates two direction (functions?) that can be used in Autonomous for easy setting of their solenoid.
+	 *  Creates two directions that can be used in Autonomous for easy setting of their respective solenoid.
 	 *  TODO Update these with correct direction.
 	 */
-	DualActionSolenoid.Direction CLAW_CLOSE = Direction.LEFT;
-	DualActionSolenoid.Direction CLAW_OPEN = Direction.RIGHT;
-	// grabSolenoid ^
-	
-	DualActionSolenoid.Direction FLEX_EXTEND = Direction.LEFT;
-	DualActionSolenoid.Direction FLEX_RETRACT = Direction.RIGHT;	
-	// armSolenoid ^
+	DualActionSolenoid.Direction 
+		CLAW_CLOSE = Direction.LEFT,
+		CLAW_OPEN = Direction.RIGHT,
+		FLEX_EXTEND = Direction.LEFT,
+		FLEX_RETRACT = Direction.RIGHT;	
 }

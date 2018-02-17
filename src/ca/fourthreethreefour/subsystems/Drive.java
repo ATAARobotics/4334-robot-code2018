@@ -25,15 +25,17 @@ public interface Drive extends Settings {
 		left = new TalonSRXModuleGroup(new TalonSRXModule[] { left1, left2 }),
 		right = new TalonSRXModuleGroup(new TalonSRXModule[] { right1, right2 });
 
-	// Drivetrain object using the TalonSRX groups left and right. Left is reversed so they move in the same direction.
+	// Drivetrain object using the TalonSRX groups left and right. One side is reversed so they move in the same direction.
 	// TODO find out which side needs to be reversed
-	Drivetrain drivetrain = new Drivetrain(new InversedSpeedController(left), right);
+	Drivetrain 
+		drivetrain = new Drivetrain(new InversedSpeedController(left), right);
 	
 	DualActionSolenoidModule // DualActionSolenoid called gearShifter
 		gearShifter = new DualActionSolenoidModule(GEAR_SHIFTER_SOLENOID_1, GEAR_SHIFTER_SOLENOID_2);
 	
-	DualActionSolenoid.Direction LOW_GEAR = Direction.LEFT;
-	DualActionSolenoid.Direction HIGH_GEAR = Direction.RIGHT;
+	DualActionSolenoid.Direction
+		LOW_GEAR = Direction.LEFT,
+		HIGH_GEAR = Direction.RIGHT;
 	
 	/**
 	 * Function used in driving controls that squares the input of the joysticks on the controller. 
@@ -45,20 +47,6 @@ public interface Drive extends Settings {
 			public double F(double in) { // sets the function to return a double
 				return in > 0 ? in * in : -(in * in); //if in is greater than 0, multiply it by itself
 				//^ otherwise multiply by itself and make it negative
-			}
-	};
-	
-	/**
-	 * Function used in driving controls that brings the input of the joysticks on the controller to a power.
-	 * This is done to make controls more intuitive.
-	 */
-	Function
-		turnFunction = new Function() { //makes a function for turn
-			@Override
-			public double F(double in) { //sets the function to return a double
-				double turn = in > 0 ? Math.pow(in, TURN_CURVE) : -Math.pow(Math.abs(in), TURN_CURVE); //if in is greater than 0, bring it to the power of the value of the turn curve variable
-				//^ otherwise bring its absolute value to the power of the value of the turn curve variable and make it negative
-	            return turn * TURN_CONSTANT; //multiplies the value obtained by the turn constant variable
 			}
 	};
 	
