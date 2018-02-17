@@ -40,11 +40,6 @@ public class Robot extends IterativeRobotAdapter {
 	 */
 	DriverStation ds = DriverStation.getInstance();
 
-	
-	//TODO Attach this to the actual part in Arm.java
-	TalonSRX armMotorSRX = new TalonSRX(ARM_MOTOR);
-	double armAngle = armMotorSRX.getSensorCollection().getAnalogIn();
-	
 	/*
 	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter requires a string for some reason.
 	 * TODO Name the robot!
