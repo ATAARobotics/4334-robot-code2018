@@ -1,7 +1,5 @@
 package ca.fourthreethreefour.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import ca.fourthreethreefour.module.actuators.TalonSRXModule;
 import ca.fourthreethreefour.settings.Settings;
 import edu.first.module.Module;
@@ -21,7 +19,6 @@ public interface Arm extends Settings {
 		armSolenoid = new DualActionSolenoidModule(ARM_SOLENOID_1, ARM_SOLENOID_2);
 	
 	TalonSRXModule armMotor = new TalonSRXModule(ARM_MOTOR);
-	double armAngle = armMotor.getAnalogIn();
 	
 	// Creates subsystem of above for use in Robot.java
 	Subsystem arm = new Subsystem(new Module[] {  grabSolenoid, armSolenoid, armMotor });
