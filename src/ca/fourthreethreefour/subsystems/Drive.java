@@ -25,7 +25,7 @@ public interface Drive extends Settings {
 		left = new TalonSRXModuleGroup(new TalonSRXModule[] { left1, left2 }),
 		right = new TalonSRXModuleGroup(new TalonSRXModule[] { right1, right2 });
 
-	// Drivetrain object using the TalonSRX groups left and right. Left is reversed so they move in the same direction.
+	// Drivetrain object using the TalonSRX groups left and right. One side is reversed so they move in the same direction.
 	// TODO find out which side needs to be reversed
 	Drivetrain 
 		drivetrain = new Drivetrain(new InversedSpeedController(left), right);

@@ -5,10 +5,10 @@ import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 
 /**
- ** Sets the specified solenoid to specified direction
- ** @author Cool Kornak
- **
- **/
+ * Sets the specified solenoid to specified direction
+ * @author Cool Kornak
+ *
+ */
 
 public final class SetSolenoid implements Command {
 	

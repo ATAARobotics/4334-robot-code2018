@@ -80,9 +80,7 @@ public class Robot extends IterativeRobotAdapter {
 			}
 		});
 
-		// TODO Make this a toggle (one button)
-		// When the LEFT_BUMPER is pressed, changes the solenoid state to low gear
-		// When the RIGHT_BUMPER is pressed, changes the solenoid state to high gear
+		// When A is pressed, reverses gearShifter, changing the gear.
 		controller1.addWhenPressed(XboxController.A, new ReverseSolenoid(gearShifter));
 
 		/*
@@ -124,7 +122,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addAxisBind(XboxController.TRIGGERS, armMotor);
 	}
 
-	private Command 
+	private Command // Declares these as Command
 		commandLRL,
 		commandRLR,
 		commandLLL,
@@ -132,11 +130,11 @@ public class Robot extends IterativeRobotAdapter {
 
 	@Override
 	public void periodicDisabled() {
-		if (AUTO_TYPE == "") {
+		if (AUTO_TYPE == "") { // If no type specified, ends method.
 			return;
 		}
 		
-		try {
+		try { // Creates a new AutoFile with the file of each game, and makes it a command.
 			commandLRL = new AutoFile(new File("LRL" + AUTO_TYPE + ".txt")).toCommand();
 			commandRLR = new AutoFile(new File("RLR" + AUTO_TYPE + ".txt")).toCommand();
 			commandLLL = new AutoFile(new File("LLL" + AUTO_TYPE + ".txt")).toCommand();

@@ -42,7 +42,7 @@ public interface Ramp extends Settings {
 		rightRamp2 = new TalonSRXModule(RAMP_RIGHT_2);
 	
 	RampWinch // Creates a module for the TalonSRXModule's designed for the RampWinch retraction.
-		leftRamp = new RampWinch(leftRamp1, leftRamp2), //TODO Set correct TalonSRXModule to be reversed.
+		leftRamp = new RampWinch(leftRamp1, leftRamp2), //TODO Set correct TalonSRXModule to be reversed. First one is the reversed one
 		rightRamp = new RampWinch(rightRamp1, rightRamp2);
 	
 	SolenoidModule // Creates a single action solenoid, with set ports.

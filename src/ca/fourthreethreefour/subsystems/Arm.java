@@ -24,14 +24,12 @@ public interface Arm extends Settings {
 	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, armMotor });
 
 	/*
-	 *  Creates two direction (functions?) that can be used in Autonomous for easy setting of their solenoid.
+	 *  Creates two directions that can be used in Autonomous for easy setting of their respective solenoid.
 	 *  TODO Update these with correct direction.
 	 */
 	DualActionSolenoid.Direction 
 		CLAW_CLOSE = Direction.LEFT,
 		CLAW_OPEN = Direction.RIGHT,
-	// clawSolenoid ^
 		FLEX_EXTEND = Direction.LEFT,
 		FLEX_RETRACT = Direction.RIGHT;	
-	// flexSolenoid ^
 }
