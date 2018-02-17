@@ -16,6 +16,7 @@ import edu.first.module.joysticks.BindingJoystick.WhilePressed;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -55,6 +56,10 @@ public class Robot extends IterativeRobotAdapter {
 	public void init() {
 		// Initalizes all modules
 		ALL_MODULES.init();
+		
+		// Initializes the CameraServer twice. That's how it's done
+        CameraServer.getInstance().startAutomaticCapture();
+        CameraServer.getInstance().startAutomaticCapture();
 
 		// Controller 1/driver
 		/*
