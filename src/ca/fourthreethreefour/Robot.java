@@ -3,11 +3,8 @@ package ca.fourthreethreefour;
 import java.io.File;
 import java.io.IOException;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import ca.fourthreethreefour.commands.RampRetract;
-import ca.fourthreethreefour.commands.SolenoidLeft;
-import ca.fourthreethreefour.commands.SolenoidRight;
+import ca.fourthreethreefour.commands.SolenoidDirection;
 import ca.fourthreethreefour.settings.AutoFile;
 import edu.first.command.Command;
 import edu.first.command.Commands;
@@ -109,8 +106,8 @@ public class Robot extends IterativeRobotAdapter {
 		// TODO Set to right direction
 		// When the LEFT_BUMPER is pressed, changes the solenoid state to low gear
 		// When the RIGHT_BUMPER is pressed, changes the solenoid state to high gear
-		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidLeft(gearShifter));
-		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidRight(gearShifter));
+		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidDirection(gearShifter, "left"));
+		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidDirection(gearShifter, "right"));
 
 		/*
 		 * Controller 2/Operator
@@ -119,14 +116,14 @@ public class Robot extends IterativeRobotAdapter {
 		// TODO Set to right direction
 		// When left bumper is pressed, it closes the grabSolenoid
 		// When right bumper is pressed, it opens the grabSolenoid
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidLeft(grabSolenoid));
-		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidRight(grabSolenoid));
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidDirection(grabSolenoid, "left"));
+		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidDirection(grabSolenoid, "right"));
 
 		// TODO Set to right direction
 		// When the B button is pressed, it extends the armSolenoid
 		// When the A button is pressed, it retracts the armSolenoid
-		controller2.addWhenPressed(XboxController.B, new SolenoidLeft(armSolenoid));
-		controller2.addWhenPressed(XboxController.A, new SolenoidRight(armSolenoid));
+		controller2.addWhenPressed(XboxController.B, new SolenoidDirection(armSolenoid, "left"));
+		controller2.addWhenPressed(XboxController.A, new SolenoidDirection(armSolenoid, "right"));
 
 		// Sets a deadband to prevent input less than 0.1
 		controller2.addDeadband(XboxController.LEFT_TRIGGER, 0.1);
@@ -137,15 +134,6 @@ public class Robot extends IterativeRobotAdapter {
 		// TODO When arm is in set range, needs to automatically retract. armSolenoid. 
 		controller2.addAxisBind(XboxController.LEFT_TRIGGER, armMotor);
 		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor);
-		
-		controller2.addWhilePressed(XboxController.RIGHT_TRIGGER, new Command () {
-			@Override
-			public void run() {
-				if (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX) {
-					armSolenoid.set(ARM_RETRACT);
-				};
-			}
-		});
 	}
 
 	private Command commandLRL;
@@ -227,6 +215,11 @@ public class Robot extends IterativeRobotAdapter {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
+		
+		double armAngle = armMotor.getAnalogIn();
+		if (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX) {
+			armSolenoid.set(ARM_RETRACT);
+		};
 	}
 
 	// Runs at the end of teleop
