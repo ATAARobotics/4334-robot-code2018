@@ -5,8 +5,8 @@ import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 
 /**
- ** Sets the specified solenoid to LEFT
- ** @author Cool Kornak (with reference from ReverseSolenoid.java)
+ ** Sets the specified solenoid to specified direction
+ ** @author Cool Kornak
  **
  **/
 
