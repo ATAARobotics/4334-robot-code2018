@@ -113,10 +113,10 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
 		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_OPEN));
 
-		// When the B button is pressed, it extends the flexSolenoid
-		// When the A button is pressed, it retracts the flexSolenoid
-		controller2.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
-		controller2.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
+		// When the A button is pressed, it extends the flexSolenoid
+		// When the B button is pressed, it retracts the flexSolenoid
+		controller2.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
+		controller2.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
 
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, armMotor);
