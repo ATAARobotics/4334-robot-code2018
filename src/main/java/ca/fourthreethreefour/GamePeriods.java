@@ -4,7 +4,6 @@
  */
 package main.java.ca.fourthreethreefour;
 
-import edu.first.robot.IterativeRobotAdapter;
 import edu.first.robot.RobotMode;
 import edu.first.robot.SafeRobotMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
