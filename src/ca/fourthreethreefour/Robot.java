@@ -24,28 +24,30 @@ public class Robot extends IterativeRobotAdapter {
 	 * Creates Subsystems AUTO and TELEOP to separate modules required to be enabled
 	 * in autonomous and modules required to be enabled in teleoperated mode.
 	 */
-	private final Subsystem AUTO_MODULES = new Subsystem(new Module[] { arm, drive });
+	private final Subsystem AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders });
 
 	private final Subsystem TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, ramp });
 
 	// Puts the above two subsystems into this subsystem. Subsystemception!
 	private final Subsystem ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 
-	/* 
+	/*
 	 * The current instance of the driver station. Needed in order to send and
 	 * receive information (not controller inputs) from the driver station.
 	 */
 	DriverStation ds = DriverStation.getInstance();
 
 	/*
-	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter requires a string for some reason.
-	 * TODO Name the robot!
+	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter
+	 * requires a string for some reason. TODO Name the robot!
 	 */
 	public Robot() {
 		super("ATA 2018");
 	}
 
-	private WhilePressed leftRampRetractionBind, rightRampRetractionBind;
+	// Creates a bind to be used, with button and command RampRetract
+	private WhilePressed leftRampRetractionBind = new WhilePressed(controller1.getBack(), new RampRetract(leftRamp));
+	private WhilePressed rightRampRetractionBind = new WhilePressed(controller1.getStart(), new RampRetract(rightRamp));
 
 	// runs when the robot is first turned on
 	@Override
@@ -69,33 +71,16 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
 			@Override
 			public void doBind(double speed, double turn) {
-				if (turn == 0 && speed == 0) {
-					drivetrain.stopMotor();
-				} else {
-					drivetrain.arcadeDrive(speed, turn);
-				}
+				drivetrain.arcadeDrive(speed, turn);
 			}
-
 		});
-
-		// Creates a bind to be used, with button and command RampRetract
-		leftRampRetractionBind = new WhilePressed(controller1.getX(), new RampRetract(leftRamp));
-		rightRampRetractionBind = new WhilePressed(controller1.getY(), new RampRetract(rightRamp));
 
 		/*
 		 * When X/Y is pressed first time, set respective Release solenoid to true
 		 * (active), and create a respective RampRetractionBind. Next time pressed, runs
 		 * bind.
 		 */
-		controller1.addWhenPressed(XboxController.X, new Command() {
-			@Override
-			public void run() {
-				leftRelease.setPosition(true);
-				controller1.addBind(leftRampRetractionBind);
-			}
-		});
-
-		controller1.addWhenPressed(XboxController.Y, new Command() {
+		controller1.addWhenPressed(XboxController.START, new Command() {
 			@Override
 			public void run() {
 				rightRelease.setPosition(true);
@@ -103,7 +88,15 @@ public class Robot extends IterativeRobotAdapter {
 			}
 		});
 
-		// TODO Set to right direction
+		controller1.addWhenPressed(XboxController.BACK, new Command() {
+			@Override
+			public void run() {
+				leftRelease.setPosition(true);
+				controller1.addBind(leftRampRetractionBind);
+			}
+		});
+
+		// TODO Set to right direction, make this a toggle (one button)
 		// When the LEFT_BUMPER is pressed, changes the solenoid state to low gear
 		// When the RIGHT_BUMPER is pressed, changes the solenoid state to high gear
 		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidDirection(gearShifter, "left"));
@@ -113,38 +106,33 @@ public class Robot extends IterativeRobotAdapter {
 		 * Controller 2/Operator
 		 */
 
-		// TODO Set to right direction
+		// TODO Set to right direction, make this a toggle
 		// When left bumper is pressed, it closes the grabSolenoid
 		// When right bumper is pressed, it opens the grabSolenoid
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidDirection(grabSolenoid, "left"));
-		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidDirection(grabSolenoid, "right"));
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidDirection(clawSolenoid, "left"));
+		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidDirection(clawSolenoid, "right"));
 
-		// TODO Set to right direction
+		// TODO Set to right direction, make this a toggle
 		// When the B button is pressed, it extends the armSolenoid
 		// When the A button is pressed, it retracts the armSolenoid
 		controller2.addWhenPressed(XboxController.B, new SolenoidDirection(armSolenoid, "left"));
 		controller2.addWhenPressed(XboxController.A, new SolenoidDirection(armSolenoid, "right"));
 
-		// Sets a deadband to prevent input less than 0.1
-		controller2.addDeadband(XboxController.LEFT_TRIGGER, 0.1);
-		controller2.addDeadband(XboxController.RIGHT_TRIGGER, 0.1);
-		// Inverts the axis of the left_trigger
-		controller2.invertAxis(XboxController.LEFT_TRIGGER);
 		// Binds the axis to the motor
-		// TODO When arm is in set range, needs to automatically retract. armSolenoid. 
-		controller2.addAxisBind(XboxController.LEFT_TRIGGER, armMotor);
-		controller2.addAxisBind(XboxController.RIGHT_TRIGGER, armMotor);
+		controller2.addAxisBind(XboxController.TRIGGERS, armMotor);
 	}
 
 	private Command commandLRL;
 	private Command commandRLR;
 	private Command commandLLL;
 	private Command commandRRR;
-	
+
 	@Override
 	public void periodicDisabled() {
+		if (AUTO_TYPE == "") {
+			return;
+		}
 		
-		if (AUTO_TYPE == "") { return; }
 		try {
 			commandLRL = new AutoFile(new File("LRL" + AUTO_TYPE + ".txt")).toCommand();
 			commandRLR = new AutoFile(new File("RLR" + AUTO_TYPE + ".txt")).toCommand();
@@ -153,6 +141,7 @@ public class Robot extends IterativeRobotAdapter {
 		} catch (IOException e) {
 			throw new Error(e.getMessage());
 		}
+		
 		Timer.delay(1);
 	}
 
@@ -163,7 +152,7 @@ public class Robot extends IterativeRobotAdapter {
 		// Gets game-specific information (switch and scale orientations) from FMS.
 		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
-		if(gameData.length() > 0) {
+		if (gameData.length() > 0) {
 			switch (gameData) {
 			case "LRL":
 				Commands.run(commandLRL);
@@ -193,16 +182,16 @@ public class Robot extends IterativeRobotAdapter {
 		TELEOP_MODULES.enable();
 		drivetrain.setSafetyEnabled(true); // Maybe we do...
 		/*
-		 * If any of these solenoids are are in the OFF position, set them to a default position.
-		 * Necessary because most of our code for operating solenoids reverses them,
-		 * which cannot be done for solenoids in the OFF position.
-		 * TODO check which positions these solenoids should be set to when initiating teleop
+		 * If any of these solenoids are are in the OFF position, set them to a default
+		 * position. Necessary because most of our code for operating solenoids reverses
+		 * them, which cannot be done for solenoids in the OFF position. TODO check
+		 * which positions these solenoids should be set to when initiating teleop
 		 */
-		if (grabSolenoid.get() == Direction.OFF) {
-			grabSolenoid.set(GRAB_OPEN);
+		if (clawSolenoid.get() == Direction.OFF) {
+			clawSolenoid.set(CLAW_OPEN);
 		}
-		if (armSolenoid.get() == Direction.OFF) {
-			armSolenoid.set(ARM_EXTEND);
+		if (flexSolenoid.get() == Direction.OFF) {
+			flexSolenoid.set(FLEX_EXTEND);
 		}
 		if (gearShifter.get() == Direction.OFF) {
 			gearShifter.set(LOW_GEAR);

@@ -35,7 +35,6 @@ public interface Ramp extends Settings {
 
 	}
 	
-	
 	TalonSRXModule // Creates a TalonSRXModule for the left side and right
 		leftRamp1 = new TalonSRXModule(RAMP_LEFT_1),
 		leftRamp2 = new TalonSRXModule(RAMP_LEFT_2),
@@ -52,4 +51,5 @@ public interface Ramp extends Settings {
 	
 	// Makes a subsystem called ramp with parts above
 	public Subsystem ramp = new Subsystem(new Module[] { leftRamp, rightRamp, leftRelease, rightRelease });
+	
 }

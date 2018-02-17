@@ -29,7 +29,6 @@ public interface Drive extends Settings {
 	// TODO find out which side needs to be reversed
 	Drivetrain drivetrain = new Drivetrain(new InversedSpeedController(left), right);
 	
-	
 	DualActionSolenoidModule // DualActionSolenoid called gearShifter
 		gearShifter = new DualActionSolenoidModule(GEAR_SHIFTER_SOLENOID_1, GEAR_SHIFTER_SOLENOID_2);
 	
