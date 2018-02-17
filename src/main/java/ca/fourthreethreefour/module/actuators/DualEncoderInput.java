@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.module.actuators;
+package main.java.ca.fourthreethreefour.module.actuators;
 
 import edu.first.identifiers.Input;
 import edu.first.module.sensors.EncoderModule;

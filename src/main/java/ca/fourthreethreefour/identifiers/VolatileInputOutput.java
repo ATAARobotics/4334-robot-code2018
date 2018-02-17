@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.identifiers;
+package main.java.ca.fourthreethreefour.identifiers;
 
 public class VolatileInputOutput extends InputOutput {
 

@@ -1,10 +1,10 @@
-package edu.first.main;
+package main.java.ca.fourthreethreefour;
 
-import ca.fourthreethreefour.settings.Settings;
-import ca.fourthreethreefour.subsystems.Arm;
-import ca.fourthreethreefour.subsystems.Controllers;
-import ca.fourthreethreefour.subsystems.Drive;
-import ca.fourthreethreefour.subsystems.Ramp;
+import main.java.ca.fourthreethreefour.settings.Settings;
+import main.java.ca.fourthreethreefour.subsystems.Arm;
+import main.java.ca.fourthreethreefour.subsystems.Controllers;
+import main.java.ca.fourthreethreefour.subsystems.Drive;
+import main.java.ca.fourthreethreefour.subsystems.Ramp;
 
 /**
  * The central repository for all constant values. Values here are expected to

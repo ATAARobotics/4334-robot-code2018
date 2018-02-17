@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.module.actuators;
+package main.java.ca.fourthreethreefour.module.actuators;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 

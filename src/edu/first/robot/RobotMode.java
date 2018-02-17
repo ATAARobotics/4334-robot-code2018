@@ -1,6 +1,6 @@
 package edu.first.robot;
 
-import edu.first.main.Constants;
+import main.java.ca.fourthreethreefour.Constants;
 import main.java.ca.fourthreethreefour.GamePeriods;
 
 /**

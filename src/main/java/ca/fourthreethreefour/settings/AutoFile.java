@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.settings;
+package main.java.ca.fourthreethreefour.settings;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import ca.fourthreethreefour.subsystems.Arm;
-import ca.fourthreethreefour.subsystems.Drive;
-import ca.fourthreethreefour.subsystems.DriveSensors;
+import main.java.ca.fourthreethreefour.subsystems.Arm;
+import main.java.ca.fourthreethreefour.subsystems.Drive;
+import main.java.ca.fourthreethreefour.subsystems.DriveSensors;
 import edu.first.command.Command;
 import edu.first.commands.CommandGroup;
 import edu.first.commands.common.LoopingCommand;

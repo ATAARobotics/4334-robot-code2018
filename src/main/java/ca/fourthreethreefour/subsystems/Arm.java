@@ -1,6 +1,6 @@
-package ca.fourthreethreefour.subsystems;
+package main.java.ca.fourthreethreefour.subsystems;
 
-import ca.fourthreethreefour.settings.Settings;
+import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoidModule;

@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.identifiers;
+package main.java.ca.fourthreethreefour.identifiers;
 
 import edu.first.identifiers.Input;
 import edu.first.identifiers.Output;

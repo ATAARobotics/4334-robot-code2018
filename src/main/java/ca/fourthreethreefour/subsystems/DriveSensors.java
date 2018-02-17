@@ -1,10 +1,10 @@
-package ca.fourthreethreefour.subsystems;
+package main.java.ca.fourthreethreefour.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import ca.fourthreethreefour.identifiers.VolatileInputOutput;
-import ca.fourthreethreefour.module.actuators.DualEncoderInput;
-import ca.fourthreethreefour.settings.Settings;
+import main.java.ca.fourthreethreefour.identifiers.VolatileInputOutput;
+import main.java.ca.fourthreethreefour.module.actuators.DualEncoderInput;
+import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.identifiers.Input;
 import edu.first.module.Module;
 import edu.first.module.controllers.PIDController;

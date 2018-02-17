@@ -1,4 +1,4 @@
-package ca.fourthreethreefour.module.actuators;
+package main.java.ca.fourthreethreefour.module.actuators;
 
 import edu.first.module.actuators.SpeedController;
 import edu.first.module.actuators.SpeedControllerGroup;

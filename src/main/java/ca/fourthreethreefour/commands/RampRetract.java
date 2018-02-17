@@ -1,7 +1,7 @@
 package main.java.ca.fourthreethreefour.commands;
 
-import ca.fourthreethreefour.settings.Settings;
-import ca.fourthreethreefour.subsystems.Ramp.RampWinch;
+import main.java.ca.fourthreethreefour.settings.Settings;
+import main.java.ca.fourthreethreefour.subsystems.Ramp.RampWinch;
 import edu.first.command.Command;
 
 public final class RampRetract implements Command, Settings {
