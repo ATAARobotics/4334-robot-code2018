@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import ca.fourthreethreefour.commands.RampRetract;
-import ca.fourthreethreefour.commands.SolenoidDirection;
+import ca.fourthreethreefour.commands.ReverseSolenoid;
+import ca.fourthreethreefour.commands.SetSolenoid;
 import ca.fourthreethreefour.settings.AutoFile;
 import edu.first.command.Command;
 import edu.first.command.Commands;
@@ -75,48 +76,45 @@ public class Robot extends IterativeRobotAdapter {
 			}
 		});
 
-		/*
-		 * When X/Y is pressed first time, set respective Release solenoid to true
-		 * (active), and create a respective RampRetractionBind. Next time pressed, runs
-		 * bind.
-		 */
-		controller1.addWhenPressed(XboxController.START, new Command() {
-			@Override
-			public void run() {
-				rightRelease.setPosition(true);
-				controller1.addBind(rightRampRetractionBind);
-			}
-		});
-
-		controller1.addWhenPressed(XboxController.BACK, new Command() {
-			@Override
-			public void run() {
-				leftRelease.setPosition(true);
-				controller1.addBind(leftRampRetractionBind);
-			}
-		});
-
-		// TODO Set to right direction, make this a toggle (one button)
+		// TODO Make this a toggle (one button)
 		// When the LEFT_BUMPER is pressed, changes the solenoid state to low gear
 		// When the RIGHT_BUMPER is pressed, changes the solenoid state to high gear
-		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidDirection(gearShifter, "left"));
-		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidDirection(gearShifter, "right"));
+		controller1.addWhenPressed(XboxController.A, new ReverseSolenoid(gearShifter));
 
 		/*
 		 * Controller 2/Operator
 		 */
+		
+		/*
+		 * When Start/Back is pressed first time, set respective Release solenoid to true
+		 * (active), and create a respective RampRetractionBind. Next time pressed, runs
+		 * bind.
+		 */
+		controller2.addWhenPressed(XboxController.START, new Command() {
+			@Override
+			public void run() {
+				rightRelease.setPosition(true);
+				controller2.addBind(rightRampRetractionBind);
+			}
+		});
 
-		// TODO Set to right direction, make this a toggle
-		// When left bumper is pressed, it closes the grabSolenoid
-		// When right bumper is pressed, it opens the grabSolenoid
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SolenoidDirection(clawSolenoid, "left"));
-		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SolenoidDirection(clawSolenoid, "right"));
+		controller2.addWhenPressed(XboxController.BACK, new Command() {
+			@Override
+			public void run() {
+				leftRelease.setPosition(true);
+				controller2.addBind(leftRampRetractionBind);
+			}
+		});
 
-		// TODO Set to right direction, make this a toggle
-		// When the B button is pressed, it extends the armSolenoid
-		// When the A button is pressed, it retracts the armSolenoid
-		controller2.addWhenPressed(XboxController.B, new SolenoidDirection(armSolenoid, "left"));
-		controller2.addWhenPressed(XboxController.A, new SolenoidDirection(armSolenoid, "right"));
+		// When left bumper is pressed, it closes the clawSolenoid
+		// When right bumper is pressed, it opens the clawSolenoid
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
+		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_OPEN));
+
+		// When the B button is pressed, it extends the flexSolenoid
+		// When the A button is pressed, it retracts the flexSolenoid
+		controller2.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
+		controller2.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
 
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, armMotor);
@@ -191,7 +189,7 @@ public class Robot extends IterativeRobotAdapter {
 			clawSolenoid.set(CLAW_OPEN);
 		}
 		if (flexSolenoid.get() == Direction.OFF) {
-			flexSolenoid.set(FLEX_EXTEND);
+			flexSolenoid.set(FLEX_RETRACT);
 		}
 		if (gearShifter.get() == Direction.OFF) {
 			gearShifter.set(LOW_GEAR);
@@ -207,7 +205,7 @@ public class Robot extends IterativeRobotAdapter {
 		
 		double armAngle = armMotor.getAnalogIn();
 		if (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX) {
-			armSolenoid.set(ARM_RETRACT);
+			flexSolenoid.set(FLEX_RETRACT);
 		};
 	}
 
