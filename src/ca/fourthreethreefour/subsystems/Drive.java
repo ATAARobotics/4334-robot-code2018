@@ -27,13 +27,15 @@ public interface Drive extends Settings {
 
 	// Drivetrain object using the TalonSRX groups left and right. Left is reversed so they move in the same direction.
 	// TODO find out which side needs to be reversed
-	Drivetrain drivetrain = new Drivetrain(new InversedSpeedController(left), right);
+	Drivetrain 
+		drivetrain = new Drivetrain(new InversedSpeedController(left), right);
 	
 	DualActionSolenoidModule // DualActionSolenoid called gearShifter
 		gearShifter = new DualActionSolenoidModule(GEAR_SHIFTER_SOLENOID_1, GEAR_SHIFTER_SOLENOID_2);
 	
-	DualActionSolenoid.Direction LOW_GEAR = Direction.LEFT;
-	DualActionSolenoid.Direction HIGH_GEAR = Direction.RIGHT;
+	DualActionSolenoid.Direction
+		LOW_GEAR = Direction.LEFT,
+		HIGH_GEAR = Direction.RIGHT;
 	
 	/**
 	 * Function used in driving controls that squares the input of the joysticks on the controller. 

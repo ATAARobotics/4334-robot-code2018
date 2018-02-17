@@ -24,14 +24,13 @@ public class Robot extends IterativeRobotAdapter {
 
 	/*
 	 * Creates Subsystems AUTO and TELEOP to separate modules required to be enabled
-	 * in autonomous and modules required to be enabled in teleoperated mode.
+	 * in autonomous and modules required to be enabled in teleoperated mode, 
+	 * then puts the two subsystems into ALL_MODULES subsystem. Subsystemception!
 	 */
-	private final Subsystem AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders });
-
-	private final Subsystem TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, ramp });
-
-	// Puts the above two subsystems into this subsystem. Subsystemception!
-	private final Subsystem ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
+	private final Subsystem 
+		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders }),
+		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, ramp }),
+		ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 
 	/*
 	 * The current instance of the driver station. Needed in order to send and
@@ -48,8 +47,9 @@ public class Robot extends IterativeRobotAdapter {
 	}
 
 	// Creates a bind to be used, with button and command RampRetract
-	private WhilePressed leftRampRetractionBind = new WhilePressed(controller1.getBack(), new RampRetract(leftRamp));
-	private WhilePressed rightRampRetractionBind = new WhilePressed(controller1.getStart(), new RampRetract(rightRamp));
+	private WhilePressed 
+		leftRampRetractionBind = new WhilePressed(controller1.getBack(), new RampRetract(leftRamp)),
+		rightRampRetractionBind = new WhilePressed(controller1.getStart(), new RampRetract(rightRamp));
 
 	// runs when the robot is first turned on
 	@Override
@@ -124,10 +124,11 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addAxisBind(XboxController.TRIGGERS, armMotor);
 	}
 
-	private Command commandLRL;
-	private Command commandRLR;
-	private Command commandLLL;
-	private Command commandRRR;
+	private Command 
+		commandLRL,
+		commandRLR,
+		commandLLL,
+		commandRRR;
 
 	@Override
 	public void periodicDisabled() {
@@ -185,9 +186,8 @@ public class Robot extends IterativeRobotAdapter {
 		drivetrain.setSafetyEnabled(true); // Maybe we do...
 		/*
 		 * If any of these solenoids are are in the OFF position, set them to a default
-		 * position. Necessary because most of our code for operating solenoids reverses
-		 * them, which cannot be done for solenoids in the OFF position. TODO check
-		 * which positions these solenoids should be set to when initiating teleop
+		 * position. Necessary because most of our code for operating solenoids requires
+		 * them to not be in the OFF position.
 		 */
 		if (clawSolenoid.get() == Direction.OFF) {
 			clawSolenoid.set(CLAW_OPEN);
