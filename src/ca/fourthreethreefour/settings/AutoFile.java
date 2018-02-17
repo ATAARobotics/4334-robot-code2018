@@ -464,16 +464,16 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				public void run() {
 					switch (cmd) {
 					case "open":
-						Arm.grabSolenoid.set(GRAB_OPEN);
+						Arm.clawSolenoid.set(CLAW_OPEN);
 						break;
 					case "close":
-						Arm.grabSolenoid.set(GRAB_CLOSE);
+						Arm.clawSolenoid.set(CLAW_CLOSE);
 						break;
 					case "extend":
-						Arm.armSolenoid.set(ARM_EXTEND);
+						Arm.flexSolenoid.set(FLEX_EXTEND);
 						break;
 					case "retract":
-						Arm.armSolenoid.set(ARM_RETRACT);
+						Arm.flexSolenoid.set(FLEX_RETRACT);
 						break;
 					case "":
 						//System.out.println("Error in SetArm: No direction set");
@@ -539,9 +539,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 
-			Double speed = Double.parseDouble(args.get(0));
-
-			Long time = Long.parseLong(args.get(1));
+			double speed = Double.parseDouble(args.get(0));
+			long time = Long.parseLong(args.get(1));
 
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
 
@@ -556,67 +555,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			};
 		}
 	}
-	
-	/*
-	 * An attempt at using sensors to drive
-	 * Drives up to an object in front of the robot
-	 * @author Aidan
-	 */
-	// Commented out until we actually have the sensors. Don't want it to accidentlly be called upon, and break the code.
-	
-	/*private static class DriveUpTo implements RuntimeCommand {
-		@Override
-		public Command getCommand(List<String> args) {
-			Double speed = Double.parseDouble(args.get(0));
-			Double Distance = Double.parseDouble(args.get(1));
-			return new LoopingCommand() {
-				
-				String direction = "";
-				
-				@Override
-				public void runLoop() {
-					switch (direction.toLowerCase()) {
-					case "straight":
-						drivetrain.tankDrive(speed, speed);
-						break;
-					case "left":
-						drivetrain.tankDrive(-speed, speed);
-						break;
-					case "right":
-						drivetrain.tankDrive(speed, -speed);
-						break;
-					case "":
-						throw new Error ("Error in DriveUpTo: unable to determine direction");
-					default:
-						throw new Error ("Error in DriveUpTo: direction broke");
-					}
-				}
-				
-				@Override
-				public boolean continueLoop() {
-					if (leftEncoder.get() > Distance && rightEncoder.get() > Distance) {
-						direction = "straight";
-						return true;
-					}
-					else if (leftEncoder.get() > Distance && rightEncoder.get() <= Distance) {
-						direction = "left";
-						return true;
-					}
-					else if (leftEncoder.get() <= Distance && leftEncoder.get() > Distance) {
-						direction = "right";
-						return true;
-					}
-					else
-						return false;
-				}
-				
-				@Override
-				public void end() {
-					drivetrain.stopMotor();
-				}
-			};
-		}
-	}*/
 	
 	// End of commands section
 
