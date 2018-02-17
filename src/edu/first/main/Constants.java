@@ -4,6 +4,7 @@ import ca.fourthreethreefour.settings.Settings;
 import ca.fourthreethreefour.subsystems.Arm;
 import ca.fourthreethreefour.subsystems.Controllers;
 import ca.fourthreethreefour.subsystems.Drive;
+import ca.fourthreethreefour.subsystems.DriveSensors;
 import ca.fourthreethreefour.subsystems.Ramp;
 
 /**
@@ -48,5 +49,5 @@ import ca.fourthreethreefour.subsystems.Ramp;
  */
 
 //Make sure to add whatever subsystem you add to here
-public interface Constants extends Settings, Drive, Arm, Controllers, Ramp {
+public interface Constants extends Settings, Drive, Arm, Controllers, Ramp, DriveSensors {
 }
