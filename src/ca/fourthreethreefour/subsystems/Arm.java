@@ -1,11 +1,11 @@
 package ca.fourthreethreefour.subsystems;
 
+import ca.fourthreethreefour.module.actuators.TalonSRXModule;
 import ca.fourthreethreefour.settings.Settings;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
-import edu.first.module.actuators.DualActionSolenoidModule;
-import edu.first.module.actuators.VictorModule;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
+import edu.first.module.actuators.DualActionSolenoidModule;
 import edu.first.module.subsystems.Subsystem;
 
 public interface Arm extends Settings {
@@ -18,7 +18,8 @@ public interface Arm extends Settings {
 		clawSolenoid = new DualActionSolenoidModule(CLAW_SOLENOID_1, CLAW_SOLENOID_2),
 		flexSolenoid = new DualActionSolenoidModule(FLEX_SOLENOID_1, FLEX_SOLENOID_2);
 	
-	VictorModule armMotor = new VictorModule(ARM_MOTOR);
+	TalonSRXModule armMotor = new TalonSRXModule(ARM_MOTOR);
+	
 	// Creates subsystem of above for use in Robot.java
 	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, armMotor });
 
