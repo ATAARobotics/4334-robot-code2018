@@ -20,7 +20,7 @@ public class RotationalArm extends Subsystem implements Settings, Output {
 	public void set(double value) {
 		// TODO Figure out if true or false means limit reached, if false add a ! before
 		if (highLimitSwitch.getPosition()) {
-			if (value > 0) {
+			if (value < 0) {
 				armMotor.set(value);
 			}
 		}
