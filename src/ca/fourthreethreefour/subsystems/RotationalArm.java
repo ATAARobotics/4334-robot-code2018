@@ -24,6 +24,11 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 		super(new Module[] { armMotor, highLimitSwitch, lowLimitSwitch });
 	}
 
+	public boolean shouldArmBeFlexed() {
+		double armAngle = armMotor.getAnalogIn();
+		return (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX);
+	}
+
 	@Override
 	public void set(double value) {
 		// TODO Figure out if true or false means limit reached, if false add a ! before
@@ -41,13 +46,10 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 				armMotor.set(value);
 			}
 		}
+
+		// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
+		if (rotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
+		
 	}
 
-	
-	public boolean setArmFlex() {
-		double armAngle = armMotor.getAnalogIn();
-		if (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX) {
-			return true;
-		} else { return false; }
-	}
 }

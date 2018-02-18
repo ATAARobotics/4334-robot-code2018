@@ -204,9 +204,6 @@ public class Robot extends IterativeRobotAdapter {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
-		
-		// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
-		if (rotationalArm.setArmFlex()) { flexSolenoid.set(FLEX_RETRACT); }
 	}
 
 	// Runs at the end of teleop
