@@ -1,5 +1,7 @@
 package ca.fourthreethreefour.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import ca.fourthreethreefour.module.actuators.TalonSRXModule;
 import ca.fourthreethreefour.settings.Settings;
 import edu.first.identifiers.Output;
@@ -38,15 +40,15 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 		 */
 		if (highLimitSwitch.getPosition()) {
 			if (value < 0) {
-				armMotor.set(value);
+				armMotor.setPID(ControlMode.MotionMagic, value);
 			}
 		}
 		if (lowLimitSwitch.getPosition()) {
 			if (value > 0) {
-				armMotor.set(value);
+				armMotor.setPID(ControlMode.MotionMagic, value);
 			}
 		}
-
+		
 		// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
 		if (rotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
 		

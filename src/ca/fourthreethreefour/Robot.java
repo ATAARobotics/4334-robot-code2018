@@ -108,6 +108,8 @@ public class Robot extends IterativeRobotAdapter {
 			}
 		});
 
+		//TODO Up scale, sides switch, down ground
+		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));

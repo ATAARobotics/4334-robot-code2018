@@ -1,5 +1,6 @@
 package ca.fourthreethreefour.module.actuators;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.first.module.actuators.SpeedController;
@@ -158,6 +159,13 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 	 */
 	public double getAnalogIn() {
 		return talon.getSensorCollection().getAnalogIn();
+	}
+	
+	// TODO Confirm this is proper. Normally it is set, which uses set in
+	// BaseMotorController. This is basically that code. Unsure if done properly,
+	// needs to be confirmed
+	public void setPID(ControlMode mode, double outputValue) {
+		setPID(mode, outputValue);
 	}
 	
 }
