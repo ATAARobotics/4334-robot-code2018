@@ -119,7 +119,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
 
 		// Binds the axis to the motor
-		controller2.addAxisBind(XboxController.TRIGGERS, armMotor);
+		controller2.addAxisBind(XboxController.TRIGGERS, rotationalArm);
 	}
 
 	private Command // Declares these as Command
@@ -205,10 +205,10 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.doBinds();
 		controller2.doBinds();
 		
-		double armAngle = armMotor.getAnalogIn();
+		double armAngle = rotationalArm.getAnalog();
 		if (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX) {
 			flexSolenoid.set(FLEX_RETRACT);
-		};
+		}
 	}
 
 	// Runs at the end of teleop
