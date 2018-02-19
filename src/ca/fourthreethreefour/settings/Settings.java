@@ -20,8 +20,8 @@ public interface Settings {
     // Ports
 	// TODO get default ports
 	// int EXAMPLE_PORT = settingsFile.getIntProperty("EXAMPLE_PORT", [default port])
-	int DRIVE_LEFT_1 = settingsFile.getIntProperty("DRIVE_LEFT_1", 0);
-	int DRIVE_LEFT_2 = settingsFile.getIntProperty("DRIVE_LEFT_2", 1);
+	int DRIVE_LEFT_1 = settingsFile.getIntProperty("DRIVE_LEFT_1", 1);
+	int DRIVE_LEFT_2 = settingsFile.getIntProperty("DRIVE_LEFT_2", 2);
 	int DRIVE_RIGHT_1 = settingsFile.getIntProperty("DRIVE_RIGHT_1", 2);
 	int DRIVE_RIGHT_2 = settingsFile.getIntProperty("DRIVE_RIGHT_2", 3);
 	
