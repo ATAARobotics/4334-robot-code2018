@@ -8,6 +8,7 @@ import ca.fourthreethreefour.commands.ReverseSolenoid;
 import ca.fourthreethreefour.commands.SetPIDPoint;
 import ca.fourthreethreefour.commands.SetSolenoid;
 import ca.fourthreethreefour.settings.AutoFile;
+import ca.fourthreethreefour.subsystems.RotationalArm;
 import edu.first.command.Command;
 import edu.first.command.Commands;
 import edu.first.module.Module;
@@ -202,6 +203,7 @@ public class Robot extends IterativeRobotAdapter {
 		if (gearShifter.get() == Direction.OFF) {
 			gearShifter.set(LOW_GEAR);
 		}
+		
 	}
 
 	// Runs every (approx.) 20ms in teleop
@@ -210,6 +212,10 @@ public class Robot extends IterativeRobotAdapter {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
+		
+		if (!RotationalArm.highLimitSwitch.getPosition() || !RotationalArm.lowLimitSwitch.getPosition()) {
+			RotationalArm.armMotor.neutralOutput(); // TODO Find the right method.
+		}
 	}
 
 	// Runs at the end of teleop

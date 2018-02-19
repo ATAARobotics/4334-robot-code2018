@@ -161,11 +161,18 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 		return talon.getSensorCollection().getAnalogIn();
 	}
 	
-	// TODO Confirm this is proper. Normally it is set, which uses set in
+	// TODO Confirm these two are proper (setSetpoint and neutralOutput). Normally it is set, which uses set in
 	// BaseMotorController. This is basically that code. Unsure if done properly,
 	// needs to be confirmed
-	public void setPID(ControlMode mode, double outputValue) {
-		setPID(mode, outputValue);
+	public void setSetpoint(ControlMode mode, double outputValue) {
+		setSetpoint(mode, outputValue);
+	}
+	
+	/**
+	 * Neutral the motor output by setting control mode to disabled.
+	 */
+	public void neutralOutput() {
+		setSetpoint(ControlMode.Disabled, 0);
 	}
 	
 }

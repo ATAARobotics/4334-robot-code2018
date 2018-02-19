@@ -35,21 +35,12 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 	public void set(double value) {
 		// TODO Figure out if true or false means limit reached, if false add a ! before
 		// TODO Set it to stop immediately at limit.
-		// TODO Fix entire LimitSwitch for the PID. Likely that the value can't be less than 0?
 		/*
 		 * Gets the current position of the respective limit switch, then if the value
-		 * is above or below 0 for each respective, then it will set the value, otherwise it won't.
+		 * is above or below 0 for each respective, then it will set the value,
+		 * otherwise it won't.
 		 */
-		if (highLimitSwitch.getPosition()) {
-			if (value < 0) {
-				armMotor.setPID(ControlMode.MotionMagic, value);
-			}
-		}
-		if (lowLimitSwitch.getPosition()) {
-			if (value > 0) {
-				armMotor.setPID(ControlMode.MotionMagic, value);
-			}
-		}
+		armMotor.setSetpoint(ControlMode.MotionMagic, value);
 		
 		// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
 		if (rotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
