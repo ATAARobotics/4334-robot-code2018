@@ -15,6 +15,8 @@ public interface Settings {
 	
     boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
 	
+    double TURN_CURVE = settingsFile.getDoubleProperty("TURN_CURVE", 1.5);
+    double TURN_CONSTANT = settingsFile.getDoubleProperty("TURN_CONSTANT", 1);
     // Ports
 	// TODO get default ports
 	// int EXAMPLE_PORT = settingsFile.getIntProperty("EXAMPLE_PORT", [default port])
@@ -39,16 +41,18 @@ public interface Settings {
 	//int RAMP_RELEASE_SPEED = settingsFile.getIntProperty("RAMP_RELEASE_SPEED", 1);
 	int RAMP_RETRACT_SPEED = settingsFile.getIntProperty("RAMP_RETRACT_SPEED", -1);
 	
-	int GRAB_SOLENOID_1 = settingsFile.getIntProperty("GRAB_SOLENOID_1", 0);
-	int GRAB_SOLENOID_2 = settingsFile.getIntProperty("GRAB_SOLENOID_2", 1);
+	int CLAW_SOLENOID_1 = settingsFile.getIntProperty("CLAW_SOLENOID_1", 0);
+	int CLAW_SOLENOID_2 = settingsFile.getIntProperty("CLAW_SOLENOID_2", 1);
 	
-	int ARM_SOLENOID_1 = settingsFile.getIntProperty("ARM_SOLENOID_1", 2);
-	int ARM_SOLENOID_2 = settingsFile.getIntProperty("ARM_SOLENOID_2", 3);
+	int FLEX_SOLENOID_1 = settingsFile.getIntProperty("FLEX_SOLENOID_1", 2);
+	int FLEX_SOLENOID_2 = settingsFile.getIntProperty("FLEX_SOLENOID_2", 3);
 	
 	int ENCODER_LEFT_1 = settingsFile.getIntProperty("ENCODER_LEFT_1", 0);
 	int ENCODER_LEFT_2 = settingsFile.getIntProperty("ENCODER_LEFT_2", 1);
 	int ENCODER_RIGHT_1 = settingsFile.getIntProperty("ENCODER_RIGHT_1", 2);
 	int ENCODER_RIGHT_2 = settingsFile.getIntProperty("ENCODER_RIGHT_2", 3);
+	int HIGH_LIMIT_SWITCH = settingsFile.getIntProperty("HIGH_LIMIT_SWITCH", 4);
+	int LOW_LIMIT_SWITCH = settingsFile.getIntProperty("LOW_LIMIT_SWITCH", 5);
 	
 	int XBOXCONTROLLER_1 = settingsFile.getIntProperty("XBOXCONTROLLER_1", 0);
 	int XBOXCONTROLLER_2 = settingsFile.getIntProperty("XBOXCONTROLLER_2", 1);
@@ -62,5 +66,9 @@ public interface Settings {
 	int TURN_P = settingsFile.getIntProperty("TURN_P", 0);
 	int TURN_I = settingsFile.getIntProperty("TURN_I", 0);
 	int TURN_D = settingsFile.getIntProperty("TURN_D", 0);
+	
+	// TODO get default values
+	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0);
+	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0);
 	
 }

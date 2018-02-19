@@ -35,7 +35,6 @@ public interface Ramp extends Settings {
 
 	}
 	
-	
 	TalonSRXModule // Creates a TalonSRXModule for the left side and right
 		leftRamp1 = new TalonSRXModule(RAMP_LEFT_1),
 		leftRamp2 = new TalonSRXModule(RAMP_LEFT_2),
@@ -43,13 +42,16 @@ public interface Ramp extends Settings {
 		rightRamp2 = new TalonSRXModule(RAMP_RIGHT_2);
 	
 	RampWinch // Creates a module for the TalonSRXModule's designed for the RampWinch retraction.
-		leftRamp = new RampWinch(leftRamp1, leftRamp2), //TODO Set correct TalonSRXModule to be reversed.
+		leftRamp = new RampWinch(leftRamp1, leftRamp2), //TODO Set correct TalonSRXModule to be reversed. First one is the reversed one
 		rightRamp = new RampWinch(rightRamp1, rightRamp2);
 	
 	SolenoidModule // Creates a single action solenoid, with set ports.
 		leftRelease = new SolenoidModule(RAMP_RELEASE_LEFT),
 		rightRelease = new SolenoidModule(RAMP_RELEASE_RIGHT);
 	
+	
+	
 	// Makes a subsystem called ramp with parts above
 	public Subsystem ramp = new Subsystem(new Module[] { leftRamp, rightRamp, leftRelease, rightRelease });
+	
 }

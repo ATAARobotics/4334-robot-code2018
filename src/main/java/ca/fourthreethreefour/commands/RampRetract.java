@@ -4,6 +4,12 @@ import main.java.ca.fourthreethreefour.settings.Settings;
 import main.java.ca.fourthreethreefour.subsystems.Ramp.RampWinch;
 import edu.first.command.Command;
 
+/**
+ * A command designed for binds involving a RampRetract.
+ * @author Cool
+ *
+ */
+
 public final class RampRetract implements Command, Settings {
 
 	private final RampWinch ramp;

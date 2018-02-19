@@ -183,7 +183,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 *
 	 */
 	// Very similar to DriveStraight below. Check that for comments.
-	//TODO Might want to replace compensation with individual left and right values later.
+	// TODO Might want to replace compensation with individual left and right values later.
 	private static class DriveDistance implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {
@@ -277,7 +277,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						correctIterations = 0; // Set the amount to 0
 					}
 
-					return correctIterations < threshold; // If it hasn't reached the threshold, return.
+					return correctIterations < threshold; // If it hasn't reached the threshold, return true.
 				}
 
 				@Override
@@ -326,7 +326,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * @since 2017
 	 *
 	 */
-	// Mainly the same commenting as above DriveStraight
+	// Mainly the same commenting as DriveStraight above
 	public static class Turn implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {
@@ -369,7 +369,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 							turnPID.wait(20);
 						} catch (InterruptedException e) {} // no? (look at 2017)
 					}
-					drivetrain.arcadeDrive(0, turningOutput.get()); // Turns it by the turningOutput, but doesn't move.
+					// Turns it by the turningOutput, but doesn't move forwards.
+					drivetrain.arcadeDrive(0, turningOutput.get()); 
 					Logging.put("Turning Error", turnPID.getError());
 				}
 
@@ -407,8 +408,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 			if (args.size() != 1) {
-				throw new IllegalArgumentException("Error in Wait: Invalid arguments"); // In case no arguments put for
-																						// Wait.
+				// In case no arguments are put for Wait.
+				throw new IllegalArgumentException("Error in Wait: Invalid arguments"); 
 			} else {
 				return new WaitCommand(Double.parseDouble(args.get(0))); // Runs the WaitCommand with value set.
 			}
@@ -463,16 +464,16 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				public void run() {
 					switch (cmd) {
 					case "open":
-						Arm.grabSolenoid.set(GRAB_OPEN);
+						Arm.clawSolenoid.set(CLAW_OPEN);
 						break;
 					case "close":
-						Arm.grabSolenoid.set(GRAB_CLOSE);
+						Arm.clawSolenoid.set(CLAW_CLOSE);
 						break;
 					case "extend":
-						Arm.armSolenoid.set(ARM_EXTEND);
+						Arm.flexSolenoid.set(FLEX_EXTEND);
 						break;
 					case "retract":
-						Arm.armSolenoid.set(ARM_RETRACT);
+						Arm.flexSolenoid.set(FLEX_RETRACT);
 						break;
 					case "":
 						//System.out.println("Error in SetArm: No direction set");
@@ -533,89 +534,27 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 *
 	 */
 
-	//TODO May be getting a sensor for this motor. Would require another PID controller.
+	// TODO May be getting a sensor for this motor. Would require another PID controller.
 	private static class TurnArm implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {
 
-			Double speed = Double.parseDouble(args.get(0));
-
-			Long time = Long.parseLong(args.get(1));
+			double speed = Double.parseDouble(args.get(0));
+			long time = Long.parseLong(args.get(1));
 
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
 
 				@Override
 				public void runLoop() {
-					armMotor.setSpeed(speed);
+					rotationalArm.set(speed);
 				}
 
 				public void end() {
-					armMotor.setSpeed(0);
+					rotationalArm.set(0);
 				}
 			};
 		}
 	}
-	
-	/*
-	 * An attempt at using sensors to drive
-	 * Drives up to an object in front of the robot
-	 * @author Aidan
-	 */
-	// Commented out until we actually have the sensors. Don't want it to accidentlly be called upon, and break the code.
-	
-	/*private static class DriveUpTo implements RuntimeCommand {
-		@Override
-		public Command getCommand(List<String> args) {
-			Double speed = Double.parseDouble(args.get(0));
-			Double Distance = Double.parseDouble(args.get(1));
-			return new LoopingCommand() {
-				
-				String direction = "";
-				
-				@Override
-				public void runLoop() {
-					switch (direction.toLowerCase()) {
-					case "straight":
-						drivetrain.tankDrive(speed, speed);
-						break;
-					case "left":
-						drivetrain.tankDrive(-speed, speed);
-						break;
-					case "right":
-						drivetrain.tankDrive(speed, -speed);
-						break;
-					case "":
-						throw new Error ("Error in DriveUpTo: unable to determine direction");
-					default:
-						throw new Error ("Error in DriveUpTo: direction broke");
-					}
-				}
-				
-				@Override
-				public boolean continueLoop() {
-					if (leftEncoder.get() > Distance && rightEncoder.get() > Distance) {
-						direction = "straight";
-						return true;
-					}
-					else if (leftEncoder.get() > Distance && rightEncoder.get() <= Distance) {
-						direction = "left";
-						return true;
-					}
-					else if (leftEncoder.get() <= Distance && leftEncoder.get() > Distance) {
-						direction = "right";
-						return true;
-					}
-					else
-						return false;
-				}
-				
-				@Override
-				public void end() {
-					drivetrain.stopMotor();
-				}
-			};
-		}
-	}*/
 	
 	// End of commands section
 

@@ -3,34 +3,31 @@ package main.java.ca.fourthreethreefour.subsystems;
 import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
-import edu.first.module.actuators.DualActionSolenoidModule;
-import edu.first.module.actuators.VictorModule;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
+import edu.first.module.actuators.DualActionSolenoidModule;
 import edu.first.module.subsystems.Subsystem;
 
 public interface Arm extends Settings {
 	
 	/*
-	 * Creates DualActionSolenoidModules called armSolenoid, grabSolenoid, 
-	 * and motorSolenoid, with ports specified. 
+	 * Creates DualActionSolenoidModules called clawSolenoid and flexSolenoid, with ports specified. 
 	 */
 	DualActionSolenoidModule 
-		grabSolenoid = new DualActionSolenoidModule(GRAB_SOLENOID_1, GRAB_SOLENOID_2),
-		armSolenoid = new DualActionSolenoidModule(ARM_SOLENOID_1, ARM_SOLENOID_2);
+		clawSolenoid = new DualActionSolenoidModule(CLAW_SOLENOID_1, CLAW_SOLENOID_2),
+		flexSolenoid = new DualActionSolenoidModule(FLEX_SOLENOID_1, FLEX_SOLENOID_2);
 	
-	VictorModule armMotor = new VictorModule(ARM_MOTOR);
+	RotationalArm rotationalArm = new RotationalArm();
+
 	// Creates subsystem of above for use in Robot.java
-	Subsystem arm = new Subsystem(new Module[] {  grabSolenoid, armSolenoid, armMotor });
+	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, rotationalArm });
 
 	/*
-	 *  Creates two direction (functions?) that can be used in Autonomous for easy setting of their solenoid.
+	 *  Creates two directions that can be used in Autonomous for easy setting of their respective solenoid.
 	 *  TODO Update these with correct direction.
 	 */
-	DualActionSolenoid.Direction GRAB_CLOSE = Direction.LEFT;
-	DualActionSolenoid.Direction GRAB_OPEN = Direction.RIGHT;
-	// grabSolenoid ^
-	
-	DualActionSolenoid.Direction ARM_EXTEND = Direction.LEFT;
-	DualActionSolenoid.Direction ARM_RETRACT = Direction.RIGHT;	
-	// armSolenoid ^
+	DualActionSolenoid.Direction 
+		CLAW_CLOSE = Direction.LEFT,
+		CLAW_OPEN = Direction.RIGHT,
+		FLEX_EXTEND = Direction.LEFT,
+		FLEX_RETRACT = Direction.RIGHT;	
 }

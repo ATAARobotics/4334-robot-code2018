@@ -144,4 +144,20 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 		this.set(0);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @return object that can get/set individual raw sensor values.
+	 */
+	public Object getSensorCollection() {
+		return talon.getSensorCollection();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @return
+	 */
+	public double getAnalogIn() {
+		return talon.getSensorCollection().getAnalogIn();
+	}
+	
 }

@@ -5,6 +5,7 @@ import main.java.ca.fourthreethreefour.subsystems.Arm;
 import main.java.ca.fourthreethreefour.subsystems.Controllers;
 import main.java.ca.fourthreethreefour.subsystems.Drive;
 import main.java.ca.fourthreethreefour.subsystems.Ramp;
+import main.java.ca.fourthreethreefour.subsystems.DriveSensors;
 
 /**
  * The central repository for all constant values. Values here are expected to
@@ -48,5 +49,5 @@ import main.java.ca.fourthreethreefour.subsystems.Ramp;
  */
 
 //Make sure to add whatever subsystem you add to here
-public interface Constants extends Settings, Drive, Arm, Controllers, Ramp {
+public interface Constants extends Settings, Drive, Arm, Controllers, Ramp, DriveSensors {
 }
