@@ -36,7 +36,8 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 		 * Gets the current position of the respective limit switch, then if the value
 		 * is above or below 0 for each respective, then it will set the value, otherwise it won't.
 		 */
-		if (highLimitSwitch.getPosition()) {
+		armMotor.set(value);
+		/*if (highLimitSwitch.getPosition()) {
 			if (value < 0) {
 				armMotor.set(value);
 			}
@@ -45,7 +46,7 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 			if (value > 0) {
 				armMotor.set(value);
 			}
-		}
+		}*/
 
 		// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
 		if (rotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
