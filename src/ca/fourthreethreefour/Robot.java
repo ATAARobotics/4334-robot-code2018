@@ -214,7 +214,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.doBinds();
 		
 		if (!RotationalArm.highLimitSwitch.getPosition() || !RotationalArm.lowLimitSwitch.getPosition()) {
-			RotationalArm.armMotor.neutralOutput(); // TODO Find the right method.
+			RotationalArm.armMotor.neutralOutput(); // TODO Find the right method
 		}
 	}
 
