@@ -49,6 +49,8 @@ public interface Ramp extends Settings {
 		leftRelease = new SolenoidModule(RAMP_RELEASE_LEFT),
 		rightRelease = new SolenoidModule(RAMP_RELEASE_RIGHT);
 	
+	
+	
 	// Makes a subsystem called ramp with parts above
 	public Subsystem ramp = new Subsystem(new Module[] { leftRamp, rightRamp, leftRelease, rightRelease });
 	

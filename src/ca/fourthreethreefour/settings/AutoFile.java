@@ -546,11 +546,11 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 				@Override
 				public void runLoop() {
-					armMotor.setSpeed(speed);
+					rotationalArm.set(speed);
 				}
 
 				public void end() {
-					armMotor.setSpeed(0);
+					rotationalArm.set(0);
 				}
 			};
 		}
