@@ -115,7 +115,6 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
      */
     @Override
     public void update() {
-        victor.Feed();
     }
 
     /**

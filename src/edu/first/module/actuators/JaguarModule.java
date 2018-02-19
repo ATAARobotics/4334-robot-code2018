@@ -114,7 +114,6 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
      */
     @Override
     public void update() {
-        jaguar.Feed();
     }
 
     /**

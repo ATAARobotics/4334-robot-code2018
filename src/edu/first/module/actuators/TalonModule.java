@@ -115,7 +115,6 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
      */
     @Override
     public void update() {
-        talon.Feed();
     }
 
     /**

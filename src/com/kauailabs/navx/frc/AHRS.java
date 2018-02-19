@@ -15,8 +15,6 @@ import com.kauailabs.navx.AHRSProtocol.AHRSPosUpdate;
 import com.kauailabs.navx.AHRSProtocol.BoardID;
 import com.kauailabs.navx.IMUProtocol.YPRUpdate;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;

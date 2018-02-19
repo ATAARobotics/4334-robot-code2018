@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 
 /**
  * Contains all DriverStation static methods and other useful methods used for
@@ -97,7 +98,7 @@ public final class DriverstationInfo {
      * @return the battery voltage.
      */
     public static double getBatteryVoltage() {
-        return DS.getBatteryVoltage();
+        return RobotController.getBatteryVoltage();
     }
 
     /**
