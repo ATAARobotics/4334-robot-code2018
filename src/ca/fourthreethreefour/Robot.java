@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import ca.fourthreethreefour.commands.RampRetract;
 import ca.fourthreethreefour.commands.ReverseSolenoid;
+import ca.fourthreethreefour.commands.SetPIDPoint;
 import ca.fourthreethreefour.commands.SetSolenoid;
 import ca.fourthreethreefour.settings.AutoFile;
 import edu.first.command.Command;
@@ -56,6 +57,8 @@ public class Robot extends IterativeRobotAdapter {
 	public void init() {
 		// Initalizes all modules
 		ALL_MODULES.init();
+		
+		rotationalArm.set(ARM_PID_START); // Sets the rotationalArm to the starting position
 		
 		// Initializes the CameraServer twice. That's how it's done
         CameraServer.getInstance().startAutomaticCapture();
@@ -120,8 +123,9 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
 		controller2.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
 
-		// Binds the axis to the motor
-		controller2.addAxisBind(XboxController.TRIGGERS, rotationalArm);
+		controller2.addWhenPressed(XboxController.A, new SetPIDPoint(rotationalArm, ARM_PID_POS_1)); //TODO Replace temp A with Direction Pad inputs.
+		controller2.addWhenPressed(XboxController.A, new SetPIDPoint(rotationalArm, ARM_PID_POS_2));
+		controller2.addWhenPressed(XboxController.A, new SetPIDPoint(rotationalArm, ARM_PID_POS_3));
 	}
 
 	private Command // Declares these as Command
