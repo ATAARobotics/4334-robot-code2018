@@ -34,6 +34,8 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 	@Override
 	public void set(double value) {
 		// TODO Figure out if true or false means limit reached, if false add a ! before
+		// TODO Set it to stop immediately at limit.
+		// TODO Fix entire LimitSwitch for the PID. Likely that the value can't be less than 0?
 		/*
 		 * Gets the current position of the respective limit switch, then if the value
 		 * is above or below 0 for each respective, then it will set the value, otherwise it won't.
