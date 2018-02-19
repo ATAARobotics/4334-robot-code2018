@@ -23,6 +23,12 @@ deploy {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'lib'
+    }
+}
+
 // Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix (Talon SRX)
 // and NavX.
 dependencies {
@@ -30,7 +36,7 @@ dependencies {
     compile ctre()
     compile navx()
     compile openrio.powerup.matchData()
-    compile files('atalibj.jar')
+    compile group: 'edu.first', name: 'atalibj', version: '0.0.1'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
