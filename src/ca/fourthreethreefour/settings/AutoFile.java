@@ -512,11 +512,11 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						Drive.gearShifter.set(HIGH_GEAR);
 						break;
 					case "":
-						//System.out.println("Error in SetGear: No gear set");
+						// System.out.println("Error in SetGear: No gear set");
 						Drive.gearShifter.set(Direction.OFF);
 						throw new Error("Error in SetGear: No gear set");
 					default:
-						//System.out.println("Error in SetGear: Gear set incorrectly");
+						// System.out.println("Error in SetGear: Gear set incorrectly");
 						throw new Error("Error in SetGear: Gear set incorrectly");
 					}
 				}
@@ -525,11 +525,9 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	}
 
 	/**
-	 * Turn the arm with set speed for set time.
-	 * First argument is speed that the arm will turn at between -1 and 1.
-	 * Second argument is time that it will last for.
+	 * Turn the arm to set point. Argument is setpoint, a double value.
 	 * 
-	 * @author Cool, with reference to last year.
+	 * @author Cool Kornak
 	 * @since 2018
 	 *
 	 */
@@ -539,18 +537,11 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 
-			double speed = Double.parseDouble(args.get(0));
-			long time = Long.parseLong(args.get(1));
-
-			return new LoopingCommandWithTimeout(new Timeout(time)) {
-
+			double setpoint = Double.parseDouble(args.get(0));
+			return new Command() {
 				@Override
-				public void runLoop() {
-					rotationalArm.set(speed);
-				}
-
-				public void end() {
-					rotationalArm.set(0);
+				public void run() {
+					rotationalArm.set(setpoint);
 				}
 			};
 		}
