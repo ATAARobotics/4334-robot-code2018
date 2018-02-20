@@ -16,11 +16,10 @@ public interface Arm extends Settings {
 		clawSolenoid = new DualActionSolenoidModule(CLAW_SOLENOID_1, CLAW_SOLENOID_2),
 		flexSolenoid = new DualActionSolenoidModule(FLEX_SOLENOID_1, FLEX_SOLENOID_2);
 	
-//	RotationalArm rotationalArm = new RotationalArm();
+	RotationalArm rotationalArm = new RotationalArm();
 
 	// Creates subsystem of above for use in Robot.java
-	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid//, rotationalArm 
-			});
+	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, rotationalArm });
 
 	/*
 	 *  Creates two directions that can be used in Autonomous for easy setting of their respective solenoid.

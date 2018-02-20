@@ -82,7 +82,7 @@ public class Robot extends IterativeRobotAdapter {
 		});
 
 		// When A is pressed, reverses gearShifter, changing the gear.
-		controller1.addWhenPressed(XboxController.A, new ReverseSolenoid(gearShifter));
+		// controller1.addWhenPressed(XboxController.A, new ReverseSolenoid(gearShifter));
 
 		/*
 		 * Controller 2/Operator
@@ -111,16 +111,16 @@ public class Robot extends IterativeRobotAdapter {
 
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
-		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_OPEN));
+		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
+		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_OPEN));
 
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
-		controller2.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
-		controller2.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
+		controller1.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
+		controller1.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
 
 		// Binds the axis to the motor
-		//controller2.addAxisBind(XboxController.TRIGGERS, rotationalArm);
+		controller1.addAxisBind(XboxController.TRIGGERS, rotationalArm);
 	}
 
 	private Command // Declares these as Command
