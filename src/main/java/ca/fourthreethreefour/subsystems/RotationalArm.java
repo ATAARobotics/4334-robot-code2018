@@ -1,6 +1,5 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
-import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
 import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
@@ -37,7 +36,7 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 		 * Gets the current position of the respective limit switch, then if the value
 		 * is above or below 0 for each respective, then it will set the value, otherwise it won't.
 		 */
-		armMotor.set(value);
+		armMotor.set(value*0.6);
 		/*if (highLimitSwitch.getPosition()) {
 			if (value < 0) {
 				armMotor.set(value);
