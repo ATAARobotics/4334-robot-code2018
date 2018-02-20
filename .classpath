@@ -12,7 +12,7 @@
 	<classpathentry kind="lib" path="lib/CTRE_Phoenix.jar" sourcepath="lib/CTRE_Phoenix-sources.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix-sources.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix.jar"/>
-	<classpathentry kind="lib" path="lib/atalibj-0.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/atalibj-0.0.1.jar" sourcepath="C:/Users/cool/Documents/0 TEAM4334/Team4334-atalibj-v1.0-71-g97e039b/Team4334-atalibj-97e039b"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -33,9 +33,7 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 
 	@Override
 	public void set(double value) {
-		/*
-		 * Sets the setpoint for MotionMagic.
-		 */
+		//Sets the setpoint for MotionMagic.
 		armMotor.setSetpoint(ControlMode.MotionMagic, value);
 
 		// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
