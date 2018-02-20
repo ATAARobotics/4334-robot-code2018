@@ -28,7 +28,7 @@ public interface Settings {
 	int GEAR_SHIFTER_SOLENOID_1 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_1", 4);
 	int GEAR_SHIFTER_SOLENOID_2 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_2", 5);
 	
-	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 12);
+	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 8);
 	
 	int RAMP_LEFT_1 = settingsFile.getIntProperty("RAMP_LEFT_1", 4);
 	int RAMP_LEFT_2 = settingsFile.getIntProperty("RAMP_LEFT_2", 5);

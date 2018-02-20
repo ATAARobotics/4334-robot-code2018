@@ -3,10 +3,6 @@ package main.java.ca.fourthreethreefour;
 import java.io.File;
 import java.io.IOException;
 
-import main.java.ca.fourthreethreefour.commands.RampRetract;
-import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
-import main.java.ca.fourthreethreefour.commands.SetSolenoid;
-import main.java.ca.fourthreethreefour.settings.AutoFile;
 import edu.first.command.Command;
 import edu.first.command.Commands;
 import edu.first.module.Module;
@@ -16,10 +12,11 @@ import edu.first.module.joysticks.BindingJoystick.WhilePressed;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
-
 import edu.wpi.first.wpilibj.Timer;
+import main.java.ca.fourthreethreefour.commands.RampRetract;
+import main.java.ca.fourthreethreefour.commands.SetSolenoid;
+import main.java.ca.fourthreethreefour.settings.AutoFile;
 
 public class Robot extends IterativeRobotAdapter {
 
@@ -59,8 +56,8 @@ public class Robot extends IterativeRobotAdapter {
 		ALL_MODULES.init();
 		
 		// Initializes the CameraServer twice. That's how it's done
-        CameraServer.getInstance().startAutomaticCapture();
-        CameraServer.getInstance().startAutomaticCapture();
+        //CameraServer.getInstance().startAutomaticCapture();
+        //CameraServer.getInstance().startAutomaticCapture();
 
 		// Controller 1/driver
 		/*
@@ -82,7 +79,7 @@ public class Robot extends IterativeRobotAdapter {
 		});
 
 		// When A is pressed, reverses gearShifter, changing the gear.
-		controller1.addWhenPressed(XboxController.A, new ReverseSolenoid(gearShifter));
+		// controller1.addWhenPressed(XboxController.A, new ReverseSolenoid(gearShifter));
 
 		/*
 		 * Controller 2/Operator
@@ -111,16 +108,16 @@ public class Robot extends IterativeRobotAdapter {
 
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
-		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_OPEN));
+		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
+		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_OPEN));
 
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
-		controller2.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
-		controller2.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
+		controller1.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
+		controller1.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
 
 		// Binds the axis to the motor
-		controller2.addAxisBind(XboxController.TRIGGERS, rotationalArm);
+		controller1.addAxisBind(XboxController.TRIGGERS, rotationalArm);
 	}
 
 	private Command // Declares these as Command
