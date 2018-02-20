@@ -1,5 +1,7 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.module.sensors.DigitalInput;
@@ -31,27 +33,13 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 
 	@Override
 	public void set(double value) {
-		// TODO Figure out if true or false means limit reached, if false add a ! before
-		// TODO Set it to stop immediately at limit.
 		/*
-		 * Gets the current position of the respective limit switch, then if the value
-		 * is above or below 0 for each respective, then it will set the value,
-		 * otherwise it won't.
+		 * Sets the setpoint for MotionMagic.
 		 */
-		armMotor.set(value);
-		/*if (highLimitSwitch.getPosition()) {
-			if (value < 0) {
-				armMotor.set(value);
-			}
-		}
-		if (lowLimitSwitch.getPosition()) {
-			if (value > 0) {
-				armMotor.set(value);
-			}
-		}*/
+		armMotor.setSetpoint(ControlMode.MotionMagic, value);
 
 		// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
-		if (rotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
+		if (rotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); } // TODO Check to see if this will always check or not
 		
 	}
 

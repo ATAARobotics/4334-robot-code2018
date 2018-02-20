@@ -8,7 +8,6 @@ import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.SetPIDPoint;
 import main.java.ca.fourthreethreefour.commands.SetSolenoid;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
-import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 import edu.first.command.Command;
 import edu.first.command.Commands;
 import edu.first.module.Module;
@@ -214,9 +213,6 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.doBinds();
 		controller2.doBinds();
 		
-		if (!RotationalArm.highLimitSwitch.getPosition() || !RotationalArm.lowLimitSwitch.getPosition()) {
-			RotationalArm.armMotor.neutralOutput(); // TODO Find the right method
-		}
 	}
 
 	// Runs at the end of teleop
