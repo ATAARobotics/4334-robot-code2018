@@ -93,7 +93,7 @@ public class Robot extends IterativeRobotAdapter {
 		 * (active), and create a respective RampRetractionBind. Next time pressed, runs
 		 * bind.
 		 */
-		/*controller2.addWhenPressed(XboxController.START, new Command() {
+		controller2.addWhenPressed(XboxController.START, new Command() {
 			@Override
 			public void run() {
 				rightRelease.setPosition(true);
@@ -107,7 +107,7 @@ public class Robot extends IterativeRobotAdapter {
 				leftRelease.setPosition(true);
 				controller2.addBind(leftRampRetractionBind);
 			}
-		});*/
+		});
 
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid

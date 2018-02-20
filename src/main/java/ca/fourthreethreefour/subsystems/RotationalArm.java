@@ -4,6 +4,7 @@ import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
 import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
+import edu.first.module.actuators.VictorModule;
 import edu.first.module.sensors.DigitalInput;
 import edu.first.module.subsystems.Subsystem;
 
@@ -15,7 +16,7 @@ import edu.first.module.subsystems.Subsystem;
  * @author Cool and Joel
  */
 public class RotationalArm extends Subsystem implements Settings, Output, Arm {
-	public static TalonSRXModule armMotor = new TalonSRXModule(ARM_MOTOR);
+	public static VictorModule armMotor = new VictorModule(ARM_MOTOR);
 	public static DigitalInput 
 		highLimitSwitch = new DigitalInput(HIGH_LIMIT_SWITCH),
 		lowLimitSwitch = new DigitalInput(LOW_LIMIT_SWITCH);
@@ -24,10 +25,10 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 		super(new Module[] { armMotor, highLimitSwitch, lowLimitSwitch });
 	}
 
-	public boolean shouldArmBeFlexed() {
+	/*public boolean shouldArmBeFlexed() {
 		double armAngle = armMotor.getAnalogIn();
 		return (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX);
-	}
+	}*/
 
 	@Override
 	public void set(double value) {
@@ -49,7 +50,7 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 		}*/
 
 		// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
-		if (rotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
+		//if (rotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
 		
 	}
 
