@@ -1,9 +1,10 @@
-package main.java.ca.fourthreethreefour.subsystems;
+/*package main.java.ca.fourthreethreefour.subsystems;
 
 import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
 import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
+import edu.first.module.actuators.VictorModule;
 import edu.first.module.sensors.DigitalInput;
 import edu.first.module.subsystems.Subsystem;
 
@@ -14,8 +15,8 @@ import edu.first.module.subsystems.Subsystem;
  * 
  * @author Cool and Joel
  */
-public class RotationalArm extends Subsystem implements Settings, Output, Arm {
-	public static TalonSRXModule armMotor = new TalonSRXModule(ARM_MOTOR);
+/*public class RotationalArm extends Subsystem implements Settings, Output, Arm {
+	public static VictorModule armMotor = new VictorModule(ARM_MOTOR);
 	public static DigitalInput 
 		highLimitSwitch = new DigitalInput(HIGH_LIMIT_SWITCH),
 		lowLimitSwitch = new DigitalInput(LOW_LIMIT_SWITCH);
@@ -36,7 +37,7 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 		 * Gets the current position of the respective limit switch, then if the value
 		 * is above or below 0 for each respective, then it will set the value, otherwise it won't.
 		 */
-		if (highLimitSwitch.getPosition()) {
+/*		if (highLimitSwitch.getPosition()) {
 			if (value < 0) {
 				armMotor.set(value);
 			}
@@ -52,4 +53,4 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 		
 	}
 
-}
+}*/

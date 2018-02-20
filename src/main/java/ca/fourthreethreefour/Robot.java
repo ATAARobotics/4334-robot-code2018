@@ -59,8 +59,8 @@ public class Robot extends IterativeRobotAdapter {
 		ALL_MODULES.init();
 		
 		// Initializes the CameraServer twice. That's how it's done
-        CameraServer.getInstance().startAutomaticCapture();
-        CameraServer.getInstance().startAutomaticCapture();
+        //CameraServer.getInstance().startAutomaticCapture();
+        //CameraServer.getInstance().startAutomaticCapture();
 
 		// Controller 1/driver
 		/*
@@ -120,7 +120,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller2.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
 
 		// Binds the axis to the motor
-		controller2.addAxisBind(XboxController.TRIGGERS, rotationalArm);
+		//controller2.addAxisBind(XboxController.TRIGGERS, rotationalArm);
 	}
 
 	private Command // Declares these as Command
