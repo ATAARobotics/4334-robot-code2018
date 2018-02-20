@@ -68,16 +68,16 @@ public interface Settings {
 	int TURN_D = settingsFile.getIntProperty("TURN_D", 0);
 	
 	// TODO get default values for all below
-	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0);
-	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0);
+	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.0);
+	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.0);
 	
-	double ARM_PID_START = settingsFile.getDoubleProperty("ARM_PID_START", 0); // Might end up being the
+	double ARM_PID_START = settingsFile.getDoubleProperty("ARM_PID_START", 0.0); // Might end up being the
 	
-	double ARM_PID_POS_1 = settingsFile.getDoubleProperty("ARM_PID_POS_1", 0); // same?
-	double ARM_PID_POS_2 = settingsFile.getDoubleProperty("ARM_PID_POS_2", 0);
-	double ARM_PID_POS_3 = settingsFile.getDoubleProperty("ARM_PID_POS_3", 0);
+	double ARM_PID_POS_1 = settingsFile.getDoubleProperty("ARM_PID_POS_1", 0.0); // same?
+	double ARM_PID_POS_2 = settingsFile.getDoubleProperty("ARM_PID_POS_2", 0.0);
+	double ARM_PID_POS_3 = settingsFile.getDoubleProperty("ARM_PID_POS_3", 0.0);
 	
-	double ARM_PID_MIN = settingsFile.getDoubleProperty("ARM_PID_MIN", 0);
-	double ARM_PID_MAX = settingsFile.getDoubleProperty("ARM_PID_MAX", 0);
+	double ARM_PID_MIN = settingsFile.getDoubleProperty("ARM_PID_MIN", 0.0);
+	double ARM_PID_MAX = settingsFile.getDoubleProperty("ARM_PID_MAX", 0.0);
 	
 }
