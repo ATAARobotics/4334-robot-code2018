@@ -168,11 +168,4 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 		setSetpoint(mode, outputValue);
 	}
 	
-	/**
-	 * Neutral the motor output by setting control mode to disabled.
-	 */
-	public void neutralOutput() {
-		setSetpoint(ControlMode.Disabled, 0);
-	}
-	
 }
