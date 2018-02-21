@@ -3,11 +3,6 @@ package main.java.ca.fourthreethreefour;
 import java.io.File;
 import java.io.IOException;
 
-import main.java.ca.fourthreethreefour.commands.RampRetract;
-import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
-import main.java.ca.fourthreethreefour.commands.SetPIDPoint;
-import main.java.ca.fourthreethreefour.commands.SetSolenoid;
-import main.java.ca.fourthreethreefour.settings.AutoFile;
 import edu.first.command.Command;
 import edu.first.command.Commands;
 import edu.first.module.Module;
@@ -19,8 +14,11 @@ import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
-
 import edu.wpi.first.wpilibj.Timer;
+import main.java.ca.fourthreethreefour.commands.RampRetract;
+import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
+import main.java.ca.fourthreethreefour.commands.SetSolenoid;
+import main.java.ca.fourthreethreefour.settings.AutoFile;
 
 public class Robot extends IterativeRobotAdapter {
 
@@ -123,10 +121,7 @@ public class Robot extends IterativeRobotAdapter {
 		// When the B button is pressed, it retracts the flexSolenoid
 		controller2.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
 		controller2.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
-
-		controller2.addWhenPressed(XboxController.A, new SetPIDPoint(rotationalArm, ARM_PID_POS_1)); //TODO Replace temp A with Direction Pad inputs.
-		controller2.addWhenPressed(XboxController.A, new SetPIDPoint(rotationalArm, ARM_PID_POS_2));
-		controller2.addWhenPressed(XboxController.A, new SetPIDPoint(rotationalArm, ARM_PID_POS_3));
+		
 	}
 
 	private Command // Declares these as Command
@@ -213,6 +208,13 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.doBinds();
 		controller2.doBinds();
 		
+		if (controllerPOV.getPOV() == 0) {
+			rotationalArm.set(ARM_PID_POS_3);
+		} else if (controllerPOV.getPOV() == 90) {
+			rotationalArm.set(ARM_PID_POS_2);
+		} else if (controllerPOV.getPOV() == 180) {
+			rotationalArm.set(ARM_PID_POS_1);
+		}
 	}
 
 	// Runs at the end of teleop
