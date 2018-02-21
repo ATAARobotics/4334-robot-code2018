@@ -208,11 +208,13 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.doBinds();
 		controller2.doBinds();
 		
-		if (controllerPOV.getPOV() == 0) {
+		int anglePOV = DriverStation.getInstance().getStickPOV(XBOXCONTROLLER_2, 0);
+		
+		if (anglePOV == 0) {
 			rotationalArm.set(ARM_PID_POS_3);
-		} else if (controllerPOV.getPOV() == 90) {
+		} else if (anglePOV == 90) {
 			rotationalArm.set(ARM_PID_POS_2);
-		} else if (controllerPOV.getPOV() == 180) {
+		} else if (anglePOV == 180) {
 			rotationalArm.set(ARM_PID_POS_1);
 		}
 	}
