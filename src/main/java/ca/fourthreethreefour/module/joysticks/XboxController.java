@@ -562,11 +562,11 @@ public class XboxController extends BindingJoystick {
      * @param pov The index of the POV to read (starting at 0)
      * @return the angle of the POV in degrees, or -1 if the POV is not pressed.
      */
-    public int getPOV(int pov) {
+    public final int getPOV(int pov) {
       return DriverStation.getInstance().getStickPOV(port, pov);
     }
 
-    public int getPOV() {
+    public final int getPOV() {
       return getPOV(0);
     }
     
