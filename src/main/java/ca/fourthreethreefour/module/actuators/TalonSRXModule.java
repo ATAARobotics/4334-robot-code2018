@@ -1,5 +1,6 @@
 package main.java.ca.fourthreethreefour.module.actuators;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.first.module.actuators.SpeedController;
@@ -12,7 +13,7 @@ import edu.first.module.Module;
  * @since Feb 13 18
  * @author Trevor Tsang
  */
-public class TalonSRXModule extends Module.StandardModule implements SpeedController {
+public class TalonSRXModule extends Module.StandardModule implements SpeedController  {
 	
 	private final WPI_TalonSRX talon;
 	
@@ -21,6 +22,27 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
             throw new NullPointerException("Null talon given");
 		}
 		this.talon = talon;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void init() {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void enableModule() {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void disableModule() {
+		this.set(0);
 	}
 
 	/**
@@ -84,6 +106,24 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 	public void set(double value) {
 		talon.set(value);
 	}
+	
+	/**
+	 * Sets the appropriate output on the talon, depending on the mode.
+	 * @param mode The output mode to apply.
+	 * In PercentOutput, the output is between -1.0 and 1.0, with 0.0 as stopped.
+	 * In Current mode, output value is in amperes.
+	 * In Velocity mode, output value is in position change / 100ms.
+	 * In Position mode, output value is in encoder ticks or an analog value,
+	 *   depending on the sensor. 
+	 * In Follower mode, the output value is the integer device ID of the talon to
+	 * duplicate.
+	 *
+	 * @param outputValue The setpoint value, as described above.
+	 */
+	public void set(ControlMode mode, double outputValue) {
+		talon.set(mode, outputValue);
+	}
+	
 
 	/**
 	 * {@inheritDoc}
@@ -120,28 +160,6 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 	 */
 	public void stopMotor() {
 		talon.stopMotor();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void init() {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void enableModule() {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void disableModule() {
-		this.set(0);
 	}
 
 	/**

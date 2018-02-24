@@ -55,6 +55,8 @@ public class Robot extends IterativeRobotAdapter {
 		// Initalizes all modules
 		ALL_MODULES.init();
 		
+		rotationalArm.set(ARM_PID_START); // Sets the rotationalArm to the starting position
+		
 		// Initializes the CameraServer twice. That's how it's done
         //CameraServer.getInstance().startAutomaticCapture();
         //CameraServer.getInstance().startAutomaticCapture();
@@ -106,6 +108,8 @@ public class Robot extends IterativeRobotAdapter {
 			}
 		});
 
+		//TODO Up scale, sides switch, down ground
+		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
 		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
@@ -196,6 +200,7 @@ public class Robot extends IterativeRobotAdapter {
 		if (gearShifter.get() == Direction.OFF) {
 			gearShifter.set(LOW_GEAR);
 		}
+		
 	}
 
 	// Runs every (approx.) 20ms in teleop
@@ -204,6 +209,7 @@ public class Robot extends IterativeRobotAdapter {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
+		
 	}
 
 	// Runs at the end of teleop
