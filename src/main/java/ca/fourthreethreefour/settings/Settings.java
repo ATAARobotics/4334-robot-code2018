@@ -11,6 +11,7 @@ public interface Settings {
 
 	SettingsFile settingsFile = new SettingsFile(new File("/settings.txt"));
 
+	String ROBOT_TYPE = settingsFile.getProperty("ROBOT_TYPE", "");
     String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "");
 	
     boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
@@ -28,7 +29,7 @@ public interface Settings {
 	int GEAR_SHIFTER_SOLENOID_1 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_1", 4);
 	int GEAR_SHIFTER_SOLENOID_2 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_2", 5);
 	
-	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 12);
+	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 8);
 	
 	int RAMP_LEFT_1 = settingsFile.getIntProperty("RAMP_LEFT_1", 4);
 	int RAMP_LEFT_2 = settingsFile.getIntProperty("RAMP_LEFT_2", 5);
