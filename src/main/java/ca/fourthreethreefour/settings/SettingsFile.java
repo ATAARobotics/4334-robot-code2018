@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class SettingsFile extends Properties {
 	//this line only exists so Eclipse would shut up about it
 	private static final long serialVersionUID = -6308390915164135156L;
+	private File file;
 	
 	DriverStation driverStation = DriverStation.getInstance();
 	
@@ -27,6 +28,7 @@ public class SettingsFile extends Properties {
 	public SettingsFile(File file) {
 		try {
 			load(new FileInputStream(file));
+			this.file = file;
 		} catch (FileNotFoundException fileNotFound) {
 			DriverStation.reportError("File not found", false);
 		} catch (IOException IOException) {
@@ -76,6 +78,19 @@ public class SettingsFile extends Properties {
 			return Boolean.parseBoolean(getProperty(key));
 		} else {
 			return defaultValue;
+		}
+	}
+	
+	/**
+	 * Reloads the settings file.
+	 */
+	public void reload() {
+		try {
+			load(new FileInputStream(file));
+		} catch (FileNotFoundException fileNotFound) {
+			DriverStation.reportError("File not found", false);
+		} catch (IOException IOException) {
+			DriverStation.reportWarning("I/O Exception", false);
 		}
 	}
 }

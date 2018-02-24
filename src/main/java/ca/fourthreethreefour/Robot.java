@@ -128,6 +128,8 @@ public class Robot extends IterativeRobotAdapter {
 
 	@Override
 	public void periodicDisabled() {
+		settingsFile.reload();
+		
 		if (AUTO_TYPE == "") { // If no type specified, ends method.
 			return;
 		}
