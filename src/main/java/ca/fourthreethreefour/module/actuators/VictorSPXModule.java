@@ -17,17 +17,21 @@ public class VictorSPXModule extends Module.StandardModule implements SpeedContr
 		this.victor = victor;
 	}
 	
+	public VictorSPXModule(int channel) {
+		this(new VictorSPX(channel));
+	}
+	
 	@Override
 	public void init() {
 	}
 
 	@Override
+	protected void enableModule() {
+	}
+	
+	@Override
 	protected void disableModule() {
 		victor.set(ControlMode.Disabled, 0);
-	}
-
-	@Override
-	protected void enableModule() {
 	}
 
 	@Override
@@ -54,6 +58,10 @@ public class VictorSPXModule extends Module.StandardModule implements SpeedContr
 	public void set(double value) {
 		victor.set(victor.getControlMode(), value);
 	}
+	
+	public void set(ControlMode mode, double value) {
+		victor.set(mode, value);
+	}
 
 	@Override
 	public void setRate(double value) {
@@ -73,6 +81,10 @@ public class VictorSPXModule extends Module.StandardModule implements SpeedContr
 	@Override
 	public void update() {
 		victor.valueUpdated();
+	}
+	
+	public double getAnalogIn() {
+		return victor.getSensorCollection().getAnalogIn();
 	}
 
 }
