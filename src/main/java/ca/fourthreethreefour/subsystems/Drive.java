@@ -1,5 +1,7 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
+import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
+import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModuleGroup;
 import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.identifiers.Function;
 import edu.first.identifiers.InversedSpeedController;
@@ -14,15 +16,15 @@ import edu.first.module.subsystems.Subsystem;
 
 public interface Drive extends Settings {
 	
-	VictorModule // Creates modules on these ports. Ports are determined in settings.txt on the RoboRIO,
-		left1 = new VictorModule(DRIVE_LEFT_1), // or the default ports in Settings.java.
-		left2 = new VictorModule(DRIVE_LEFT_2),
-		right1 = new VictorModule(DRIVE_RIGHT_1),
-		right2 = new VictorModule(DRIVE_RIGHT_2);
+	TalonSRXModule // Creates modules on these ports. Ports are determined in settings.txt on the RoboRIO,
+		left1 = new TalonSRXModule(DRIVE_LEFT_1), // or the default ports in Settings.java.
+		left2 = new TalonSRXModule(DRIVE_LEFT_2),
+		right1 = new TalonSRXModule(DRIVE_RIGHT_1),
+		right2 = new TalonSRXModule(DRIVE_RIGHT_2);
 	
-	VictorModuleGroup // Groups Modules together so they can be used as one speed controller.
-		left = new VictorModuleGroup(new VictorModule[] { left1, left2 }),
-		right = new VictorModuleGroup(new VictorModule[] { right1, right2 });
+	TalonSRXModuleGroup // Groups Modules together so they can be used as one speed controller.
+		left = new TalonSRXModuleGroup(new TalonSRXModule[] { left1, left2 }),
+		right = new TalonSRXModuleGroup(new TalonSRXModule[] { right1, right2 });
 
 	// Drivetrain object using the TalonSRX groups left and right. One side is reversed so they move in the same direction.
 	// TODO find out which side needs to be reversed
