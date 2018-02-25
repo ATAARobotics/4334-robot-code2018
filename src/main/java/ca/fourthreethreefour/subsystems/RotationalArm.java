@@ -2,12 +2,9 @@ package main.java.ca.fourthreethreefour.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.first.identifiers.Input;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
-import edu.first.module.sensors.AnalogInput;
 import edu.first.module.subsystems.Subsystem;
-import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.module.actuators.VictorSPXModule;
 import main.java.ca.fourthreethreefour.settings.Settings;
 

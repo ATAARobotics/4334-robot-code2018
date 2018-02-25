@@ -1,8 +1,5 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
-import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
-import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModuleGroup;
-import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.identifiers.Function;
 import edu.first.identifiers.InversedSpeedController;
 import edu.first.module.Module;
@@ -10,9 +7,10 @@ import edu.first.module.actuators.Drivetrain;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.actuators.DualActionSolenoidModule;
-import edu.first.module.actuators.VictorModule;
-import edu.first.module.actuators.VictorModuleGroup;
 import edu.first.module.subsystems.Subsystem;
+import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
+import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModuleGroup;
+import main.java.ca.fourthreethreefour.settings.Settings;
 
 public interface Drive extends Settings {
 	

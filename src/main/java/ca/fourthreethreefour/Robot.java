@@ -18,7 +18,6 @@ import main.java.ca.fourthreethreefour.commands.RampRetract;
 import main.java.ca.fourthreethreefour.commands.SetSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
-import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 public class Robot extends IterativeRobotAdapter {
 
