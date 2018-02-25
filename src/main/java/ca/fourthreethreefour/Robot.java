@@ -128,13 +128,13 @@ public class Robot extends IterativeRobotAdapter {
 			}
 		});
 		
-		controller1.addWhenPressed(XboxController.Y, new Command() {
+		/*controller1.addWhenPressed(XboxController.Y, new Command() {
 			
 			@Override
 			public void run() {
 				rotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
 			}
-		});
+		});*/
 		// Binds the axis to the motor
 		// controller1.addAxisBind(XboxController.TRIGGERS, rotationalArm);
 	}
