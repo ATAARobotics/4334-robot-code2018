@@ -1,11 +1,12 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+
+import edu.first.identifiers.Input;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
-import edu.first.module.sensors.DigitalInput;
+import edu.first.module.sensors.AnalogInput;
 import edu.first.module.subsystems.Subsystem;
-
 import main.java.ca.fourthreethreefour.module.actuators.VictorSPXModule;
 import main.java.ca.fourthreethreefour.settings.Settings;
 
@@ -18,16 +19,15 @@ import main.java.ca.fourthreethreefour.settings.Settings;
  */
 public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 	public static VictorSPXModule armMotor = new VictorSPXModule(ARM_MOTOR);
-	public static DigitalInput 
-		highLimitSwitch = new DigitalInput(HIGH_LIMIT_SWITCH),
-		lowLimitSwitch = new DigitalInput(LOW_LIMIT_SWITCH);
+	
+	Input potentiometer = new AnalogInput(POTENTIOMETER);
 	
 	public RotationalArm() { // Creates a public accessable class with a module of armMotor, highLimitSwitch, and lowLimitSwitch
-		super(new Module[] { highLimitSwitch, lowLimitSwitch });
+		super(new Module[] { armMotor });
 	}
 
 	public boolean shouldArmBeFlexed() {
-		double armAngle = armMotor.getAnalogIn();
+		double armAngle = potentiometer.get();
 		return (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX);
 	}
 
