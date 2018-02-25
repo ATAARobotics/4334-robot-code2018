@@ -23,12 +23,34 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 		}
 		this.talon = talon;
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public TalonSRXModule(int channel) {
 		this(new WPI_TalonSRX(channel));
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void init() {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void enableModule() {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void disableModule() {
+		this.set(0);
 	}
 
 	/**
@@ -139,28 +161,6 @@ public class TalonSRXModule extends Module.StandardModule implements SpeedContro
 	 */
 	public void stopMotor() {
 		talon.stopMotor();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void init() {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void enableModule() {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void disableModule() {
-		this.set(0);
 	}
 
 	/**

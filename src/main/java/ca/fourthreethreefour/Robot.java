@@ -12,7 +12,6 @@ import edu.first.module.joysticks.BindingJoystick.WhilePressed;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import main.java.ca.fourthreethreefour.commands.RampRetract;
@@ -60,8 +59,8 @@ public class Robot extends IterativeRobotAdapter {
 		rotationalArm.set(ARM_PID_START); // Sets the rotationalArm to the starting position
 		
 		// Initializes the CameraServer twice. That's how it's done
-        CameraServer.getInstance().startAutomaticCapture();
-        CameraServer.getInstance().startAutomaticCapture();
+        //CameraServer.getInstance().startAutomaticCapture();
+        //CameraServer.getInstance().startAutomaticCapture();
 
 		// Controller 1/driver
 		/*
@@ -114,14 +113,16 @@ public class Robot extends IterativeRobotAdapter {
 		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
-		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_OPEN));
+		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
+		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_OPEN));
 
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
-		controller2.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
-		controller2.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
-		
+		controller1.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
+		controller1.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
+
+		// Binds the axis to the motor
+		// controller1.addAxisBind(XboxController.TRIGGERS, rotationalArm);
 	}
 
 	private Command // Declares these as Command
@@ -132,6 +133,8 @@ public class Robot extends IterativeRobotAdapter {
 
 	@Override
 	public void periodicDisabled() {
+		settingsFile.reload();
+		
 		if (AUTO_TYPE == "") { // If no type specified, ends method.
 			return;
 		}

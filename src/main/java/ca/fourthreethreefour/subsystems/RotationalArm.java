@@ -1,12 +1,12 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.module.sensors.DigitalInput;
 import edu.first.module.subsystems.Subsystem;
-import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
+
+import main.java.ca.fourthreethreefour.module.actuators.VictorSPXModule;
 import main.java.ca.fourthreethreefour.settings.Settings;
 
 
@@ -17,13 +17,13 @@ import main.java.ca.fourthreethreefour.settings.Settings;
  * @author Cool and Joel
  */
 public class RotationalArm extends Subsystem implements Settings, Output, Arm {
-	public static TalonSRXModule armMotor = new TalonSRXModule(ARM_MOTOR);
+	public static VictorSPXModule armMotor = new VictorSPXModule(ARM_MOTOR);
 	public static DigitalInput 
 		highLimitSwitch = new DigitalInput(HIGH_LIMIT_SWITCH),
 		lowLimitSwitch = new DigitalInput(LOW_LIMIT_SWITCH);
 	
 	public RotationalArm() { // Creates a public accessable class with a module of armMotor, highLimitSwitch, and lowLimitSwitch
-		super(new Module[] { armMotor, highLimitSwitch, lowLimitSwitch });
+		super(new Module[] { highLimitSwitch, lowLimitSwitch });
 	}
 
 	public boolean shouldArmBeFlexed() {
@@ -40,5 +40,4 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 		if (rotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); } // TODO Check to see if this will always check or not
 		
 	}
-
 }
