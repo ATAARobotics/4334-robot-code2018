@@ -11,30 +11,29 @@ import main.java.ca.fourthreethreefour.settings.Settings;
 
 
 /**
- * Puts the full rotation parts of the arm into one class.
- * Designed to prevent going past the limit.
+ * Puts the parts of the arm that rotate and parts needed in one class that can be called upon with specific functions.
  * 
- * @author Cool and Joel
+ * @author Cool with assistance from Joel
  */
 public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 	
-	public static VictorSPXModule armMotor = new VictorSPXModule(ARM_MOTOR);
+	public static VictorSPXModule armMotor = new VictorSPXModule(ARM_MOTOR); // Creates a *Module called armMotor that can be called on
 	
-	Input potentiometer = new AnalogInput(POTENTIOMETER);
+	Input potentiometer = new AnalogInput(POTENTIOMETER); // Creates input that recieves from AnalogInput
 	
-	public PIDController armPID = new PIDController(potentiometer, this, ARM_P, ARM_I, ARM_D);
+	public PIDController armPID = new PIDController(potentiometer, this, ARM_P, ARM_I, ARM_D); // Creates a PIDController for the arm
 	
-	public RotationalArm() { // Creates a public accessable class with a module of armMotor, highLimitSwitch, and lowLimitSwitch
+	public RotationalArm() { // Creates a public accessable class with a module of armMotor
 		super(new Module[] { armMotor });
 	}
 
-	public boolean shouldArmBeFlexed() {
+	public boolean shouldArmBeFlexed() { // Checks if the arm's angle A.K.A the potentiometer value is between the set points.
 		double armAngle = potentiometer.get();
 		return (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX);
 	}
 
 	@Override
-	public void set(double value) {
+	public void set(double value) { // Sets the armMotor and checks if Arm should be flexed. Value is set from this in PIDController.
 		
 		armMotor.set(value);
 		
