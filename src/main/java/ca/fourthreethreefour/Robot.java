@@ -81,7 +81,7 @@ public class Robot extends IterativeRobotAdapter {
 		});
 
 		// When A is pressed, reverses gearShifter, changing the gear.
-		// controller1.addWhenPressed(XboxController.A, new ReverseSolenoid(gearShifter));
+		controller1.addWhenPressed(XboxController.A, new ReverseSolenoid(gearShifter));
 
 		/*
 		 * Controller 2/Operator
@@ -118,8 +118,23 @@ public class Robot extends IterativeRobotAdapter {
 		// When the B button is pressed, it retracts the flexSolenoid
 		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
 
+		controller1.addWhenPressed(XboxController.X, new Command() {
+			
+			@Override
+			public void run() {
+				rotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
+			}
+		});
+		
+		/*controller1.addWhenPressed(XboxController.Y, new Command() {
+			
+			@Override
+			public void run() {
+				rotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
+			}
+		});*/
 		// Binds the axis to the motor
-		controller1.addAxisBind(XboxController.TRIGGERS, rotationalArm);
+		// controller1.addAxisBind(XboxController.TRIGGERS, rotationalArm);
 	}
 
 	private Command // Declares these as Command
@@ -202,6 +217,7 @@ public class Robot extends IterativeRobotAdapter {
 		if (gearShifter.get() == Direction.OFF) {
 			gearShifter.set(LOW_GEAR);
 		}
+
 		
 	}
 
@@ -211,9 +227,22 @@ public class Robot extends IterativeRobotAdapter {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
+		
+		/*int anglePOV = DriverStation.getInstance().getStickPOV(XBOXCONTROLLER_2, 0);
+		
+		if (anglePOV == 0) {
+			rotationalArm.armPID.setSetpoint(ARM_PID_POS_3);
+		} else if (anglePOV == 90) {
+			rotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
+		} else if (anglePOV == 180) {
+			rotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
+		}*/
+		
+		
 
         Logging.log("Potentiometer value: " + potentiometer.get());
 	}
+	
 
 	// Runs at the end of teleop
 	@Override

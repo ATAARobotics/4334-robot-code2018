@@ -33,4 +33,6 @@ public interface Arm extends Settings {
 		CLAW_OPEN = Direction.RIGHT,
 		FLEX_EXTEND = Direction.LEFT,
 		FLEX_RETRACT = Direction.RIGHT;	
+	
+	
 }
