@@ -68,8 +68,8 @@ public interface Settings {
 	int TURN_D = settingsFile.getIntProperty("TURN_D", 0);
 	
 	// TODO get default values for all below
-	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0);
-	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0);
+	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.43);
+	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.91);
 	
 	double ARM_PID_START = settingsFile.getDoubleProperty("ARM_PID_START", 0); // Might end up being the
 	

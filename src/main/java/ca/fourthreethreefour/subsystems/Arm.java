@@ -1,5 +1,7 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
+import edu.first.identifiers.Input;
+import edu.first.module.sensors.AnalogInput;
 import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
@@ -18,8 +20,10 @@ public interface Arm extends Settings {
 	
 	RotationalArm rotationalArm = new RotationalArm();
 
+	AnalogInput potentiometer = new AnalogInput(POTENTIOMETER);
+
 	// Creates subsystem of above for use in Robot.java
-	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, rotationalArm });
+	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, rotationalArm, potentiometer });
 
 	/*
 	 *  Creates two directions that can be used in Autonomous for easy setting of their respective solenoid.

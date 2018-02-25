@@ -16,7 +16,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import main.java.ca.fourthreethreefour.commands.RampRetract;
 import main.java.ca.fourthreethreefour.commands.SetSolenoid;
+import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
+import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 public class Robot extends IterativeRobotAdapter {
 
@@ -54,8 +56,6 @@ public class Robot extends IterativeRobotAdapter {
 	public void init() {
 		// Initalizes all modules
 		ALL_MODULES.init();
-		
-		rotationalArm.set(ARM_PID_START); // Sets the rotationalArm to the starting position
 		
 		// Initializes the CameraServer twice. That's how it's done
         //CameraServer.getInstance().startAutomaticCapture();
@@ -213,7 +213,8 @@ public class Robot extends IterativeRobotAdapter {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
-		
+
+        Logging.log("Potentiometer value: " + potentiometer.get());
 	}
 
 	// Runs at the end of teleop
