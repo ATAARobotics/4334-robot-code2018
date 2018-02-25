@@ -11,3 +11,5 @@ bin/*
 /build/
 /dist/
 /bin/
+/.gradle/
+/.idea/
