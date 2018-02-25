@@ -201,6 +201,7 @@ public class Robot extends IterativeRobotAdapter {
 		if (gearShifter.get() == Direction.OFF) {
 			gearShifter.set(LOW_GEAR);
 		}
+
 		
 	}
 
@@ -214,13 +215,16 @@ public class Robot extends IterativeRobotAdapter {
 		int anglePOV = DriverStation.getInstance().getStickPOV(XBOXCONTROLLER_2, 0);
 		
 		if (anglePOV == 0) {
-			rotationalArm.set(ARM_PID_POS_3);
+			rotationalArm.armPID.setSetpoint(ARM_PID_POS_3);
 		} else if (anglePOV == 90) {
-			rotationalArm.set(ARM_PID_POS_2);
+			rotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
 		} else if (anglePOV == 180) {
-			rotationalArm.set(ARM_PID_POS_1);
+			rotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
 		}
+		
+		
 	}
+	
 
 	// Runs at the end of teleop
 	@Override
