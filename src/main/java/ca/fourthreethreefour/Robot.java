@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 import main.java.ca.fourthreethreefour.commands.RampRetract;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.SetSolenoid;
+import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
 
 public class Robot extends IterativeRobotAdapter {
@@ -55,8 +56,6 @@ public class Robot extends IterativeRobotAdapter {
 	public void init() {
 		// Initalizes all modules
 		ALL_MODULES.init();
-		
-		rotationalArm.set(ARM_PID_START); // Sets the rotationalArm to the starting position
 		
 		// Initializes the CameraServer twice. That's how it's done
         //CameraServer.getInstance().startAutomaticCapture();
@@ -121,6 +120,21 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
 		controller1.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
 
+		controller1.addWhenPressed(XboxController.X, new Command() {
+			
+			@Override
+			public void run() {
+				rotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
+			}
+		});
+		
+		controller1.addWhenPressed(XboxController.Y, new Command() {
+			
+			@Override
+			public void run() {
+				rotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
+			}
+		});
 		// Binds the axis to the motor
 		// controller1.addAxisBind(XboxController.TRIGGERS, rotationalArm);
 	}
@@ -133,7 +147,11 @@ public class Robot extends IterativeRobotAdapter {
 
 	@Override
 	public void periodicDisabled() {
-		settingsFile.reload();
+		try{
+			settingsFile.reload();
+		} catch (NullPointerException e) {
+			Timer.delay(1);
+		}
 		
 		if (AUTO_TYPE == "") { // If no type specified, ends method.
 			return;
@@ -212,7 +230,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.doBinds();
 		controller2.doBinds();
 		
-		int anglePOV = DriverStation.getInstance().getStickPOV(XBOXCONTROLLER_2, 0);
+		/*int anglePOV = DriverStation.getInstance().getStickPOV(XBOXCONTROLLER_2, 0);
 		
 		if (anglePOV == 0) {
 			rotationalArm.armPID.setSetpoint(ARM_PID_POS_3);
@@ -220,9 +238,11 @@ public class Robot extends IterativeRobotAdapter {
 			rotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
 		} else if (anglePOV == 180) {
 			rotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
-		}
+		}*/
 		
 		
+
+        Logging.log("Potentiometer value: " + potentiometer.get());
 	}
 	
 
