@@ -15,6 +15,7 @@ import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import main.java.ca.fourthreethreefour.commands.RampRetract;
+import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.SetSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
@@ -112,13 +113,11 @@ public class Robot extends IterativeRobotAdapter {
 		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
-		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
-		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_OPEN));
+		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(clawSolenoid));
 
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
-		controller1.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
-		controller1.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
+		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
 
 		// Binds the axis to the motor
 		controller1.addAxisBind(XboxController.TRIGGERS, rotationalArm);
