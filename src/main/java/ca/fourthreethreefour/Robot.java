@@ -132,7 +132,11 @@ public class Robot extends IterativeRobotAdapter {
 
 	@Override
 	public void periodicDisabled() {
-		settingsFile.reload();
+		try{
+			settingsFile.reload();
+		} catch (NullPointerException e) {
+			Timer.delay(1);
+		}
 		
 		if (AUTO_TYPE == "") { // If no type specified, ends method.
 			return;
