@@ -20,7 +20,7 @@ public class RotationalArm extends Subsystem implements Settings, Output, Arm {
 	
 	public static VictorSPXModule armMotor = new VictorSPXModule(ARM_MOTOR);
 	
-	Input potentiometer = new AnalogInput(0);
+	Input potentiometer = new AnalogInput(POTENTIOMETER);
 	
 	public PIDController armPID = new PIDController(potentiometer, this, ARM_P, ARM_I, ARM_D);
 	

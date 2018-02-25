@@ -40,6 +40,10 @@ TURN_P = 0
 TURN_I = 0
 TURN_D = 0
 
+ARM_P = 0
+ARM_I = 0
+ARM_D = 0
+
 ARM_ANGLE_MIN = 0.0
 ARM_ANGLE_MAX = 0.0
 

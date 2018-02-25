@@ -52,8 +52,7 @@ public interface Settings {
 	int ENCODER_LEFT_2 = settingsFile.getIntProperty("ENCODER_LEFT_2", 1);
 	int ENCODER_RIGHT_1 = settingsFile.getIntProperty("ENCODER_RIGHT_1", 2);
 	int ENCODER_RIGHT_2 = settingsFile.getIntProperty("ENCODER_RIGHT_2", 3);
-	int HIGH_LIMIT_SWITCH = settingsFile.getIntProperty("HIGH_LIMIT_SWITCH", 4);
-	int LOW_LIMIT_SWITCH = settingsFile.getIntProperty("LOW_LIMIT_SWITCH", 5);
+	int POTENTIOMETER = settingsFile.getIntProperty("POTENTIOMETER", 0);
 	
 	int XBOXCONTROLLER_1 = settingsFile.getIntProperty("XBOXCONTROLLER_1", 0);
 	int XBOXCONTROLLER_2 = settingsFile.getIntProperty("XBOXCONTROLLER_2", 1);
