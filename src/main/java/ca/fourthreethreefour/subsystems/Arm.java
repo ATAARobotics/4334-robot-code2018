@@ -1,13 +1,12 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
-import edu.first.identifiers.Input;
-import edu.first.module.sensors.AnalogInput;
-import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.actuators.DualActionSolenoidModule;
+import edu.first.module.sensors.AnalogInput;
 import edu.first.module.subsystems.Subsystem;
+import main.java.ca.fourthreethreefour.settings.Settings;
 
 public interface Arm extends Settings {
 	
