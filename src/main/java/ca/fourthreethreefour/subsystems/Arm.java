@@ -16,10 +16,10 @@ public interface Arm extends Settings {
 	DualActionSolenoidModule 
 		clawSolenoid = new DualActionSolenoidModule(CLAW_SOLENOID_1, CLAW_SOLENOID_2),
 		flexSolenoid = new DualActionSolenoidModule(FLEX_SOLENOID_1, FLEX_SOLENOID_2);
-	
-	RotationalArm rotationalArm = new RotationalArm();
 
-	AnalogInput potentiometer = new AnalogInput(POTENTIOMETER);
+    AnalogInput potentiometer = new AnalogInput(POTENTIOMETER);
+
+	RotationalArm rotationalArm = new RotationalArm();
 
 	// Creates subsystem of above for use in Robot.java
 	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, rotationalArm, potentiometer });

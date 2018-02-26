@@ -51,7 +51,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		COMMANDS.put("waitUntil", new WaitUntil());
 		COMMANDS.put("setGear", new SetGear());
 		COMMANDS.put("setArm", new SetArm());
-		COMMANDS.put("turnArm", new TurnArm());
 		//COMMANDS.put("driveupto", new DriveUpTo());
 	}
 
@@ -519,29 +518,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						// System.out.println("Error in SetGear: Gear set incorrectly");
 						throw new Error("Error in SetGear: Gear set incorrectly");
 					}
-				}
-			};
-		}
-	}
-
-	/**
-	 * Turn the arm to set point. Argument is setpoint, a double value.
-	 * 
-	 * @author Cool Kornak
-	 * @since 2018
-	 *
-	 */
-
-	// TODO May be getting a sensor for this motor. Would require another PID controller.
-	private static class TurnArm implements RuntimeCommand {
-		@Override
-		public Command getCommand(List<String> args) {
-
-			double setpoint = Double.parseDouble(args.get(0));
-			return new Command() {
-				@Override
-				public void run() {
-					rotationalArm.set(setpoint);
 				}
 			};
 		}

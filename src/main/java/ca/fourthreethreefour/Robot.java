@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import edu.first.command.Command;
 import edu.first.command.Commands;
+import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
@@ -14,11 +15,13 @@ import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.RampRetract;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.SetSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
+import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 public class Robot extends IterativeRobotAdapter {
 
@@ -71,6 +74,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.changeAxis(XboxController.LEFT_FROM_MIDDLE, speedFunction);
 		controller1.addDeadband(XboxController.RIGHT_X, 0.20);
 		controller1.invertAxis(XboxController.RIGHT_X);
+		controller1.addDeadband(XboxController.TRIGGERS, 0.20);
 
 		// Creates an axis bind for the left and right sticks
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
@@ -80,8 +84,8 @@ public class Robot extends IterativeRobotAdapter {
 			}
 		});
 
-		// When A is pressed, reverses gearShifter, changing the gear.
-		controller1.addWhenPressed(XboxController.A, new ReverseSolenoid(gearShifter));
+		// When right stick is pressed, reverses gearShifter, changing the gear.
+		controller1.addWhenPressed(XboxController.RIGHT_STICK, new ReverseSolenoid(gearShifter));
 
 		/*
 		 * Controller 2/Operator
@@ -108,6 +112,8 @@ public class Robot extends IterativeRobotAdapter {
 			}
 		});
 
+		controller2.addAxisBind(XboxController.TRIGGERS, rightRamp);
+
 		//TODO Up scale, sides switch, down ground
 		
 		// When left bumper is pressed, it closes the clawSolenoid
@@ -118,23 +124,32 @@ public class Robot extends IterativeRobotAdapter {
 		// When the B button is pressed, it retracts the flexSolenoid
 		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
 
+		controller1.addWhenPressed(XboxController.X, rotationalArm.armPID.enableCommand());
 		controller1.addWhenPressed(XboxController.X, new Command() {
-			
 			@Override
 			public void run() {
 				rotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
 			}
 		});
-		
-		/*controller1.addWhenPressed(XboxController.Y, new Command() {
-			
+
+		controller1.addWhenPressed(XboxController.Y, rotationalArm.armPID.enableCommand());
+		controller1.addWhenPressed(XboxController.Y, new Command() {
 			@Override
 			public void run() {
 				rotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
 			}
-		});*/
+		});
+
+		controller1.addWhenPressed(controller1.getRawAxisAsButton(XboxController.TRIGGERS, 0.20),
+				RotationalArm.armPID.disableCommand());
+
 		// Binds the axis to the motor
-		// controller1.addAxisBind(XboxController.TRIGGERS, rotationalArm);
+		controller1.addAxisBind(XboxController.TRIGGERS, new Output() {
+			@Override
+			public void set(double v) {
+					RotationalArm.armMotor.set(v);
+				}
+			});
 	}
 
 	private Command // Declares these as Command
@@ -237,10 +252,9 @@ public class Robot extends IterativeRobotAdapter {
 		} else if (anglePOV == 180) {
 			rotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
 		}*/
-		
-		
 
-        Logging.log("Potentiometer value: " + potentiometer.get());
+        // Logging.log("Potentiometer value: " + potentiometer.get());
+		SmartDashboard.putNumber("potentiometer", potentiometer.get());
 	}
 	
 
