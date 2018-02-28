@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import main.java.ca.fourthreethreefour.subsystems.Arm;
 import main.java.ca.fourthreethreefour.subsystems.Drive;
 import main.java.ca.fourthreethreefour.subsystems.DriveSensors;
+import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 import edu.first.command.Command;
 import edu.first.commands.CommandGroup;
 import edu.first.commands.common.LoopingCommand;
@@ -448,7 +449,11 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 * If 'open', then grabSolenoid will be set to GRAB_OPEN. 
 	 * If 'close', then grabSolenoid will be set to GRAB_OPEN.
 	 * If 'extend', then armSolenoid will be set to ARM_EXTEND.
-	 * If 'retract', then armSolenoid will be set to ARM_RETRACT
+	 * If 'retract', then armSolenoid will be set to ARM_RETRACT.
+	 * 
+	 * If 'high', then the armPID will be set to ARM_PID_HIGH.
+	 * If 'medium', then the armPID will be set to ARM_PID_MEDIUM.
+	 * If 'low', then the armPID will be set to ARM_PID_LOW.
 	 * 
 	 * @author Cool
 	 * @since 2018
@@ -473,6 +478,15 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						break;
 					case "retract":
 						Arm.flexSolenoid.set(FLEX_RETRACT);
+						break;
+					case "high":
+						RotationalArm.armPID.setSetpoint(ARM_PID_HIGH);
+						break;
+					case "medium":
+						RotationalArm.armPID.setSetpoint(ARM_PID_MEDIUM);
+						break;
+					case "low":
+						RotationalArm.armPID.setSetpoint(ARM_PID_LOW);
 						break;
 					case "":
 						//System.out.println("Error in SetArm: No direction set");
