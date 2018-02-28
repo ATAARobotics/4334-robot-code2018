@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import edu.first.command.Command;
 import edu.first.command.Commands;
-import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
@@ -18,8 +17,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.RampRetract;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
-import main.java.ca.fourthreethreefour.commands.SetSolenoid;
-import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
@@ -51,8 +48,8 @@ public class Robot extends IterativeRobotAdapter {
 
 	// Creates a bind to be used, with button and command RampRetract
 	private WhilePressed 
-		leftRampRetractionBind = new WhilePressed(controller1.getBack(), new RampRetract(leftRamp)),
-		rightRampRetractionBind = new WhilePressed(controller1.getStart(), new RampRetract(rightRamp));
+		leftRampRetractionBind = new WhilePressed(controller2.getBack(), new RampRetract(leftRamp)),
+		rightRampRetractionBind = new WhilePressed(controller2.getStart(), new RampRetract(rightRamp));
 
 	// runs when the robot is first turned on
 	@Override
