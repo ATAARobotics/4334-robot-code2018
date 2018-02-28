@@ -77,9 +77,9 @@ public interface Settings {
 	
 	double ARM_PID_START = settingsFile.getDoubleProperty("ARM_PID_START", 0.0); // Might end up being the
 	
-	double ARM_PID_POS_1 = settingsFile.getDoubleProperty("ARM_PID_POS_1", 0.5); // same?
-	double ARM_PID_POS_2 = settingsFile.getDoubleProperty("ARM_PID_POS_2", 0.0);
-	double ARM_PID_POS_3 = settingsFile.getDoubleProperty("ARM_PID_POS_3", 0.0);
+	double ARM_PID_LOW = settingsFile.getDoubleProperty("ARM_PID_LOW", 0.5); // same?
+	double ARM_PID_MEDIUM = settingsFile.getDoubleProperty("ARM_PID_MEDIUM", 0.0);
+	double ARM_PID_HIGH = settingsFile.getDoubleProperty("ARM_PID_HIGH", 0.0);
 	
 	double ARM_PID_MIN = settingsFile.getDoubleProperty("ARM_PID_MIN", 0.0);
 	double ARM_PID_MAX = settingsFile.getDoubleProperty("ARM_PID_MAX", 0.0);

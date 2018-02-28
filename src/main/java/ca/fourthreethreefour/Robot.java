@@ -131,7 +131,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.addWhenPressed(XboxController.X, new Command() {
 			@Override
 			public void run() {
-				RotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
+				RotationalArm.armPID.setSetpoint(ARM_PID_LOW);
 			}
 		});
 
@@ -139,7 +139,7 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.addWhenPressed(XboxController.Y, new Command() {
 			@Override
 			public void run() {
-				RotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
+				RotationalArm.armPID.setSetpoint(ARM_PID_MEDIUM);
 			}
 		});
 
@@ -246,11 +246,11 @@ public class Robot extends IterativeRobotAdapter {
 		/*int anglePOV = DriverStation.getInstance().getStickPOV(XBOXCONTROLLER_2, 0);
 		
 		if (anglePOV == 0) {
-			rotationalArm.armPID.setSetpoint(ARM_PID_POS_3);
+			rotationalArm.armPID.setSetpoint(ARM_PID_HIGH);
 		} else if (anglePOV == 90) {
-			rotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
+			rotationalArm.armPID.setSetpoint(ARM_PID_MEDIUM);
 		} else if (anglePOV == 180) {
-			rotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
+			rotationalArm.armPID.setSetpoint(ARM_PID_LOW);
 		}*/
 
         // Logging.log("Potentiometer value: " + potentiometer.get());
