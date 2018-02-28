@@ -57,7 +57,7 @@ public class Robot extends IterativeRobotAdapter {
 	// runs when the robot is first turned on
 	@Override
 	public void init() {
-		// Initalizes all modules
+		// Initializes all modules
 		ALL_MODULES.init();
 		
 		// Initializes the CameraServer twice. That's how it's done
@@ -124,32 +124,28 @@ public class Robot extends IterativeRobotAdapter {
 		// When the B button is pressed, it retracts the flexSolenoid
 		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
 
-		controller1.addWhenPressed(XboxController.X, rotationalArm.armPID.enableCommand());
-		controller1.addWhenPressed(XboxController.X, new Command() {
-			@Override
-			public void run() {
-				rotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
-			}
-		});
 
-		controller1.addWhenPressed(XboxController.Y, rotationalArm.armPID.enableCommand());
-		controller1.addWhenPressed(XboxController.Y, new Command() {
-			@Override
-			public void run() {
-				rotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
-			}
-		});
-
+		// Binds the axis to the motor
+		controller1.addAxisBind(XboxController.TRIGGERS, RotationalArm.armMotor);
 		controller1.addWhenPressed(controller1.getRawAxisAsButton(XboxController.TRIGGERS, 0.20),
 				RotationalArm.armPID.disableCommand());
 
-		// Binds the axis to the motor
-		controller1.addAxisBind(XboxController.TRIGGERS, new Output() {
+		controller1.addWhenPressed(XboxController.X, RotationalArm.armPID.enableCommand());
+		controller1.addWhenPressed(XboxController.X, new Command() {
 			@Override
-			public void set(double v) {
-					RotationalArm.armMotor.set(v);
-				}
-			});
+			public void run() {
+				RotationalArm.armPID.setSetpoint(ARM_PID_POS_1);
+			}
+		});
+
+		controller1.addWhenPressed(XboxController.Y, RotationalArm.armPID.enableCommand());
+		controller1.addWhenPressed(XboxController.Y, new Command() {
+			@Override
+			public void run() {
+				RotationalArm.armPID.setSetpoint(ARM_PID_POS_2);
+			}
+		});
+
 	}
 
 	private Command // Declares these as Command
@@ -157,6 +153,12 @@ public class Robot extends IterativeRobotAdapter {
 		commandRLR,
 		commandLLL,
 		commandRRR;
+
+	@Override
+	public void initDisabled() {
+		ALL_MODULES.disable();
+		RotationalArm.armPID.disable();
+	}
 
 	@Override
 	public void periodicDisabled() {
@@ -232,7 +234,6 @@ public class Robot extends IterativeRobotAdapter {
 		if (gearShifter.get() == Direction.OFF) {
 			gearShifter.set(LOW_GEAR);
 		}
-
 		
 	}
 
@@ -242,7 +243,9 @@ public class Robot extends IterativeRobotAdapter {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
-		
+
+        if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
+
 		/*int anglePOV = DriverStation.getInstance().getStickPOV(XBOXCONTROLLER_2, 0);
 		
 		if (anglePOV == 0) {
@@ -263,6 +266,7 @@ public class Robot extends IterativeRobotAdapter {
 	public void endTeleoperated() {
 		controller1.removeBind(leftRampRetractionBind);
 		controller1.removeBind(rightRampRetractionBind);
+		RotationalArm.armPID.disable();
 		TELEOP_MODULES.disable();
 	}
 

@@ -19,7 +19,7 @@ public class RotationalArm extends Subsystem implements Settings, Arm {
 
 	public static VictorSPXModule armMotor = new VictorSPXModule(ARM_MOTOR); // Creates a *Module called armMotor that can be called on
 
-	private static boolean shouldArmBeFlexed() { // Checks if the arm's angle A.K.A the potentiometer value is between the set points.
+	public static boolean shouldArmBeFlexed() { // Checks if the arm's angle A.K.A the potentiometer value is between the set points.
 		double armAngle = potentiometer.get();
 		return (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX && flexSolenoid.get() == FLEX_EXTEND);
 	}
