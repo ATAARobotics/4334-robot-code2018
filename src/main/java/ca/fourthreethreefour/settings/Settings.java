@@ -39,7 +39,6 @@ public interface Settings {
 	int RAMP_RELEASE_LEFT = settingsFile.getIntProperty("RAMP_RELEASE_LEFT", 6);
 	int RAMP_RELEASE_RIGHT = settingsFile.getIntProperty("RAMP_RELEASE_RIGHT", 7);
 	
-	//int RAMP_RELEASE_SPEED = settingsFile.getIntProperty("RAMP_RELEASE_SPEED", 1);
 	double RAMP_RETRACT_SPEED = settingsFile.getDoubleProperty("RAMP_RETRACT_SPEED", -0.1);
 	
 	int CLAW_SOLENOID_1 = settingsFile.getIntProperty("CLAW_SOLENOID_1", 0);
@@ -80,8 +79,5 @@ public interface Settings {
 	double ARM_PID_LOW = settingsFile.getDoubleProperty("ARM_PID_LOW", 0.5); // same?
 	double ARM_PID_MEDIUM = settingsFile.getDoubleProperty("ARM_PID_MEDIUM", 0.0);
 	double ARM_PID_HIGH = settingsFile.getDoubleProperty("ARM_PID_HIGH", 0.0);
-	
-	double ARM_PID_MIN = settingsFile.getDoubleProperty("ARM_PID_MIN", 0.0);
-	double ARM_PID_MAX = settingsFile.getDoubleProperty("ARM_PID_MAX", 0.0);
 	
 }
