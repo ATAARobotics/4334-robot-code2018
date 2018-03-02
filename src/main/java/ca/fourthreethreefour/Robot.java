@@ -2,6 +2,7 @@ package main.java.ca.fourthreethreefour;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 
 import edu.first.command.Command;
 import edu.first.command.Commands;
@@ -52,16 +53,19 @@ public class Robot extends IterativeRobotAdapter {
 		leftRampRetractionBind = new WhilePressed(controller2.getBack(), new RampRetract(leftRamp)),
 		rightRampRetractionBind = new WhilePressed(controller2.getStart(), new RampRetract(rightRamp));
 
+	String settingsActive;
+	
 	// runs when the robot is first turned on
 	@Override
 	public void init() {
 		// Initializes all modules
 		ALL_MODULES.init();
 		
+		settingsActive = settingsFile.toString();
 		// Initializes the CameraServer twice. That's how it's done
         //CameraServer.getInstance().startAutomaticCapture();
         //CameraServer.getInstance().startAutomaticCapture();
-
+		
 		// Controller 1/driver
 		/*
 		 * Sets the deadband for LEFT_FROM_MIDDLE and RIGHT_X. If the input value from
@@ -159,10 +163,16 @@ public class Robot extends IterativeRobotAdapter {
 
 	@Override
 	public void periodicDisabled() {
-		try{
+		
+		try {
 			settingsFile.reload();
+			
 		} catch (NullPointerException e) {
 			Timer.delay(1);
+		}
+		
+		if (!settingsActive.equalsIgnoreCase(settingsFile.toString())) {
+			throw new RuntimeException(); // If it HAS changed, best to crash the Robot so it gets the update.
 		}
 		
 		if (AUTO_TYPE == "") { // If no type specified, ends method.
@@ -254,6 +264,7 @@ public class Robot extends IterativeRobotAdapter {
 		}*/
 
 		SmartDashboard.putNumber("potentiometer", potentiometer.get());
+		
 	}
 	
 
