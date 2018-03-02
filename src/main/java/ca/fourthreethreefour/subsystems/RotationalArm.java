@@ -23,7 +23,7 @@ public class RotationalArm extends Subsystem implements Settings, Arm {
 		double armAngle = potentiometer.get();
 		return (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX && flexSolenoid.get() == FLEX_EXTEND);
 	}
-
+	
 	public static PIDController armPID = new PIDController(potentiometer, new Output() {
 		@Override
 		public void set(double value) {

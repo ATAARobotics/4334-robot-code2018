@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import edu.first.command.Command;
 import edu.first.command.Commands;
+import edu.first.identifiers.TransformedOutput;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
@@ -123,10 +124,9 @@ public class Robot extends IterativeRobotAdapter {
 
 
 		// Binds the axis to the motor
-		controller1.addAxisBind(XboxController.TRIGGERS, RotationalArm.armMotor);
+		controller1.addAxisBind(XboxController.TRIGGERS, new TransformedOutput(RotationalArm.armMotor, armFunction));
 		controller1.addWhenPressed(controller1.getRawAxisAsButton(XboxController.TRIGGERS, 0.20),
 				RotationalArm.armPID.disableCommand());
-
 		controller1.addWhenPressed(XboxController.X, RotationalArm.armPID.enableCommand());
 		controller1.addWhenPressed(XboxController.X, new Command() {
 			@Override
@@ -253,7 +253,6 @@ public class Robot extends IterativeRobotAdapter {
 			rotationalArm.armPID.setSetpoint(ARM_PID_LOW);
 		}*/
 
-        // Logging.log("Potentiometer value: " + potentiometer.get());
 		SmartDashboard.putNumber("potentiometer", potentiometer.get());
 	}
 	

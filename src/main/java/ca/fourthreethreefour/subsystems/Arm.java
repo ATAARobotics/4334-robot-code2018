@@ -1,5 +1,6 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
+import edu.first.identifiers.Function;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
@@ -34,5 +35,10 @@ public interface Arm extends Settings {
 		FLEX_EXTEND = Direction.LEFT,
 		FLEX_RETRACT = Direction.RIGHT;	
 	
-	
+	Function armFunction = new Function() {
+		@Override
+		public double F(double in) {
+			return in * ARM_SPEED;
+		}
+	};
 }
