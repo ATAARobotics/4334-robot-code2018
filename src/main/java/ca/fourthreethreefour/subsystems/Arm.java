@@ -34,11 +34,6 @@ public interface Arm extends Settings {
 		CLAW_OPEN = Direction.RIGHT,
 		FLEX_EXTEND = Direction.LEFT,
 		FLEX_RETRACT = Direction.RIGHT;	
-	
-	Function armFunction = new Function() {
-		@Override
-		public double F(double in) {
-			return in * ARM_SPEED;
-		}
-	};
+
+	Function armFunction = new Function.ProductFunction(ARM_SPEED);
 }

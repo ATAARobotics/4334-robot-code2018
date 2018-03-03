@@ -2,10 +2,11 @@ package main.java.ca.fourthreethreefour;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 
 import edu.first.command.Command;
 import edu.first.command.Commands;
+import edu.first.commands.common.SetOutput;
+import edu.first.identifiers.Output;
 import edu.first.identifiers.TransformedOutput;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
@@ -22,7 +23,7 @@ import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
-public class Robot extends IterativeRobotAdapter {
+public class Robot extends IterativeRobotAdapter implements Constants {
 
 	/*
 	 * Creates Subsystems AUTO and TELEOP to separate modules required to be enabled
@@ -92,7 +93,9 @@ public class Robot extends IterativeRobotAdapter {
 		/*
 		 * Controller 2/Operator
 		 */
-		
+
+		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
+
 		/*
 		 * When Start/Back is pressed first time, set respective Release solenoid to true
 		 * (active), and create a respective RampRetractionBind. Next time pressed, runs
@@ -120,33 +123,31 @@ public class Robot extends IterativeRobotAdapter {
 		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
-		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(clawSolenoid));
+		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(clawSolenoid));
 
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
-		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
-
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
 
 		// Binds the axis to the motor
-		controller1.addAxisBind(XboxController.TRIGGERS, new TransformedOutput(RotationalArm.armMotor, armFunction));
-		controller1.addWhenPressed(controller1.getRawAxisAsButton(XboxController.TRIGGERS, 0.20),
-				RotationalArm.armPID.disableCommand());
-		controller1.addWhenPressed(XboxController.X, RotationalArm.armPID.enableCommand());
-		controller1.addWhenPressed(XboxController.X, new Command() {
+		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
 			@Override
-			public void run() {
-				RotationalArm.armPID.setSetpoint(ARM_PID_LOW);
+			public void set(double v) {
+				if (Math.abs(v) > 0.2) {
+					if (RotationalArm.armPID.isEnabled()) {
+						RotationalArm.armPID.disable();
+					}
+				}
+				if (!RotationalArm.armPID.isEnabled()) {
+					RotationalArm.armMotor.set(v);
+				}
 			}
 		});
+		controller2.addWhenPressed(XboxController.X, RotationalArm.armPID.enableCommand());
+		controller2.addWhenPressed(XboxController.X, new SetOutput(RotationalArm.armPID, ARM_PID_LOW));
 
-		controller1.addWhenPressed(XboxController.Y, RotationalArm.armPID.enableCommand());
-		controller1.addWhenPressed(XboxController.Y, new Command() {
-			@Override
-			public void run() {
-				RotationalArm.armPID.setSetpoint(ARM_PID_MEDIUM);
-			}
-		});
-
+		controller2.addWhenPressed(XboxController.Y, RotationalArm.armPID.enableCommand());
+		controller2.addWhenPressed(XboxController.Y, new SetOutput(RotationalArm.armPID, ARM_PID_MEDIUM));
 	}
 
 	private Command // Declares these as Command
