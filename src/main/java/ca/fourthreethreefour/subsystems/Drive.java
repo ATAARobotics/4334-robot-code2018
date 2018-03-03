@@ -39,15 +39,23 @@ public interface Drive extends Settings {
 	 * Function used in driving controls that squares the input of the joysticks on the controller. 
 	 * This is done to make controls more intuitive.
 	 */
-	Function  
-		speedFunction = new Function() { // makes a function for speed
+	Function speedFunction = new Function() {
 			@Override
-			public double F(double in) { // sets the function to return a double
-				return in > 0 ? in * in : -(in * in); //if in is greater than 0, multiply it by itself
-				//^ otherwise multiply by itself and make it negative
+			public double F(double in) {
+				// if in is greater than 0, multiply it by itself, otherwise multiply by itself and make it negative
+				return in > 0 ? in * in : -(in * in);
 			}
 	};
-	
+
+	Function turnFunction = new Function() {
+		@Override
+		public double F(double in) {
+			//if in is greater than 0, bring it to the power of TURN_CURVE
+			//otherwise bring its absolute value to the power of TURN_CURVE and make it negative
+			return in > 0 ? Math.pow(in, TURN_CURVE) : -Math.pow(Math.abs(in), TURN_CURVE);
+		}
+	};
+
 	// Creates subsystem called drive, with Modules drivetrain, left, right, and gearShifter
 	public Subsystem drive = new Subsystem(new Module[] { drivetrain, left, right, gearShifter });
 

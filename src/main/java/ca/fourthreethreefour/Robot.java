@@ -77,6 +77,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller1.changeAxis(XboxController.LEFT_FROM_MIDDLE, speedFunction);
 		controller1.addDeadband(XboxController.RIGHT_X, 0.20);
 		controller1.invertAxis(XboxController.RIGHT_X);
+		controller1.changeAxis(XboxController.RIGHT_X, turnFunction);
 		controller1.addDeadband(XboxController.TRIGGERS, 0.20);
 
 		// Creates an axis bind for the left and right sticks
@@ -143,11 +144,14 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		});
-		controller2.addWhenPressed(XboxController.X, RotationalArm.armPID.enableCommand());
-		controller2.addWhenPressed(XboxController.X, new SetOutput(RotationalArm.armPID, ARM_PID_LOW));
+		controller2.addWhenPressed(XboxController.DPAD_DOWN, RotationalArm.armPID.enableCommand());
+		controller2.addWhenPressed(XboxController.DPAD_DOWN, new SetOutput(RotationalArm.armPID, ARM_PID_LOW));
 
-		controller2.addWhenPressed(XboxController.Y, RotationalArm.armPID.enableCommand());
-		controller2.addWhenPressed(XboxController.Y, new SetOutput(RotationalArm.armPID, ARM_PID_MEDIUM));
+		controller2.addWhenPressed(XboxController.DPAD_RIGHT, RotationalArm.armPID.enableCommand());
+		controller2.addWhenPressed(XboxController.DPAD_RIGHT, new SetOutput(RotationalArm.armPID, ARM_PID_MEDIUM));
+
+		controller2.addWhenPressed(XboxController.DPAD_UP, RotationalArm.armPID.enableCommand());
+		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));
 	}
 
 	private Command // Declares these as Command
