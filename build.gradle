@@ -36,7 +36,7 @@ dependencies {
     compile ctre()
     compile navx()
     compile openrio.powerup.matchData()
-    compile group: 'edu.first', name: 'atalibj', version: '0.0.1'
+    compile group: 'edu.first', name: 'atalibj'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
