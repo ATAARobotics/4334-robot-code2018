@@ -1,7 +1,6 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
 import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
-import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModuleGroup;
 import main.java.ca.fourthreethreefour.module.actuators.VictorSPXModule;
 import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.identifiers.InversedSpeedController;

@@ -14,5 +14,6 @@
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
 	<classpathentry kind="lib" path="/atalibj/build/libs/atalibj.jar"/>
+	<classpathentry kind="lib" path="lib/atalibj.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

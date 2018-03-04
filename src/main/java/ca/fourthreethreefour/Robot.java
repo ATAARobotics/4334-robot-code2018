@@ -16,13 +16,11 @@ import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
-import javax.management.RuntimeErrorException;
 
 public class Robot extends IterativeRobotAdapter implements Constants {
 
