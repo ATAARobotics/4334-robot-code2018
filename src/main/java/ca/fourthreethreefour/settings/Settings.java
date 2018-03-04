@@ -2,13 +2,30 @@ package main.java.ca.fourthreethreefour.settings;
 
 import java.io.File;
 
+import main.java.ca.fourthreethreefour.module.actuators.MotorModule;
+import main.java.ca.fourthreethreefour.module.actuators.MotorModule.Type;
+
 /**
  * Contains all values {@link SettingsFile} can parse, as well as their keys and default values.
  * @author Trevor, but also Joel
  * 
  */
 public interface Settings {
+	
+	
+	public static Type toType(String type) {
+		if (type.equalsIgnoreCase("talon_srx") || type.equalsIgnoreCase("talonsrx")) {
+			return Type.TALON_SRX;
+		}
+		
+		if (type.equalsIgnoreCase("victor_spx") || type.equalsIgnoreCase("victorspx")) {
+			return Type.VICTOR_SPX;
+		}
+		
+		return null;
+	}
 
+	
 	SettingsFile settingsFile = new SettingsFile(new File("/settings.txt"));
 
 	String ROBOT_TYPE = settingsFile.getProperty("ROBOT_TYPE", "");
@@ -25,7 +42,7 @@ public interface Settings {
 	int DRIVE_LEFT_2 = settingsFile.getIntProperty("DRIVE_LEFT_2", 1);
 	int DRIVE_RIGHT_1 = settingsFile.getIntProperty("DRIVE_RIGHT_1", 2);
 	int DRIVE_RIGHT_2 = settingsFile.getIntProperty("DRIVE_RIGHT_2", 3);
-	
+
 	int GEAR_SHIFTER_SOLENOID_1 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_1", 4);
 	int GEAR_SHIFTER_SOLENOID_2 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_2", 5);
 	
@@ -36,11 +53,23 @@ public interface Settings {
 	int RAMP_LEFT_2 = settingsFile.getIntProperty("RAMP_LEFT_2", 5);
 	int RAMP_RIGHT_1 = settingsFile.getIntProperty("RAMP_RIGHT_1", 6);
 	int RAMP_RIGHT_2 = settingsFile.getIntProperty("RAMP_RIGHT_2", 7);
-	
+
 	int RAMP_RELEASE_LEFT = settingsFile.getIntProperty("RAMP_RELEASE_LEFT", 6);
 	int RAMP_RELEASE_RIGHT = settingsFile.getIntProperty("RAMP_RELEASE_RIGHT", 7);
 	
 	double RAMP_RETRACT_SPEED = settingsFile.getDoubleProperty("RAMP_RETRACT_SPEED", -0.1);
+	
+	MotorModule.Type TYPE_DRIVE_LEFT_1 = toType(settingsFile.getProperty("TYPE_DRIVE_LEFT_1", "talonsrx"));
+	MotorModule.Type TYPE_DRIVE_LEFT_2 = toType(settingsFile.getProperty("TYPE_DRIVE_LEFT_2", "talonsrx"));
+	MotorModule.Type TYPE_DRIVE_RIGHT_1 = toType(settingsFile.getProperty("TYPE_DRIVE_RIGHT_1", "talonsrx"));
+	MotorModule.Type TYPE_DRIVE_RIGHT_2 = toType(settingsFile.getProperty("TYPE_DRIVE_RIGHT_2", "talonsrx"));
+
+	MotorModule.Type TYPE_ARM_MOTOR = toType(settingsFile.getProperty("TYPE_ARM_MOTOR", "talonsrx"));
+
+	MotorModule.Type TYPE_RAMP_LEFT_1 = toType(settingsFile.getProperty("TYPE_RAMP_LEFT_1", "talonsrx"));
+	MotorModule.Type TYPE_RAMP_LEFT_2 = toType(settingsFile.getProperty("TYPE_RAMP_LEFT_2", "talonsrx"));
+	MotorModule.Type TYPE_RAMP_RIGHT_1 = toType(settingsFile.getProperty("TYPE_RAMP_RIGHT_1", "talonsrx"));
+	MotorModule.Type TYPE_RAMP_RIGHT_2 = toType(settingsFile.getProperty("TYPE_RAMP_RIGHT_2", "talonsrx"));
 	
 	int CLAW_SOLENOID_1 = settingsFile.getIntProperty("CLAW_SOLENOID_1", 0);
 	int CLAW_SOLENOID_2 = settingsFile.getIntProperty("CLAW_SOLENOID_2", 1);

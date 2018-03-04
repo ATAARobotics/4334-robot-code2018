@@ -12,22 +12,6 @@ public class MotorModule extends Module.StandardModule implements SpeedControlle
 		TALON_SRX, VICTOR_SPX,
 	}
 	
-	private static Type toType(String type) {
-		if (type.equalsIgnoreCase("talon_srx") || type.equalsIgnoreCase("talonsrx")) {
-			return Type.TALON_SRX;
-		}
-		
-		if (type.equalsIgnoreCase("victor_spx") || type.equalsIgnoreCase("victorspx")) {
-			return Type.VICTOR_SPX;
-		}
-		
-		return null;
-	}
-	
-	public MotorModule(String type, int channel) {
-		this(toType(type), channel);
-	}
-	
 	public MotorModule(Type type, int channel) {
 		switch (type) {
 			case TALON_SRX:
