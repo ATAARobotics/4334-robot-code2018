@@ -7,7 +7,6 @@ import edu.first.command.Command;
 import edu.first.command.Commands;
 import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
-import edu.first.identifiers.TransformedOutput;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
@@ -18,10 +17,12 @@ import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import main.java.ca.fourthreethreefour.commands.RampRetract;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
+import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
+
+import javax.management.RuntimeErrorException;
 
 public class Robot extends IterativeRobotAdapter implements Constants {
 
@@ -112,7 +113,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
 			@Override
-			public void set(double v) {
+			public void set(double v) { // TODO this should set setpoint instead of disabling PID
 				if (Math.abs(v) > 0.2) {
 					if (RotationalArm.armPID.isEnabled()) {
 						RotationalArm.armPID.disable();
@@ -238,8 +239,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
         if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
 
-		SmartDashboard.putNumber("potentiometer", potentiometer.get());
-		
+		Logging.log("potentiometer: " + (ARM_PID_TOP - potentiometer.get()));
 	}
 	
 
