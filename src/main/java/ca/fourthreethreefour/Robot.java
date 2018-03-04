@@ -118,7 +118,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			}
 		});
 
-		controller2.addAxisBind(XboxController.TRIGGERS, rightRamp);
 
 		//TODO Up scale, sides switch, down ground
 		
@@ -175,6 +174,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		} catch (NullPointerException e) {
 			Timer.delay(1);
 		}
+
+		// TODO add limit switch button to set ARM_PID_TOP constant to current potentiometer value
 		
 		if (!settingsActive.equalsIgnoreCase(settingsFile.toString())) {
 			throw new RuntimeException(); // If it HAS changed, best to crash the Robot so it gets the update.
@@ -257,16 +258,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.doBinds();
 
         if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
-
-		/*int anglePOV = DriverStation.getInstance().getStickPOV(XBOXCONTROLLER_2, 0);
-		
-		if (anglePOV == 0) {
-			rotationalArm.armPID.setSetpoint(ARM_PID_HIGH);
-		} else if (anglePOV == 90) {
-			rotationalArm.armPID.setSetpoint(ARM_PID_MEDIUM);
-		} else if (anglePOV == 180) {
-			rotationalArm.armPID.setSetpoint(ARM_PID_LOW);
-		}*/
 
 		SmartDashboard.putNumber("potentiometer", potentiometer.get());
 		
