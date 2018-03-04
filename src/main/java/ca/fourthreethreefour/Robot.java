@@ -17,10 +17,12 @@ import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import main.java.ca.fourthreethreefour.commands.RampRetract;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
+import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
+
+import javax.management.RuntimeErrorException;
 
 public class Robot extends IterativeRobotAdapter implements Constants {
 
@@ -50,18 +52,17 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	// Creates a bind to be used, with button and command RampRetract
 	private WhilePressed 
-		leftRampRetractionBind = new WhilePressed(controller2.getBack(), new RampRetract(leftRamp)),
-		rightRampRetractionBind = new WhilePressed(controller2.getStart(), new RampRetract(rightRamp));
+		leftRampRetractionBind = new WhilePressed(controller2.getBack(), new SetOutput(leftRamp, RAMP_RETRACT_SPEED)),
+		rightRampRetractionBind = new WhilePressed(controller2.getStart(), new SetOutput(rightRamp, RAMP_RETRACT_SPEED));
 
-	String settingsActive;
-	
+	String settingsActive = settingsFile.toString();
+
 	// runs when the robot is first turned on
 	@Override
 	public void init() {
 		// Initializes all modules
 		ALL_MODULES.init();
-		
-		settingsActive = settingsFile.toString();
+
 		// Initializes the CameraServer twice. That's how it's done
         //CameraServer.getInstance().startAutomaticCapture();
         //CameraServer.getInstance().startAutomaticCapture();
@@ -96,27 +97,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
-		/*
-		 * When Start/Back is pressed first time, set respective Release solenoid to true
-		 * (active), and create a respective RampRetractionBind. Next time pressed, runs
-		 * bind.
-		 */
-		controller2.addWhenPressed(XboxController.START, new Command() {
-			@Override
-			public void run() {
-				rightRelease.setPosition(true);
-				controller2.addBind(rightRampRetractionBind);
-			}
-		});
-
-		controller2.addWhenPressed(XboxController.BACK, new Command() {
-			@Override
-			public void run() {
-				leftRelease.setPosition(true);
-				controller2.addBind(leftRampRetractionBind);
-			}
-		});
-
+		controller2.addBind(rightRampRetractionBind);
+		controller2.addBind(leftRampRetractionBind);
 
 		//TODO Up scale, sides switch, down ground
 		
@@ -131,7 +113,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
 			@Override
-			public void set(double v) {
+			public void set(double v) { // TODO this should set setpoint instead of disabling PID
 				if (Math.abs(v) > 0.2) {
 					if (RotationalArm.armPID.isEnabled()) {
 						RotationalArm.armPID.disable();
@@ -169,7 +151,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		
 		try {
 			settingsFile.reload();
-			
 		} catch (NullPointerException e) {
 			Timer.delay(1);
 		}
@@ -192,7 +173,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		} catch (IOException e) {
 			throw new Error(e.getMessage());
 		}
-		
+
 		Timer.delay(1);
 	}
 
@@ -258,8 +239,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
         if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
 
-		SmartDashboard.putNumber("potentiometer", potentiometer.get());
-		
+		Logging.log("potentiometer: " + (ARM_PID_TOP - potentiometer.get()));
 	}
 	
 
