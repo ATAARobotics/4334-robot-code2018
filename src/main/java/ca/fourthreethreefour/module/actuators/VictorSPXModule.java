@@ -56,11 +56,7 @@ public class VictorSPXModule extends Module.StandardModule implements SpeedContr
 
 	@Override
 	public void set(double value) {
-		victor.set(victor.getControlMode(), value);
-	}
-	
-	public void set(ControlMode mode, double value) {
-		victor.set(mode, value);
+		victor.set(ControlMode.PercentOutput, value);
 	}
 
 	@Override
@@ -75,7 +71,7 @@ public class VictorSPXModule extends Module.StandardModule implements SpeedContr
 
 	@Override
 	public void setSpeed(double value) {
-		victor.set(victor.getControlMode(), value);
+		victor.set(ControlMode.PercentOutput, value);
 	}
 
 	@Override
