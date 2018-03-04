@@ -1,5 +1,6 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
+import main.java.ca.fourthreethreefour.module.actuators.MotorModule;
 import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
 import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModuleGroup;
 import main.java.ca.fourthreethreefour.settings.Settings;
@@ -18,28 +19,12 @@ public interface Ramp extends Settings {
 	 * @author Cool, with major credit to Joel.
 	 *
 	 */
-	public static class RampWinch extends TalonSRXModuleGroup implements SpeedController {
-		
-		private final SpeedControllerGroup group;
-
-		public RampWinch(TalonSRXModule controller1, TalonSRXModule controller2) { // Creates a public RampWinch with arguments being of two TalonSRXModule's
-			super(new TalonSRXModule[] { controller1, controller2 }); // Calls the arguments/Constructs above
-			this.group = new SpeedControllerGroup( // Initalizes with a SpeedControllerGroup with the arguments
-					new SpeedController[] { new InversedSpeedController(controller1), controller2 });
-		}
-
-		@Override 
-		public void set(double value) { // Allows the setting of a speed/value
-			this.group.set(value);
-		}
-
-	}
 	
-	TalonSRXModule // Creates a TalonSRXModule for the left side and right
-		leftRamp1 = new TalonSRXModule(RAMP_LEFT_1),
-		leftRamp2 = new TalonSRXModule(RAMP_LEFT_2),
-		rightRamp1 = new TalonSRXModule(RAMP_RIGHT_1),
-		rightRamp2 = new TalonSRXModule(RAMP_RIGHT_2);
+	MotorModule // Creates a TalonSRXModule for the left side and right
+		leftRamp1 = new MotorModule(TYPE_RAMP_LEFT_1, RAMP_LEFT_1),
+		leftRamp2 = new MotorModule(TYPE_DRIVE_LEFT_2, RAMP_LEFT_2),
+		rightRamp1 = new MotorModule(TYPE_DRIVE_RIGHT_1, RAMP_RIGHT_1),
+		rightRamp2 = new MotorModule(TYPE_RAMP_RIGHT_2, RAMP_RIGHT_2);
 	
 	RampWinch // Creates a module for the TalonSRXModule's designed for the RampWinch retraction.
 		leftRamp = new RampWinch(leftRamp1, leftRamp2), //TODO Set correct TalonSRXModule to be reversed. First one is the reversed one

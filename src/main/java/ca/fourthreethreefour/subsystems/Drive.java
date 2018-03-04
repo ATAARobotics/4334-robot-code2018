@@ -8,17 +8,18 @@ import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.actuators.DualActionSolenoidModule;
 import edu.first.module.subsystems.Subsystem;
+import main.java.ca.fourthreethreefour.module.actuators.MotorModule;
 import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
 import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModuleGroup;
 import main.java.ca.fourthreethreefour.settings.Settings;
 
 public interface Drive extends Settings {
 	
-	TalonSRXModule // Creates modules on these ports. Ports are determined in settings.txt on the RoboRIO,
-		left1 = new TalonSRXModule(DRIVE_LEFT_1), // or the default ports in Settings.java.
-		left2 = new TalonSRXModule(DRIVE_LEFT_2),
-		right1 = new TalonSRXModule(DRIVE_RIGHT_1),
-		right2 = new TalonSRXModule(DRIVE_RIGHT_2);
+	MotorModule // Creates modules on these ports. Ports are determined in settings.txt on the RoboRIO,
+		left1 = new MotorModule(TYPE_DRIVE_LEFT_1, DRIVE_LEFT_1), // or the default ports in Settings.java.
+		left2 = new MotorModule(TYPE_DRIVE_LEFT_2, DRIVE_LEFT_2),
+		right1 = new MotorModule(TYPE_DRIVE_RIGHT_1, DRIVE_RIGHT_1),
+		right2 = new MotorModule(TYPE_DRIVE_RIGHT_2, DRIVE_RIGHT_2);
 	
 	TalonSRXModuleGroup // Groups Modules together so they can be used as one speed controller.
 		left = new TalonSRXModuleGroup(new TalonSRXModule[] { left1, left2 }),

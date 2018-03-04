@@ -5,7 +5,6 @@ import edu.first.module.Module;
 import edu.first.module.controllers.PIDController;
 import edu.first.module.subsystems.Subsystem;
 import main.java.ca.fourthreethreefour.module.actuators.MotorModule;
-import main.java.ca.fourthreethreefour.module.actuators.MotorModule.Type;
 import main.java.ca.fourthreethreefour.settings.Settings;
 
 
@@ -16,7 +15,7 @@ import main.java.ca.fourthreethreefour.settings.Settings;
  */
 public class RotationalArm extends Subsystem implements Settings, Arm {
 	
-	public static MotorModule armMotor = new MotorModule(Type.VICTOR_SPX, ARM_MOTOR);
+	public static MotorModule armMotor = new MotorModule(TYPE_ARM_MOTOR, ARM_MOTOR);
 
 	public static boolean shouldArmBeFlexed() { // Checks if the arm's angle A.K.A the potentiometer value is between the set points.
 		double armAngle = potentiometer.get();
