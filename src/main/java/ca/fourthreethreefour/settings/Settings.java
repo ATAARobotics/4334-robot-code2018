@@ -70,16 +70,12 @@ public interface Settings {
 	double ARM_P = settingsFile.getDoubleProperty("ARM_P", 2.5);
 	double ARM_I = settingsFile.getDoubleProperty("ARM_I", 0);
 	double ARM_D = settingsFile.getDoubleProperty("ARM_D", 3);
-	
-	// TODO get default values for all below
-	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.25);
-	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.73);
 
 	// absolute highest position of the arm, all PID setpoints are relative to this
-	double ARM_PID_TOP = settingsFile.getDoubleProperty("ARM_PID_TOP", 0);
-
-	double ARM_PID_LOW = ARM_PID_TOP - 0.5;
-	double ARM_PID_MEDIUM = ARM_PID_TOP - 0.3;
-	double ARM_PID_HIGH = ARM_PID_TOP;
-	
+	double ARM_PID_TOP = settingsFile.getDoubleProperty("ARM_PID_TOP", 0.797119);
+	double ARM_PID_LOW = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_LOW", 0.6);
+	double ARM_PID_MEDIUM = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_MEDIUM", 0.51);
+	double ARM_PID_HIGH = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_HIGH", 0.02);
+	double ARM_ANGLE_MIN = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.25);
+	double ARM_ANGLE_MAX = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.73);
 }
