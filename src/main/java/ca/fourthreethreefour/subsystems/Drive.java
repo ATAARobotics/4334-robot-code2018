@@ -7,6 +7,8 @@ import edu.first.module.actuators.Drivetrain;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.actuators.DualActionSolenoidModule;
+import edu.first.module.actuators.SpeedController;
+import edu.first.module.actuators.SpeedControllerGroup;
 import edu.first.module.subsystems.Subsystem;
 import main.java.ca.fourthreethreefour.module.actuators.MotorModule;
 import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModule;
@@ -21,9 +23,9 @@ public interface Drive extends Settings {
 		right1 = new MotorModule(TYPE_DRIVE_RIGHT_1, DRIVE_RIGHT_1),
 		right2 = new MotorModule(TYPE_DRIVE_RIGHT_2, DRIVE_RIGHT_2);
 	
-	TalonSRXModuleGroup // Groups Modules together so they can be used as one speed controller.
-		left = new TalonSRXModuleGroup(new TalonSRXModule[] { left1, left2 }),
-		right = new TalonSRXModuleGroup(new TalonSRXModule[] { right1, right2 });
+	SpeedControllerGroup // Groups Modules together so they can be used as one speed controller.
+		left = new SpeedControllerGroup(new SpeedController[] { left1, left2 }),
+		right = new SpeedControllerGroup(new SpeedController[] { right1, right2 });
 
 	// Drivetrain object using the TalonSRX groups left and right. One side is reversed so they move in the same direction.
 	Drivetrain 
@@ -57,7 +59,7 @@ public interface Drive extends Settings {
 		}
 	};
 
-	// Creates subsystem called drive, with Modules drivetrain, left, right, and gearShifter
-	public Subsystem drive = new Subsystem(new Module[] { drivetrain, left, right, gearShifter });
+	// Creates subsystem called drive, with Modules drivetrain, left1, left2, right1, right2, and gearShifter
+	public Subsystem drive = new Subsystem(new Module[] { drivetrain, left1, left2, right1, right2, gearShifter, });
 
 }
