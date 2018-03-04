@@ -7,7 +7,6 @@ import edu.first.command.Command;
 import edu.first.command.Commands;
 import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
-import edu.first.identifiers.TransformedOutput;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
@@ -94,7 +93,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		/*
 		 * Controller 2/Operator
 		 */
-
+		
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
 		/*
