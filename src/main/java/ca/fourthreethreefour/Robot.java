@@ -92,7 +92,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		/*
 		 * Controller 2/Operator
 		 */
-
+		
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
 		controller2.addBind(rightRampRetractionBind);
