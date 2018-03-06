@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import edu.first.command.Command;
 import edu.first.command.Commands;
+import edu.first.commands.common.SetOutput;
+import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
@@ -14,11 +16,13 @@ import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import main.java.ca.fourthreethreefour.commands.RampRetract;
-import main.java.ca.fourthreethreefour.commands.SetSolenoid;
+import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
+import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
+import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
-public class Robot extends IterativeRobotAdapter {
+
+public class Robot extends IterativeRobotAdapter implements Constants {
 
 	/*
 	 * Creates Subsystems AUTO and TELEOP to separate modules required to be enabled
@@ -46,21 +50,21 @@ public class Robot extends IterativeRobotAdapter {
 
 	// Creates a bind to be used, with button and command RampRetract
 	private WhilePressed 
-		leftRampRetractionBind = new WhilePressed(controller1.getBack(), new RampRetract(leftRamp)),
-		rightRampRetractionBind = new WhilePressed(controller1.getStart(), new RampRetract(rightRamp));
+		leftRampRetractionBind = new WhilePressed(controller2.getBack(), new SetOutput(leftRamp, RAMP_RETRACT_SPEED)),
+		rightRampRetractionBind = new WhilePressed(controller2.getStart(), new SetOutput(rightRamp, RAMP_RETRACT_SPEED));
+
+	String settingsActive = settingsFile.toString();
 
 	// runs when the robot is first turned on
 	@Override
 	public void init() {
-		// Initalizes all modules
+		// Initializes all modules
 		ALL_MODULES.init();
-		
-		rotationalArm.set(ARM_PID_START); // Sets the rotationalArm to the starting position
-		
+
 		// Initializes the CameraServer twice. That's how it's done
         //CameraServer.getInstance().startAutomaticCapture();
         //CameraServer.getInstance().startAutomaticCapture();
-
+		
 		// Controller 1/driver
 		/*
 		 * Sets the deadband for LEFT_FROM_MIDDLE and RIGHT_X. If the input value from
@@ -71,6 +75,8 @@ public class Robot extends IterativeRobotAdapter {
 		controller1.changeAxis(XboxController.LEFT_FROM_MIDDLE, speedFunction);
 		controller1.addDeadband(XboxController.RIGHT_X, 0.20);
 		controller1.invertAxis(XboxController.RIGHT_X);
+		controller1.changeAxis(XboxController.RIGHT_X, turnFunction);
+		controller1.addDeadband(XboxController.TRIGGERS, 0.20);
 
 		// Creates an axis bind for the left and right sticks
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
@@ -80,48 +86,50 @@ public class Robot extends IterativeRobotAdapter {
 			}
 		});
 
-		// When A is pressed, reverses gearShifter, changing the gear.
-		// controller1.addWhenPressed(XboxController.A, new ReverseSolenoid(gearShifter));
+		// When right stick is pressed, reverses gearShifter, changing the gear.
+		controller1.addWhenPressed(XboxController.RIGHT_STICK, new ReverseSolenoid(gearShifter));
 
 		/*
 		 * Controller 2/Operator
 		 */
 		
-		/*
-		 * When Start/Back is pressed first time, set respective Release solenoid to true
-		 * (active), and create a respective RampRetractionBind. Next time pressed, runs
-		 * bind.
-		 */
-		controller2.addWhenPressed(XboxController.START, new Command() {
-			@Override
-			public void run() {
-				rightRelease.setPosition(true);
-				controller2.addBind(rightRampRetractionBind);
-			}
-		});
+		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
-		controller2.addWhenPressed(XboxController.BACK, new Command() {
-			@Override
-			public void run() {
-				leftRelease.setPosition(true);
-				controller2.addBind(leftRampRetractionBind);
-			}
-		});
+		controller2.addBind(rightRampRetractionBind);
+		controller2.addBind(leftRampRetractionBind);
 
 		//TODO Up scale, sides switch, down ground
 		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
-		controller1.addWhenPressed(XboxController.LEFT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_CLOSE));
-		controller1.addWhenPressed(XboxController.RIGHT_BUMPER, new SetSolenoid(clawSolenoid, CLAW_OPEN));
+		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(clawSolenoid));
 
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
-		controller1.addWhenPressed(XboxController.A, new SetSolenoid(flexSolenoid, FLEX_EXTEND));
-		controller1.addWhenPressed(XboxController.B, new SetSolenoid(flexSolenoid, FLEX_RETRACT));
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
 
 		// Binds the axis to the motor
-		controller1.addAxisBind(XboxController.TRIGGERS, rotationalArm);
+		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
+			@Override
+			public void set(double v) { // TODO this should set setpoint instead of disabling PID
+				if (Math.abs(v) > 0.2) {
+					if (RotationalArm.armPID.isEnabled()) {
+						RotationalArm.armPID.disable();
+					}
+				}
+				if (!RotationalArm.armPID.isEnabled()) {
+					RotationalArm.armMotor.set(v);
+				}
+			}
+		});
+		controller2.addWhenPressed(XboxController.DPAD_DOWN, RotationalArm.armPID.enableCommand());
+		controller2.addWhenPressed(XboxController.DPAD_DOWN, new SetOutput(RotationalArm.armPID, ARM_PID_LOW));
+
+		controller2.addWhenPressed(XboxController.DPAD_RIGHT, RotationalArm.armPID.enableCommand());
+		controller2.addWhenPressed(XboxController.DPAD_RIGHT, new SetOutput(RotationalArm.armPID, ARM_PID_MEDIUM));
+
+		controller2.addWhenPressed(XboxController.DPAD_UP, RotationalArm.armPID.enableCommand());
+		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));
 	}
 
 	private Command // Declares these as Command
@@ -131,8 +139,25 @@ public class Robot extends IterativeRobotAdapter {
 		commandRRR;
 
 	@Override
+	public void initDisabled() {
+		ALL_MODULES.disable();
+		RotationalArm.armPID.disable();
+	}
+
+	@Override
 	public void periodicDisabled() {
-		settingsFile.reload();
+		
+		try {
+			settingsFile.reload();
+		} catch (NullPointerException e) {
+			Timer.delay(1);
+		}
+
+		// TODO add limit switch button to set ARM_PID_TOP constant to current potentiometer value
+		
+		if (!settingsActive.equalsIgnoreCase(settingsFile.toString())) {
+			throw new RuntimeException(); // If it HAS changed, best to crash the Robot so it gets the update.
+		}
 		
 		if (AUTO_TYPE == "") { // If no type specified, ends method.
 			return;
@@ -146,7 +171,7 @@ public class Robot extends IterativeRobotAdapter {
 		} catch (IOException e) {
 			throw new Error(e.getMessage());
 		}
-		
+
 		Timer.delay(1);
 	}
 
@@ -209,14 +234,19 @@ public class Robot extends IterativeRobotAdapter {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
-		
+
+        if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
+
+		Logging.log("potentiometer: " + (ARM_PID_TOP - potentiometer.get()));
 	}
+	
 
 	// Runs at the end of teleop
 	@Override
 	public void endTeleoperated() {
 		controller1.removeBind(leftRampRetractionBind);
 		controller1.removeBind(rightRampRetractionBind);
+		RotationalArm.armPID.disable();
 		TELEOP_MODULES.disable();
 	}
 
