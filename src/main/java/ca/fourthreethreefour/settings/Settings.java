@@ -64,10 +64,10 @@ public interface Settings {
 	MotorModule.Type TYPE_DRIVE_RIGHT_1 = toType(settingsFile.getProperty("TYPE_DRIVE_RIGHT_1", "talonsrx"));
 	MotorModule.Type TYPE_DRIVE_RIGHT_2 = toType(settingsFile.getProperty("TYPE_DRIVE_RIGHT_2", "talonsrx"));
 
-	MotorModule.Type TYPE_ARM_MOTOR = toType(settingsFile.getProperty("TYPE_ARM_MOTOR", "talonsrx"));
+	MotorModule.Type TYPE_ARM_MOTOR = toType(settingsFile.getProperty("TYPE_ARM_MOTOR", "victorspx"));
 
 	MotorModule.Type TYPE_RAMP_LEFT_1 = toType(settingsFile.getProperty("TYPE_RAMP_LEFT_1", "talonsrx"));
-	MotorModule.Type TYPE_RAMP_LEFT_2 = toType(settingsFile.getProperty("TYPE_RAMP_LEFT_2", "talonsrx"));
+	MotorModule.Type TYPE_RAMP_LEFT_2 = toType(settingsFile.getProperty("TYPE_RAMP_LEFT_2", "victorspx"));
 	MotorModule.Type TYPE_RAMP_RIGHT_1 = toType(settingsFile.getProperty("TYPE_RAMP_RIGHT_1", "talonsrx"));
 	MotorModule.Type TYPE_RAMP_RIGHT_2 = toType(settingsFile.getProperty("TYPE_RAMP_RIGHT_2", "talonsrx"));
 	

@@ -20,8 +20,8 @@ public interface Ramp extends Settings {
 	
 	MotorModule // Creates a TalonSRXModule for the left side and right
 		leftRamp1 = new MotorModule(TYPE_RAMP_LEFT_1, RAMP_LEFT_1),
-		leftRamp2 = new MotorModule(TYPE_DRIVE_LEFT_2, RAMP_LEFT_2),
-		rightRamp1 = new MotorModule(TYPE_DRIVE_RIGHT_1, RAMP_RIGHT_1),
+		leftRamp2 = new MotorModule(TYPE_RAMP_LEFT_2, RAMP_LEFT_2),
+		rightRamp1 = new MotorModule(TYPE_RAMP_RIGHT_1, RAMP_RIGHT_1),
 		rightRamp2 = new MotorModule(TYPE_RAMP_RIGHT_2, RAMP_RIGHT_2);
 
 	SpeedControllerGroup // Creates a module for the TalonSRXModule's designed for the RampWinch retraction.
