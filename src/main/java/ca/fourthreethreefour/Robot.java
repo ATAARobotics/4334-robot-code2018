@@ -50,8 +50,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	// Creates a bind to be used, with button and command RampRetract
 	private WhilePressed 
-		leftRampRetractionBind = new WhilePressed(controller2.getBack(), new SetOutput(leftRamp, RAMP_RETRACT_SPEED)),
-		rightRampRetractionBind = new WhilePressed(controller2.getStart(), new SetOutput(rightRamp, RAMP_RETRACT_SPEED));
+		leftRampRetractionBind = new WhilePressed(controller2.getBack(), new SetOutput(leftRamp1, RAMP_RETRACT_SPEED)),
+		rightRampRetractionBind = new WhilePressed(controller2.getStart(), new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
 
 	String settingsActive = settingsFile.toString();
 
