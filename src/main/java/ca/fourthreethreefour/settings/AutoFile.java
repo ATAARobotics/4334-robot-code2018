@@ -673,7 +673,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	}
 
 	private interface RuntimeCommand {
-		public Command getCommand(List<String> args);
+		Command getCommand(List<String> args);
 	}
 
 }

@@ -134,11 +134,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));
 	}
 
-	private Command // Declares these as Command
-		commandLRL,
-		commandRLR,
-		commandLLL,
-		commandRRR;
+	private Command commandLRL, commandRLR, commandLLL, commandRRR;
 
 	@Override
 	public void initDisabled() {

@@ -8,7 +8,7 @@ public class MotorModule extends Module.StandardModule implements SpeedControlle
 	private Module module;
 	private SpeedController speedController;
 	
-	public static enum Type {
+	public enum Type {
 		TALON_SRX, VICTOR_SPX,
 	}
 	
