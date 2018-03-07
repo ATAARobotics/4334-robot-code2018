@@ -50,9 +50,7 @@ public interface Settings {
 	double ARM_SPEED = settingsFile.getDoubleProperty("ARM_SPEED", 0.5);
 	
 	int RAMP_LEFT_1 = settingsFile.getIntProperty("RAMP_LEFT_1", 4);
-	int RAMP_LEFT_2 = settingsFile.getIntProperty("RAMP_LEFT_2", 5);
 	int RAMP_RIGHT_1 = settingsFile.getIntProperty("RAMP_RIGHT_1", 6);
-	int RAMP_RIGHT_2 = settingsFile.getIntProperty("RAMP_RIGHT_2", 7);
 
 	int RAMP_RELEASE_LEFT = settingsFile.getIntProperty("RAMP_RELEASE_LEFT", 2);
 	int RAMP_RELEASE_RIGHT = settingsFile.getIntProperty("RAMP_RELEASE_RIGHT", 3);
