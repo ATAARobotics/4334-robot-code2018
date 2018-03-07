@@ -9,17 +9,17 @@ import edu.first.module.sensors.EncoderModule;
  */
 public class DualEncoderInput implements Input {
 
-	EncoderModule left, right;
-	
-	public DualEncoderInput(EncoderModule left, EncoderModule right) {
-		this.left = left;
-		this.right = right;
-	}
-	
-	@Override
-	public double get() {
-		return left.get() + right.get();
-	}
-	
+    EncoderModule left, right;
+    
+    public DualEncoderInput(EncoderModule left, EncoderModule right) {
+        this.left = left;
+        this.right = right;
+    }
+    
+    @Override
+    public double get() {
+        return left.get() + right.get();
+    }
+    
 }
 

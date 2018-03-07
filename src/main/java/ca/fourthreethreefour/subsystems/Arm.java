@@ -11,23 +11,23 @@ import main.java.ca.fourthreethreefour.settings.Settings;
 
 public interface Arm extends Settings {
 
-	DualActionSolenoidModule 
-		clawSolenoid = new DualActionSolenoidModule(CLAW_SOLENOID_1, CLAW_SOLENOID_2),
-		flexSolenoid = new DualActionSolenoidModule(FLEX_SOLENOID_1, FLEX_SOLENOID_2);
+    DualActionSolenoidModule 
+        clawSolenoid = new DualActionSolenoidModule(CLAW_SOLENOID_1, CLAW_SOLENOID_2),
+        flexSolenoid = new DualActionSolenoidModule(FLEX_SOLENOID_1, FLEX_SOLENOID_2);
 
     AnalogInput potentiometer = new AnalogInput(POTENTIOMETER);
 
-	RotationalArm rotationalArm = new RotationalArm();
+    RotationalArm rotationalArm = new RotationalArm();
 
-	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, rotationalArm, potentiometer });
+    Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, rotationalArm, potentiometer });
 
-	// aliases for directions, makes reading/setting directions easier
-	DualActionSolenoid.Direction 
-		CLAW_CLOSE = Direction.LEFT,
-		CLAW_OPEN = Direction.RIGHT,
-		FLEX_EXTEND = Direction.LEFT,
-		FLEX_RETRACT = Direction.RIGHT;	
+    // aliases for directions, makes reading/setting directions easier
+    DualActionSolenoid.Direction 
+        CLAW_CLOSE = Direction.LEFT,
+        CLAW_OPEN = Direction.RIGHT,
+        FLEX_EXTEND = Direction.LEFT,
+        FLEX_RETRACT = Direction.RIGHT;    
 
-	// multiplies arm value by ARM_SPEED
-	Function armFunction = new Function.ProductFunction(ARM_SPEED);
+    // multiplies arm value by ARM_SPEED
+    Function armFunction = new Function.ProductFunction(ARM_SPEED);
 }

@@ -11,20 +11,20 @@ import edu.first.module.actuators.DualActionSolenoid.Direction;
  */
 
 public final class SetSolenoid implements Command {
-	
-	private final DualActionSolenoid solenoid;
-	private final Direction direction;
-	
-	public SetSolenoid (DualActionSolenoid solenoid, Direction direction) {
-		this.solenoid = solenoid;
-		this.direction = direction;
-	}
-	
-	
-	@Override
-	public void run() {
-		solenoid.set(direction);
-		
-	}
+    
+    private final DualActionSolenoid solenoid;
+    private final Direction direction;
+    
+    public SetSolenoid (DualActionSolenoid solenoid, Direction direction) {
+        this.solenoid = solenoid;
+        this.direction = direction;
+    }
+    
+    
+    @Override
+    public void run() {
+        solenoid.set(direction);
+        
+    }
 
 }

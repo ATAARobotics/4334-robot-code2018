@@ -16,49 +16,49 @@ import main.java.ca.fourthreethreefour.module.actuators.TalonSRXModuleGroup;
 import main.java.ca.fourthreethreefour.settings.Settings;
 
 public interface Drive extends Settings {
-	
-	MotorModule
-		left1 = new MotorModule(TYPE_DRIVE_LEFT_1, DRIVE_LEFT_1),
-		left2 = new MotorModule(TYPE_DRIVE_LEFT_2, DRIVE_LEFT_2),
-		right1 = new MotorModule(TYPE_DRIVE_RIGHT_1, DRIVE_RIGHT_1),
-		right2 = new MotorModule(TYPE_DRIVE_RIGHT_2, DRIVE_RIGHT_2);
-	
-	SpeedControllerGroup // groups Modules together so they can be used as one speed controller
-		left = new SpeedControllerGroup(new SpeedController[] { left1, left2 }),
-		right = new SpeedControllerGroup(new SpeedController[] { right1, right2 });
+    
+    MotorModule
+        left1 = new MotorModule(TYPE_DRIVE_LEFT_1, DRIVE_LEFT_1),
+        left2 = new MotorModule(TYPE_DRIVE_LEFT_2, DRIVE_LEFT_2),
+        right1 = new MotorModule(TYPE_DRIVE_RIGHT_1, DRIVE_RIGHT_1),
+        right2 = new MotorModule(TYPE_DRIVE_RIGHT_2, DRIVE_RIGHT_2);
+    
+    SpeedControllerGroup // groups Modules together so they can be used as one speed controller
+        left = new SpeedControllerGroup(new SpeedController[] { left1, left2 }),
+        right = new SpeedControllerGroup(new SpeedController[] { right1, right2 });
 
     // one side is reversed so they move in the same direction
-	Drivetrain 
-		drivetrain = new Drivetrain(new InversedSpeedController(left), right);
-	
-	DualActionSolenoidModule
-		gearShifter = new DualActionSolenoidModule(GEAR_SHIFTER_SOLENOID_1, GEAR_SHIFTER_SOLENOID_2);
-	
-	DualActionSolenoid.Direction
-		LOW_GEAR = Direction.LEFT,
-		HIGH_GEAR = Direction.RIGHT;
-	
-	/**
-	 * Function used in driving controls that squares the input of the joysticks on the controller. 
-	 * This is done to make controls more intuitive.
-	 */
-	Function speedFunction = new Function() {
-			@Override
-			public double F(double in) {
-				// if in is greater than 0, multiply it by itself, otherwise multiply by itself and make it negative
-				return in > 0 ? in * in : -(in * in);
-			}
-	};
+    Drivetrain 
+        drivetrain = new Drivetrain(new InversedSpeedController(left), right);
+    
+    DualActionSolenoidModule
+        gearShifter = new DualActionSolenoidModule(GEAR_SHIFTER_SOLENOID_1, GEAR_SHIFTER_SOLENOID_2);
+    
+    DualActionSolenoid.Direction
+        LOW_GEAR = Direction.LEFT,
+        HIGH_GEAR = Direction.RIGHT;
+    
+    /**
+     * Function used in driving controls that squares the input of the joysticks on the controller. 
+     * This is done to make controls more intuitive.
+     */
+    Function speedFunction = new Function() {
+            @Override
+            public double F(double in) {
+                // if in is greater than 0, multiply it by itself, otherwise multiply by itself and make it negative
+                return in > 0 ? in * in : -(in * in);
+            }
+    };
 
-	Function turnFunction = new Function() {
-		@Override
-		public double F(double in) {
-			//if in is greater than 0, bring it to the power of TURN_CURVE
-			//otherwise bring its absolute value to the power of TURN_CURVE and make it negative
-			return in > 0 ? Math.pow(in, TURN_CURVE) : -Math.pow(Math.abs(in), TURN_CURVE);
-		}
-	};
+    Function turnFunction = new Function() {
+        @Override
+        public double F(double in) {
+            //if in is greater than 0, bring it to the power of TURN_CURVE
+            //otherwise bring its absolute value to the power of TURN_CURVE and make it negative
+            return in > 0 ? Math.pow(in, TURN_CURVE) : -Math.pow(Math.abs(in), TURN_CURVE);
+        }
+    };
 
-	Subsystem drive = new Subsystem(new Module[] { drivetrain, left1, left2, right1, right2, gearShifter, });
+    Subsystem drive = new Subsystem(new Module[] { drivetrain, left1, left2, right1, right2, gearShifter, });
 
 }
