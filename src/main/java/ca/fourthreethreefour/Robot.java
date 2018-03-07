@@ -64,7 +64,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Initializes the CameraServer twice. That's how it's done
         //CameraServer.getInstance().startAutomaticCapture();
         //CameraServer.getInstance().startAutomaticCapture();
-		
+
 		// Controller 1/driver
 		/*
 		 * Sets the deadband for LEFT_FROM_MIDDLE and RIGHT_X. If the input value from
@@ -142,10 +142,13 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	public void initDisabled() {
 		ALL_MODULES.disable();
 		RotationalArm.armPID.disable();
+		potentiometer.enable();
 	}
 
 	@Override
 	public void periodicDisabled() {
+
+		Logging.log("Potentiometer value: " + potentiometer.get());
 		
 		try {
 			settingsFile.reload();
