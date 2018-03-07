@@ -10,10 +10,7 @@ import edu.first.module.subsystems.Subsystem;
 import main.java.ca.fourthreethreefour.settings.Settings;
 
 public interface Arm extends Settings {
-	
-	/*
-	 * Creates DualActionSolenoidModules called clawSolenoid and flexSolenoid, with ports specified. 
-	 */
+
 	DualActionSolenoidModule 
 		clawSolenoid = new DualActionSolenoidModule(CLAW_SOLENOID_1, CLAW_SOLENOID_2),
 		flexSolenoid = new DualActionSolenoidModule(FLEX_SOLENOID_1, FLEX_SOLENOID_2);
@@ -22,18 +19,15 @@ public interface Arm extends Settings {
 
 	RotationalArm rotationalArm = new RotationalArm();
 
-	// Creates subsystem of above for use in Robot.java
 	Subsystem arm = new Subsystem(new Module[] {  clawSolenoid, flexSolenoid, rotationalArm, potentiometer });
 
-	/*
-	 *  Creates two directions that can be used in Autonomous for easy setting of their respective solenoid.
-	 *  TODO Update these with correct direction.
-	 */
+	// aliases for directions, makes reading/setting directions easier
 	DualActionSolenoid.Direction 
 		CLAW_CLOSE = Direction.LEFT,
 		CLAW_OPEN = Direction.RIGHT,
 		FLEX_EXTEND = Direction.LEFT,
 		FLEX_RETRACT = Direction.RIGHT;	
 
+	// multiplies arm value by ARM_SPEED
 	Function armFunction = new Function.ProductFunction(ARM_SPEED);
 }

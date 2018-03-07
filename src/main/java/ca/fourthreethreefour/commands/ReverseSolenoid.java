@@ -11,13 +11,11 @@ import edu.first.module.actuators.DualActionSolenoid;
 public final class ReverseSolenoid implements Command {
 	
 	private final DualActionSolenoid solenoid;
-	
-	//Constructor for the command
+
 	public ReverseSolenoid (DualActionSolenoid solenoid) {
 		this.solenoid = solenoid;
 	}
-	
-	//Reverses the specified solenoid.
+
 	@Override
 	public void run() {
 		solenoid.reverse();

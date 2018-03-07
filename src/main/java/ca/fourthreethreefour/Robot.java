@@ -48,7 +48,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		super("ATA 2018");
 	}
 
-	// Creates a bind to be used, with button and command RampRetract
 	private WhilePressed 
 		leftRampRetractionBind = new WhilePressed(controller2.getBack(), new SetOutput(leftRamp, RAMP_RETRACT_SPEED)),
 		rightRampRetractionBind = new WhilePressed(controller2.getStart(), new SetOutput(rightRamp, RAMP_RETRACT_SPEED));
@@ -61,11 +60,26 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Initializes all modules
 		ALL_MODULES.init();
 
-		// Initializes the CameraServer twice. That's how it's done
+		// Initializes the CameraServer twice, once per camera (yes, that's really how this works)
         //CameraServer.getInstance().startAutomaticCapture();
         //CameraServer.getInstance().startAutomaticCapture();
-		
-		// Controller 1/driver
+
+		/*
+		 * Controller 1/Driver:
+		 * Left Stick: drive forwards/backwards
+		 * Right Stick: turning
+		 * Right Stick (pressed): shift gear
+		 *
+		 * Controller 2/Operator:
+		 * Left Bumper: extend/retract arm
+		 * Right Bumper: open/close claw
+		 * Left Trigger: rotate arm down
+		 * Right Trigger: rotate arm up
+		 * Dpad Up: rotate arm to high setpoint
+		 * Dpad Right: rotate arm to middle setpoint
+		 * Dpad Down: rotate arm to low setpoint
+		 */
+
 		/*
 		 * Sets the deadband for LEFT_FROM_MIDDLE and RIGHT_X. If the input value from
 		 * either of those axes does not exceed the deadband, the value will be set to
@@ -78,7 +92,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller1.changeAxis(XboxController.RIGHT_X, turnFunction);
 		controller1.addDeadband(XboxController.TRIGGERS, 0.20);
 
-		// Creates an axis bind for the left and right sticks
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
 			@Override
 			public void doBind(double speed, double turn) {
@@ -89,24 +102,13 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// When right stick is pressed, reverses gearShifter, changing the gear.
 		controller1.addWhenPressed(XboxController.RIGHT_STICK, new ReverseSolenoid(gearShifter));
 
-		/*
-		 * Controller 2/Operator
-		 */
-		
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
 		controller2.addBind(rightRampRetractionBind);
 		controller2.addBind(leftRampRetractionBind);
 
-		//TODO Up scale, sides switch, down ground
-		
-		// When left bumper is pressed, it closes the clawSolenoid
-		// When right bumper is pressed, it opens the clawSolenoid
-		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(clawSolenoid));
-
-		// When the A button is pressed, it extends the flexSolenoid
-		// When the B button is pressed, it retracts the flexSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
+		controller2.addWhenPressed(XboxController.RIGHT_BUMPER, new ReverseSolenoid(clawSolenoid));
 
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
@@ -156,14 +158,14 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// TODO add limit switch button to set ARM_PID_TOP constant to current potentiometer value
 		
 		if (!settingsActive.equalsIgnoreCase(settingsFile.toString())) {
-			throw new RuntimeException(); // If it HAS changed, best to crash the Robot so it gets the update.
+			throw new RuntimeException(); // If settings.txt has changed, crashes the robot, updating it automatically
 		}
 		
-		if (AUTO_TYPE == "") { // If no type specified, ends method.
+		if (AUTO_TYPE == "") { // If no type specified, ends method
 			return;
 		}
 		
-		try { // Creates a new AutoFile with the file of each game, and makes it a command.
+		try { // Looks for an autofile for each possible field orientation
 			commandLRL = new AutoFile(new File("LRL" + AUTO_TYPE + ".txt")).toCommand();
 			commandRLR = new AutoFile(new File("RLR" + AUTO_TYPE + ".txt")).toCommand();
 			commandLLL = new AutoFile(new File("LLL" + AUTO_TYPE + ".txt")).toCommand();
@@ -179,7 +181,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	@Override
 	public void initAutonomous() {
 		AUTO_MODULES.enable();
-		// Gets game-specific information (switch and scale orientations) from FMS.
+		// Gets game-specific information (switch and scale orientations) from FMS
 		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
 		if (gameData.length() > 0) {

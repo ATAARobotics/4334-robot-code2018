@@ -17,18 +17,17 @@ public class RotationalArm extends Subsystem implements Settings, Arm {
 	
 	public static MotorModule armMotor = new MotorModule(TYPE_ARM_MOTOR, ARM_MOTOR);
 
-	public static boolean shouldArmBeFlexed() { // Checks if the arm's angle A.K.A the potentiometer value is between the set points.
+	// Checks if the arm's angle (potentiometer value) is between ARM_ANGLE_MIN and ARM_ANGLE_MAX
+	public static boolean shouldArmBeFlexed() {
 		double armAngle = potentiometer.get();
 		return (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX && flexSolenoid.get() == FLEX_EXTEND);
 	}
-	
+
 	public static PIDController armPID = new PIDController(potentiometer, new Output() {
 		@Override
 		public void set(double value) {
-			// Sets the setpoint for MotionMagic.
 			armMotor.set(-value);
-
-			// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
+			// If angle is between ARM_ANGLE_MIN and ARM_ANGLE_MAX, flexSolenoid will retract
 			if (shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
 		}
 	}, ARM_P, ARM_I, ARM_D);

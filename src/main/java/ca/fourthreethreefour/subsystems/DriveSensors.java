@@ -22,12 +22,10 @@ public interface DriveSensors extends Settings {
 	DualEncoderInput encoderInput = new DualEncoderInput(leftEncoder, rightEncoder);
 	
 	Input navxInput = new Input() {
-
 		@Override
 		public double get() {
 			return navx.getAngle();
 		}
-		
 	};
 	
 	VolatileInputOutput speedOutput = new VolatileInputOutput(), 

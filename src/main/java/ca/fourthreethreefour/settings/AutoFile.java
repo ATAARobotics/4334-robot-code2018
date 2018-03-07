@@ -30,7 +30,7 @@ import main.java.ca.fourthreethreefour.commands.debug.Logging;
 public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 	/**
-	 * List of all commands.
+	 * List of all autonomous commands.
 	 */
 	public static final HashMap<String, RuntimeCommand> COMMANDS = new HashMap<>();
 
@@ -623,8 +623,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			commands.add(new AutoFileCommand(e.key, value));
 		}
 
-		// CommandGroupFactory is required because the constructor for CommandGroup is
-		// private
+		// CommandGroupFactory is required because the constructor for CommandGroup is private
 		CommandGroup group = new CommandGroupFactory();
 		for (AutoFileCommand command : commands) {
 			if (COMMANDS.containsKey(command.name)) {
