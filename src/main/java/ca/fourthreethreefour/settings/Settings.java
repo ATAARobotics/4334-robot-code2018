@@ -86,13 +86,13 @@ public interface Settings {
 
 	// PID values
 	// TODO get default values
-	int SPEED_P = settingsFile.getIntProperty("SPEED_P", 0);
-	int SPEED_I = settingsFile.getIntProperty("SPEED_I", 0);
-	int SPEED_D = settingsFile.getIntProperty("SPEED_D", 0);
-	
-	int TURN_P = settingsFile.getIntProperty("TURN_P", 0);
-	int TURN_I = settingsFile.getIntProperty("TURN_I", 0);
-	int TURN_D = settingsFile.getIntProperty("TURN_D", 0);
+	double SPEED_P = settingsFile.getDoubleProperty("SPEED_P", 0);
+	double SPEED_I = settingsFile.getDoubleProperty("SPEED_I", 0);
+	double SPEED_D = settingsFile.getDoubleProperty("SPEED_D", 0);
+
+	double TURN_P = settingsFile.getDoubleProperty("TURN_P", 0);
+	double TURN_I = settingsFile.getDoubleProperty("TURN_I", 0);
+	double TURN_D = settingsFile.getDoubleProperty("TURN_D", 0);
 	
 	double ARM_P = settingsFile.getDoubleProperty("ARM_P", 2.5);
 	double ARM_I = settingsFile.getDoubleProperty("ARM_I", 0);

@@ -655,11 +655,11 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			if (key.startsWith("!")) { // if the line starts with '!', make it concurrent
 				// concurrent commands run at the same time as the command before them
 				this.concurrent = true;
-				this.name = key.substring(1);
+				this.name = key.substring(1).toLowerCase();
 			} else {
 				// if commands are not concurrent, they will run in the order they are written
 				this.concurrent = false;
-				this.name = key;
+				this.name = key.toLowerCase();
 			}
 
 			// trims brackets
