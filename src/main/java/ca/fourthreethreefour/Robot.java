@@ -16,6 +16,7 @@ import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
@@ -136,7 +137,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		commandLRL,
 		commandRLR,
 		commandLLL,
-		commandRRR;
+		commandRRR,
+		commandTest;
 
 	@Override
 	public void initDisabled() {
@@ -149,6 +151,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	public void periodicDisabled() {
 
 		Logging.log("Potentiometer value: " + potentiometer.get());
+		Timer.delay(1);
 		
 		try {
 			settingsFile.reload();
@@ -165,14 +168,22 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		if (AUTO_TYPE == "") { // If no type specified, ends method.
 			return;
 		}
-		
-		try { // Creates a new AutoFile with the file of each game, and makes it a command.
-			commandLRL = new AutoFile(new File("LRL" + AUTO_TYPE + ".txt")).toCommand();
-			commandRLR = new AutoFile(new File("RLR" + AUTO_TYPE + ".txt")).toCommand();
-			commandLLL = new AutoFile(new File("LLL" + AUTO_TYPE + ".txt")).toCommand();
-			commandRRR = new AutoFile(new File("RRR" + AUTO_TYPE + ".txt")).toCommand();
-		} catch (IOException e) {
-			throw new Error(e.getMessage());
+
+		if (AUTO_TYPE.contains("test")) {
+			try {
+				commandTest = new AutoFile(new File(AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				throw new Error(e.getMessage());
+			}
+		} else {
+			try { // Creates a new AutoFile with the file of each game, and makes it a command.
+				commandLRL = new AutoFile(new File("LRL" + AUTO_TYPE + ".txt")).toCommand();
+				commandRLR = new AutoFile(new File("RLR" + AUTO_TYPE + ".txt")).toCommand();
+				commandLLL = new AutoFile(new File("LLL" + AUTO_TYPE + ".txt")).toCommand();
+				commandRRR = new AutoFile(new File("RRR" + AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				throw new Error(e.getMessage());
+			}
 		}
 
 		Timer.delay(1);
@@ -185,24 +196,32 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Gets game-specific information (switch and scale orientations) from FMS.
 		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
-		if (gameData.length() > 0) {
-			switch (gameData) {
-			case "LRL":
-				Commands.run(commandLRL);
-				break;
-			case "RLR":
-				Commands.run(commandRLR);
-				break;
-			case "LLL":
-				Commands.run(commandLLL);
-				break;
-			case "RRR":
-				Commands.run(commandRRR);
-				break;
+		if (AUTO_TYPE.contains("test")) {
+			Commands.run(commandTest);
+		} else {
+			if (gameData.length() > 0) {
+				switch (gameData) {
+					case "LRL":
+						Commands.run(commandLRL);
+						break;
+					case "RLR":
+						Commands.run(commandRLR);
+						break;
+					case "LLL":
+						Commands.run(commandLLL);
+						break;
+					case "RRR":
+						Commands.run(commandRRR);
+						break;
+				}
 			}
 		}
 	}
 
+	@Override
+	public void periodicAutonomous() {
+		SmartDashboard.putNumber("Encoder value", encoderInput.get());
+	}
 	// Runs at the end of autonomous
 	@Override
 	public void endAutonomous() {
