@@ -43,15 +43,15 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 */
 	static {
 		COMMANDS.put("print", new Print());
-		COMMANDS.put("blindDrive", new BlindDrive());
-		COMMANDS.put("driveDistance", new DriveDistance());
-		COMMANDS.put("driveStraight", new DriveStraight());
+		COMMANDS.put("blinddrive", new BlindDrive());
+		COMMANDS.put("drivedistance", new DriveDistance());
+		COMMANDS.put("drivestraight", new DriveStraight());
 		COMMANDS.put("turn", new Turn());
 		COMMANDS.put("stop", new Stop());
 		COMMANDS.put("wait", new Wait());
-		COMMANDS.put("waitUntil", new WaitUntil());
-		COMMANDS.put("setGear", new SetGear());
-		COMMANDS.put("setArm", new SetArm());
+		COMMANDS.put("waituntil", new WaitUntil());
+		COMMANDS.put("setgear", new SetGear());
+		COMMANDS.put("setarm", new SetArm());
 		//COMMANDS.put("driveupto", new DriveUpTo());
 	}
 
@@ -264,7 +264,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 				@Override
 				public boolean continueLoop() {
-
 					if (!super.continueLoop()) { // If this continueLoop isn't original continueLoop, return false
 						return false;
 					}
