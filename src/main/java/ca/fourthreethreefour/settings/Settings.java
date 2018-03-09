@@ -29,7 +29,7 @@ public interface Settings {
 	SettingsFile settingsFile = new SettingsFile(new File("/settings.txt"));
 
 	String ROBOT_TYPE = settingsFile.getProperty("ROBOT_TYPE", "");
-    String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "");
+    String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "Right");
     boolean IS_PLAYOFF = settingsFile.getBooleanProperty("IS_PLAYOFF", false);
 	
     boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
@@ -106,4 +106,7 @@ public interface Settings {
 	double ARM_PID_HIGH = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_HIGH", 0.02);
 	double ARM_ANGLE_MIN = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.25);
 	double ARM_ANGLE_MAX = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.73);
+
+	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 50);
+	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);
 }

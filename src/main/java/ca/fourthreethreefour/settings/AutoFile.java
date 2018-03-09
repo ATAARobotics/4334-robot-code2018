@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.subsystems.Arm;
 import main.java.ca.fourthreethreefour.subsystems.Drive;
 import main.java.ca.fourthreethreefour.subsystems.DriveSensors;
@@ -264,6 +265,9 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 				@Override
 				public boolean continueLoop() {
+					SmartDashboard.putNumber("Encoder value", encoderInput.get());
+					System.out.println("Encoder value: " + encoderInput.get());
+
 					if (!super.continueLoop()) { // If this continueLoop isn't original continueLoop, return false
 						return false;
 					}
@@ -330,7 +334,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 			double angle = Double.parseDouble(args.get(0));
-			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10;
+			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 5;
 			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000;
 
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
@@ -369,8 +373,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						} catch (InterruptedException e) {} // no? (look at 2017)
 					}
 					// Turns it by the turningOutput, but doesn't move forwards.
-					drivetrain.arcadeDrive(0, turningOutput.get()); 
-					Logging.put("Turning Error", turnPID.getError());
+					drivetrain.arcadeDrive(0, turningOutput.get());
 				}
 
 				@Override
@@ -480,12 +483,15 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						break;
 					case "high":
 						RotationalArm.armPID.setSetpoint(ARM_PID_HIGH);
+						RotationalArm.armPID.enable();
 						break;
 					case "medium":
 						RotationalArm.armPID.setSetpoint(ARM_PID_MEDIUM);
+						RotationalArm.armPID.enable();
 						break;
 					case "low":
 						RotationalArm.armPID.setSetpoint(ARM_PID_LOW);
+						RotationalArm.armPID.enable();
 						break;
 					case "":
 						throw new Error("Error in SetArm: No direction set");

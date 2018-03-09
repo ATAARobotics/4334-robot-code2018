@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
+import main.java.ca.fourthreethreefour.commands.SetSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
@@ -50,11 +51,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		super("ATA 2018");
 	}
 
-	// Creates a bind to be used, with button and command RampRetract
-	private WhilePressed 
-		leftRampRetractionBind = new WhilePressed(controller2.getBack(), new SetOutput(leftRamp1, RAMP_RETRACT_SPEED)),
-		rightRampRetractionBind = new WhilePressed(controller2.getStart(), new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
-
 	String settingsActive = settingsFile.toString();
 
 	// runs when the robot is first turned on
@@ -62,6 +58,9 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	public void init() {
 		// Initializes all modules
 		ALL_MODULES.init();
+
+		distancePID.setTolerance(DISTANCE_TOLERANCE);
+		turnPID.setTolerance(TURN_TOLERANCE);
 
 		// Initializes the CameraServer twice. That's how it's done
         CameraServer.getInstance().startAutomaticCapture();
@@ -97,8 +96,14 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
-		controller2.addBind(rightRampRetractionBind);
-		controller2.addBind(leftRampRetractionBind);
+
+		// Creates a bind to be used, with button and command RampRetract
+		controller2.addWhenPressed(XboxController.BACK, leftRelease.setPositionCommand(true));
+		controller2.addWhilePressed(XboxController.BACK, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
+		controller2.addWhenReleased(XboxController.BACK, new SetOutput(leftRamp1, 0));
+		controller2.addWhenPressed(XboxController.START, rightRelease.setPositionCommand(true));
+		controller2.addWhilePressed(XboxController.START, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
+		controller2.addWhenReleased(XboxController.START, new SetOutput(rightRamp1, 0));
 
 		//TODO Up scale, sides switch, down ground
 		
@@ -132,13 +137,20 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		controller2.addWhenPressed(XboxController.DPAD_UP, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));
+
+		controller2.addWhenPressed(controller2.getBack(), new Command() {
+			@Override
+			public void run() {
+
+			}
+		});
 	}
 
 	private Command // Declares these as Command
-		commandInit,
-		commandQL,
-		commandQR,
-		commandPR,
+		commandInitialRun,
+		commandQualsLeft,
+		commandQualsRight,
+		commandPlayoffsRight,
 		commandTest;
 
 	@Override
@@ -178,10 +190,10 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			}
 		} else {
 			try { // Creates a new AutoFile with the file of each game, and makes it a command.
-				commandInit = new AutoFile(new File("initalRun" + ".txt")).toCommand();
-				commandQL = new AutoFile(new File("qL" + AUTO_TYPE + ".txt")).toCommand();
-				commandQR = new AutoFile(new File("qR" + AUTO_TYPE + ".txt")).toCommand();
-				commandPR = new AutoFile(new File("pR" + AUTO_TYPE + ".txt")).toCommand();
+				commandInitialRun = new AutoFile(new File("initialRun" + ".txt")).toCommand();
+				commandQualsLeft = new AutoFile(new File("qualsLeft" + AUTO_TYPE + ".txt")).toCommand();
+				commandQualsRight = new AutoFile(new File("qualsRight" + AUTO_TYPE + ".txt")).toCommand();
+				commandPlayoffsRight = new AutoFile(new File("playoffsRight" + AUTO_TYPE + ".txt")).toCommand();
 			} catch (IOException e) {
 				throw new Error(e.getMessage());
 			}
@@ -200,21 +212,21 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		if (AUTO_TYPE.contains("test")) {
 			Commands.run(commandTest);
 		} else {
-			Commands.run(commandInit);
+			Commands.run(commandInitialRun);
 			if (gameData.length() > 0) {
-				if (IS_PLAYOFF) {
-					if (gameData.charAt(1) == 'R') {
-						Commands.run(commandPR);
-					} else if (gameData.charAt(0) == 'R') {
-						Commands.run(commandQR);
+				if (DriverStation.getInstance().getMatchType() == DriverStation.MatchType.Elimination || IS_PLAYOFF) {
+					if (gameData.charAt(1) == 'R') { // if our side of the scale is on the right
+						Commands.run(commandPlayoffsRight);
+					} else if (gameData.charAt(0) == 'R') { // if our side of the switch is on the right
+						Commands.run(commandQualsRight);
 					} else {
-						Commands.run(commandQL);
+						Commands.run(commandQualsLeft);
 					}
 				} else {
-					if (gameData.charAt(0) == 'R') {
-						Commands.run(commandQR);
+					if (gameData.charAt(0) == 'R') { // if our side of the switch is on the right
+						Commands.run(commandQualsRight);
 					} else {
-						Commands.run(commandQL);
+						Commands.run(commandQualsLeft);
 					}
 				}
 			}
@@ -223,7 +235,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	@Override
 	public void periodicAutonomous() {
-		SmartDashboard.putNumber("Encoder value", encoderInput.get());
 	}
 	// Runs at the end of autonomous
 	@Override
@@ -262,15 +273,15 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
         if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
 
-		Logging.log("potentiometer: " + (ARM_PID_TOP - potentiometer.get()));
+//		Logging.log("potentiometer: " + (ARM_PID_TOP - potentiometer.get()));
+		Logging.log(" " + navx.getAngle());
+
 	}
 	
 
 	// Runs at the end of teleop
 	@Override
 	public void endTeleoperated() {
-		controller1.removeBind(leftRampRetractionBind);
-		controller1.removeBind(rightRampRetractionBind);
 		RotationalArm.armPID.disable();
 		TELEOP_MODULES.disable();
 	}

@@ -30,8 +30,8 @@ public interface Arm extends Settings {
 	 *  TODO Update these with correct direction.
 	 */
 	DualActionSolenoid.Direction 
-		CLAW_CLOSE = Direction.LEFT,
-		CLAW_OPEN = Direction.RIGHT,
+		CLAW_OPEN = Direction.LEFT,
+		CLAW_CLOSE = Direction.RIGHT,
 		FLEX_EXTEND = Direction.LEFT,
 		FLEX_RETRACT = Direction.RIGHT;	
 
