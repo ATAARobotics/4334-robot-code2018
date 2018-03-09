@@ -10,16 +10,13 @@ import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
-import edu.first.module.joysticks.BindingJoystick.WhilePressed;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
-import main.java.ca.fourthreethreefour.commands.SetSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
@@ -162,8 +159,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	@Override
 	public void periodicDisabled() {
-
-		Logging.log("Potentiometer value: " + potentiometer.get());
+		Logging.logf("Potentiometer value: (abs: %.2f) (rel: %.2f)", potentiometer.get(), ARM_PID_TOP - potentiometer.get());
 		Timer.delay(1);
 		
 		try {
@@ -272,9 +268,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.doBinds();
 
         if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
-
-//		Logging.log("potentiometer: " + (ARM_PID_TOP - potentiometer.get()));
-		Logging.log(" " + navx.getAngle());
 
 	}
 	
