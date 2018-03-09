@@ -34,6 +34,12 @@ public interface Arm extends Settings {
 		CLAW_OPEN = Direction.RIGHT,
 		FLEX_EXTEND = Direction.LEFT,
 		FLEX_RETRACT = Direction.RIGHT;	
-
-	Function armFunction = new Function.ProductFunction(ARM_SPEED);
+	
+	// Squares the input and multiplies the result by ARM_SPEED. 
+	// If the input is negative, it makes the result negative.
+	Function armFunction = new Function() {
+		public double F(double in) {
+			return in > 0 ? in * in * ARM_SPEED : -(in * in * ARM_SPEED);
+		}
+	};
 }
