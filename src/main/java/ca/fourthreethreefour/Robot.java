@@ -135,10 +135,10 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	}
 
 	private Command // Declares these as Command
-		commandLRL,
-		commandRLR,
-		commandLLL,
-		commandRRR,
+		commandInit,
+		commandQL,
+		commandQR,
+		commandPR,
 		commandTest;
 
 	@Override
@@ -178,10 +178,10 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			}
 		} else {
 			try { // Creates a new AutoFile with the file of each game, and makes it a command.
-				commandLRL = new AutoFile(new File("LRL" + AUTO_TYPE + ".txt")).toCommand();
-				commandRLR = new AutoFile(new File("RLR" + AUTO_TYPE + ".txt")).toCommand();
-				commandLLL = new AutoFile(new File("LLL" + AUTO_TYPE + ".txt")).toCommand();
-				commandRRR = new AutoFile(new File("RRR" + AUTO_TYPE + ".txt")).toCommand();
+				commandInit = new AutoFile(new File("initalRun" + ".txt")).toCommand();
+				commandQL = new AutoFile(new File("qL" + AUTO_TYPE + ".txt")).toCommand();
+				commandQR = new AutoFile(new File("qR" + AUTO_TYPE + ".txt")).toCommand();
+				commandPR = new AutoFile(new File("pR" + AUTO_TYPE + ".txt")).toCommand();
 			} catch (IOException e) {
 				throw new Error(e.getMessage());
 			}
@@ -200,20 +200,22 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		if (AUTO_TYPE.contains("test")) {
 			Commands.run(commandTest);
 		} else {
+			Commands.run(commandInit);
 			if (gameData.length() > 0) {
-				switch (gameData) {
-					case "LRL":
-						Commands.run(commandLRL);
-						break;
-					case "RLR":
-						Commands.run(commandRLR);
-						break;
-					case "LLL":
-						Commands.run(commandLLL);
-						break;
-					case "RRR":
-						Commands.run(commandRRR);
-						break;
+				if (IS_PLAYOFF) {
+					if (gameData.charAt(1) == 'R') {
+						Commands.run(commandPR);
+					} else if (gameData.charAt(0) == 'R') {
+						Commands.run(commandQR);
+					} else {
+						Commands.run(commandQL);
+					}
+				} else {
+					if (gameData.charAt(0) == 'R') {
+						Commands.run(commandQR);
+					} else {
+						Commands.run(commandQL);
+					}
 				}
 			}
 		}

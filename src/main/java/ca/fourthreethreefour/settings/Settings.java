@@ -30,6 +30,7 @@ public interface Settings {
 
 	String ROBOT_TYPE = settingsFile.getProperty("ROBOT_TYPE", "");
     String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "");
+    boolean IS_PLAYOFF = settingsFile.getBooleanProperty("IS_PLAYOFF", false);
 	
     boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
 	
