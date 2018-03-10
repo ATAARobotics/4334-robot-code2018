@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.subsystems.Arm;
 import main.java.ca.fourthreethreefour.subsystems.Drive;
 import main.java.ca.fourthreethreefour.subsystems.DriveSensors;
@@ -43,15 +44,15 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 */
 	static {
 		COMMANDS.put("print", new Print());
-		COMMANDS.put("blindDrive", new BlindDrive());
-		COMMANDS.put("driveDistance", new DriveDistance());
-		COMMANDS.put("driveStraight", new DriveStraight());
+		COMMANDS.put("blinddrive", new BlindDrive());
+		COMMANDS.put("drivedistance", new DriveDistance());
+		COMMANDS.put("drivestraight", new DriveStraight());
 		COMMANDS.put("turn", new Turn());
 		COMMANDS.put("stop", new Stop());
 		COMMANDS.put("wait", new Wait());
-		COMMANDS.put("waitUntil", new WaitUntil());
-		COMMANDS.put("setGear", new SetGear());
-		COMMANDS.put("setArm", new SetArm());
+		COMMANDS.put("waituntil", new WaitUntil());
+		COMMANDS.put("setgear", new SetGear());
+		COMMANDS.put("setarm", new SetArm());
 		//COMMANDS.put("driveupto", new DriveUpTo());
 	}
 
@@ -264,6 +265,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 				@Override
 				public boolean continueLoop() {
+					SmartDashboard.putNumber("Encoder value", encoderInput.get());
+					System.out.println("Encoder value: " + encoderInput.get());
 
 					if (!super.continueLoop()) { // If this continueLoop isn't original continueLoop, return false
 						return false;
@@ -331,7 +334,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 			double angle = Double.parseDouble(args.get(0));
-			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10;
+			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 5;
 			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000;
 
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
@@ -370,14 +373,14 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						} catch (InterruptedException e) {} // no? (look at 2017)
 					}
 					// Turns it by the turningOutput, but doesn't move forwards.
-					drivetrain.arcadeDrive(0, turningOutput.get()); 
-					Logging.put("Turning Error", turnPID.getError());
+					drivetrain.arcadeDrive(0, turningOutput.get());
 				}
 
 				@Override
 				public void end() {
 					Logging.log("Turn Ended");
 					turnPID.disable();
+					drivetrain.stopMotor();
 				}
 			};
 		}
@@ -481,12 +484,15 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						break;
 					case "high":
 						RotationalArm.armPID.setSetpoint(ARM_PID_HIGH);
+						RotationalArm.armPID.enable();
 						break;
 					case "medium":
 						RotationalArm.armPID.setSetpoint(ARM_PID_MEDIUM);
+						RotationalArm.armPID.enable();
 						break;
 					case "low":
 						RotationalArm.armPID.setSetpoint(ARM_PID_LOW);
+						RotationalArm.armPID.enable();
 						break;
 					case "":
 						throw new Error("Error in SetArm: No direction set");
@@ -656,11 +662,11 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			if (key.startsWith("!")) { // if the line starts with '!', make it concurrent
 				// concurrent commands run at the same time as the command before them
 				this.concurrent = true;
-				this.name = key.substring(1);
+				this.name = key.substring(1).toLowerCase();
 			} else {
 				// if commands are not concurrent, they will run in the order they are written
 				this.concurrent = false;
-				this.name = key;
+				this.name = key.toLowerCase();
 			}
 
 			// trims brackets

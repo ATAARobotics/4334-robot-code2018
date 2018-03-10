@@ -2,6 +2,7 @@ package main.java.ca.fourthreethreefour.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.identifiers.VolatileInputOutput;
 import main.java.ca.fourthreethreefour.module.actuators.DualEncoderInput;
 import main.java.ca.fourthreethreefour.settings.Settings;
@@ -22,12 +23,10 @@ public interface DriveSensors extends Settings {
 	DualEncoderInput encoderInput = new DualEncoderInput(leftEncoder, rightEncoder);
 	
 	Input navxInput = new Input() {
-
 		@Override
 		public double get() {
 			return navx.getAngle();
 		}
-		
 	};
 	
 	VolatileInputOutput speedOutput = new VolatileInputOutput(), 
