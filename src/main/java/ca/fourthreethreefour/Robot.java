@@ -16,6 +16,7 @@ import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.hal.PDPJNI;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
@@ -62,19 +63,19 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Initializes the CameraServer twice. That's how it's done
         CameraServer.getInstance().startAutomaticCapture();
         //CameraServer.getInstance().startAutomaticCapture();
-
+        
 		// Controller 1/driver
 		/*
 		 * Sets the deadband for LEFT_FROM_MIDDLE and RIGHT_X. If the input value from
 		 * either of those axes does not exceed the deadband, the value will be set to
 		 * zero.
 		 */
-		controller1.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.20);
+		controller1.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.12);
 		controller1.changeAxis(XboxController.LEFT_FROM_MIDDLE, speedFunction);
-		controller1.addDeadband(XboxController.RIGHT_X, 0.20);
+		controller1.addDeadband(XboxController.RIGHT_X, 0.12);
 		controller1.invertAxis(XboxController.RIGHT_X);
 		controller1.changeAxis(XboxController.RIGHT_X, turnFunction);
-		controller1.addDeadband(XboxController.TRIGGERS, 0.20);
+		controller1.addDeadband(XboxController.TRIGGERS, 0.15);
 
 		// Creates an axis bind for the left and right sticks
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
@@ -202,6 +203,9 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	@Override
 	public void initAutonomous() {
 		AUTO_MODULES.enable();
+		
+		gearShifter.set(LOW_GEAR);
+		
 		// Gets game-specific information (switch and scale orientations) from FMS.
 		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
@@ -243,21 +247,9 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	public void initTeleoperated() {
 		TELEOP_MODULES.enable();
 		drivetrain.setSafetyEnabled(true); // Maybe we do...
-		/*
-		 * If any of these solenoids are are in the OFF position, set them to a default
-		 * position. Necessary because most of our code for operating solenoids requires
-		 * them to not be in the OFF position.
-		 */
-		if (clawSolenoid.get() == Direction.OFF) {
-			clawSolenoid.set(CLAW_OPEN);
-		}
-		if (flexSolenoid.get() == Direction.OFF) {
-			flexSolenoid.set(FLEX_RETRACT);
-		}
-		if (gearShifter.get() == Direction.OFF) {
-			gearShifter.set(LOW_GEAR);
-		}
 		
+		flexSolenoid.set(FLEX_RETRACT);
+		gearShifter.set(LOW_GEAR);
 	}
 
 	// Runs every (approx.) 20ms in teleop
@@ -268,6 +260,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.doBinds();
 
         if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
+        Logging.logf("Amp Value: ", PDPJNI.getPDPChannelCurrent(RAMP_CHANNEL, 0));
 
 	}
 	

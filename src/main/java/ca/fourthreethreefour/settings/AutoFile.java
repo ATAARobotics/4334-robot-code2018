@@ -380,6 +380,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				public void end() {
 					Logging.log("Turn Ended");
 					turnPID.disable();
+					drivetrain.stopMotor();
 				}
 			};
 		}
