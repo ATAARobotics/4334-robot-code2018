@@ -110,7 +110,8 @@ public interface Settings {
 	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 50);
 	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);
 	
-	int RAMP_CHANNEL = settingsFile.getIntProperty("RAMP_CHANNEL", 0);
+	int RAMP_CHANNEL_LEFT = settingsFile.getIntProperty("RAMP_CHANNEL_LEFT", 0);
+	int RAMP_CHANNEL_RIGHT = settingsFile.getIntProperty("RAMP_CHANNEL_RIGHT", 0);
 	
 	double RAMP_STALL_CURRENT = settingsFile.getIntProperty("RAMP_STALL_CURRENT", 0);
 }
