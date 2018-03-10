@@ -111,4 +111,6 @@ public interface Settings {
 	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);
 	
 	int RAMP_CHANNEL = settingsFile.getIntProperty("RAMP_CHANNEL", 0);
+	
+	double RAMP_STALL_CURRENT = settingsFile.getIntProperty("RAMP_STALL_CURRENT", 0);
 }

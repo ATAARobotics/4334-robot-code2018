@@ -41,6 +41,10 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	DriverStation ds = DriverStation.getInstance();
 	
 	PowerDistributionPanel pdp = new PowerDistributionPanel();
+	
+	int rampModifier = 1;
+	
+	double pdpCurrent;
 
 	/*
 	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter
@@ -98,10 +102,10 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		// Creates a bind to be used, with button and command RampRetract
 		controller2.addWhenPressed(XboxController.BACK, leftRelease.setPositionCommand(true));
-		controller2.addWhilePressed(XboxController.BACK, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
+		controller2.addWhilePressed(XboxController.BACK, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED * rampModifier));
 		controller2.addWhenReleased(XboxController.BACK, new SetOutput(leftRamp1, 0));
 		controller2.addWhenPressed(XboxController.START, rightRelease.setPositionCommand(true));
-		controller2.addWhilePressed(XboxController.START, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
+		controller2.addWhilePressed(XboxController.START, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED * rampModifier));
 		controller2.addWhenReleased(XboxController.START, new SetOutput(rightRamp1, 0));
 
 		//TODO Up scale, sides switch, down ground
@@ -260,8 +264,16 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller1.doBinds();
 		controller2.doBinds();
 
+		pdpCurrent = pdp.getCurrent(RAMP_CHANNEL);
+
         if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
-        Logging.logf("Amp Value: ", pdp.getCurrent(RAMP_CHANNEL));
+        Logging.logf("Amp Value: ", pdpCurrent);
+        
+        if (pdpCurrent > RAMP_STALL_CURRENT) {
+        	rampModifier = -1;
+        } else {
+        	rampModifier = 1;
+        }
 
 	}
 	
