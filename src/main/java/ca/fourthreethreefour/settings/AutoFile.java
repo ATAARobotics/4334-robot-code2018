@@ -580,7 +580,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		 * .txt file is a separate command.
 		 */
 		for (String line : contents.split("\n")) {
-			if (line.trim().length() == 0) { // ignores blank lines
+			if (line.trim().length() == 0 || line.trim().startsWith("//")) { // ignores blank lines or comments
 				continue;
 			} else if (line.contains("=")) {
 				/*
