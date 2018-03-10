@@ -8,6 +8,7 @@ import edu.first.command.Commands;
 import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
+import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
@@ -39,14 +40,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	 * receive information (not controller inputs) from the driver station.
 	 */
 	DriverStation ds = DriverStation.getInstance();
-	
-	PowerDistributionPanel pdp = new PowerDistributionPanel();
-	
-	int rampLeftModifier = 1;
-	int rampRightModifier = 1;
-	
-	double pdpCurrentLeft;
-	double pdpCurrentRight;
 
 	/*
 	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter
@@ -104,10 +97,10 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		// Creates a bind to be used, with button and command RampRetract
 		controller2.addWhenPressed(XboxController.BACK, leftRelease.setPositionCommand(true));
-		controller2.addWhilePressed(XboxController.BACK, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED * rampLeftModifier));
+		controller2.addWhilePressed(XboxController.BACK, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
 		controller2.addWhenReleased(XboxController.BACK, new SetOutput(leftRamp1, 0));
 		controller2.addWhenPressed(XboxController.START, rightRelease.setPositionCommand(true));
-		controller2.addWhilePressed(XboxController.START, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED * rampRightModifier));
+		controller2.addWhilePressed(XboxController.START, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
 		controller2.addWhenReleased(XboxController.START, new SetOutput(rightRamp1, 0));
 
 		//TODO Up scale, sides switch, down ground
@@ -256,6 +249,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		drivetrain.setSafetyEnabled(true); // Maybe we do...
 		
 		flexSolenoid.set(FLEX_RETRACT);
+		clawSolenoid.set(CLAW_CLOSE);
 		gearShifter.set(LOW_GEAR);
 	}
 
@@ -265,24 +259,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
-
-		pdpCurrentLeft = pdp.getCurrent(RAMP_CHANNEL_LEFT);
-		pdpCurrentRight = pdp.getCurrent(RAMP_CHANNEL_RIGHT);
-
-        if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
-        Logging.logf("Ramp Current Value: (left: %.2f) (right: %.2f)", pdpCurrentLeft, pdpCurrentRight);
-        
-        if (pdpCurrentLeft > RAMP_STALL_CURRENT) {
-        	rampLeftModifier = -1;
-        } else {
-        	rampLeftModifier = 1;
-        }
-        if (pdpCurrentRight > RAMP_STALL_CURRENT) {
-        	rampRightModifier = -1;
-        } else {
-        	rampRightModifier = 1;
-        }
-
 	}
 	
 
