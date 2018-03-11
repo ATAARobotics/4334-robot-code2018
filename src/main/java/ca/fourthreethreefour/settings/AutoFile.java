@@ -316,6 +316,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					Logging.log("DriveStraight Ended");
 					distancePID.disable();
 					turnPID.disable();
+					drivetrain.stopMotor();
 				}
 			};
 		}
