@@ -96,12 +96,12 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 
 		// Creates a bind to be used, with button and command RampRetract
-		controller2.addWhenPressed(XboxController.BACK, leftRelease.setPositionCommand(true));
-		controller2.addWhilePressed(XboxController.BACK, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
-		controller2.addWhenReleased(XboxController.BACK, new SetOutput(leftRamp1, 0));
-		controller2.addWhenPressed(XboxController.START, rightRelease.setPositionCommand(true));
-		controller2.addWhilePressed(XboxController.START, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
-		controller2.addWhenReleased(XboxController.START, new SetOutput(rightRamp1, 0));
+		controller2.addWhenPressed(XboxController.START, leftRelease.setPositionCommand(true));
+		controller2.addWhilePressed(XboxController.START, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
+		controller2.addWhenReleased(XboxController.START, new SetOutput(leftRamp1, 0));
+		controller2.addWhenPressed(XboxController.BACK, rightRelease.setPositionCommand(true));
+		controller2.addWhilePressed(XboxController.BACK, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
+		controller2.addWhenReleased(XboxController.BACK, new SetOutput(rightRamp1, 0));
 
 		//TODO Up scale, sides switch, down ground
 		
