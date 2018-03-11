@@ -107,7 +107,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			// If the driver station isn't in autonomous, or is disabled, stop the command
 			// from looping
 			if (!DriverStation.getInstance().isAutonomous() || !DriverStation.getInstance().isEnabled()) {
-				Logging.log("command interrupted");
+				Logging.log("Command interrupted");
 				return false;
 			}
 			if (!timeout.started()) {
@@ -117,6 +117,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			if (timeout.done()) {
 				Logging.log("Command timed out");
 			}
+			
 			return !timeout.done();
 		}
 	}
@@ -204,8 +205,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 					if (distancePID.isEnabled() && distancePID.onTarget()) {
 						correctIterations++;
-						Logging.logf("error", distancePID.getError());
-						Logging.logf("threshold", distancePID.getTolerance());
 					} else {
 						correctIterations = 0;
 					}
@@ -217,7 +216,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				public void firstLoop() {
 					distancePID.setSetpoint(distance);
 					distancePID.enable();
-					Logging.log("DriveDistance Started");
 				}
 
 				@Override
@@ -226,7 +224,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						distancePID.wait(20);
 					} catch (InterruptedException e) {
 					}
-					Logging.put("Distance Error", distancePID.getError());
 					double output = speedOutput.get();
 					drivetrain.set(output + compensation, output - compensation);
 				}
@@ -236,7 +233,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					distancePID.disable();
 					leftEncoder.reset();
 					rightEncoder.reset();
-					Logging.log("DriveDistance Ended");
 				}
 			};
 		}
@@ -265,17 +261,12 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 				@Override
 				public boolean continueLoop() {
-					SmartDashboard.putNumber("Encoder value", encoderInput.get());
-					System.out.println("Encoder value: " + encoderInput.get());
-
 					if (!super.continueLoop()) { // If this continueLoop isn't original continueLoop, return false
 						return false;
 					}
 
 					if (distancePID.isEnabled() && distancePID.onTarget()) { // If it's enabled and on target
 						correctIterations++; // Add one per loop when at the Target.
-						Logging.logf("error", distancePID.getError());
-						Logging.logf("threshold", distancePID.getTolerance());
 					} else { // If it's not on target
 						correctIterations = 0; // Set the amount to 0
 					}
@@ -293,8 +284,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					double angle = navx.getAngle(); // Sets angle to the current angle.
 					turnPID.setSetpoint(angle); // Sets the angle
 					turnPID.enable(); // Enables the turn PID
-
-					Logging.logf("DriveStraight Setpoint", distancePID.getSetpoint());
 				}
 
 				@Override
@@ -306,14 +295,12 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						}
 					}
 
-					Logging.put("Distance Error", distancePID.getError());
 					drivetrain.arcadeDrive(speedOutput.get() * speed, turningOutput.get());
 					// Sets speed and turn to speedOutput and turningOutput. These values are set by the PID controllers.
 				}
 
 				@Override
 				public void end() {
-					Logging.log("DriveStraight Ended");
 					distancePID.disable();
 					turnPID.disable();
 					drivetrain.stopMotor();
@@ -348,8 +335,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					}
 
 					if (turnPID.isEnabled() && turnPID.onTarget()) {
-						Logging.logf("error", turnPID.getError());
-						Logging.logf("threshold", turnPID.getTolerance());
 						correctIterations++;
 					} else {
 						correctIterations = 0;
@@ -363,7 +348,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					navx.reset();
 					turnPID.setSetpoint(angle);
 					turnPID.enable();
-					Logging.log("Turn Started");
 				}
 
 				@Override
@@ -379,7 +363,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 				@Override
 				public void end() {
-					Logging.log("Turn Ended");
 					turnPID.disable();
 					drivetrain.stopMotor();
 				}
