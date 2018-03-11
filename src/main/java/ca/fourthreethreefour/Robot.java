@@ -123,7 +123,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 					}
 				}
 				if (!RotationalArm.armPID.isEnabled()) {
-					RotationalArm.armMotor.set(v);
+					RotationalArm.output.set(-v);
 				}
 			}
 		});
