@@ -94,7 +94,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
-
 		// Creates a bind to be used, with button and command RampRetract
 		controller2.addWhenPressed(XboxController.START, leftRelease.setPositionCommand(true));
 		controller2.addWhilePressed(XboxController.START, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
@@ -149,6 +148,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		commandQualsLeft,
 		commandQualsRight,
 		commandPlayoffsRight,
+		commandPlayoffsLeft,
 		commandTest;
 
 	@Override
@@ -190,9 +190,21 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				commandInitialRun = new AutoFile(new File("initialRun" + ".txt")).toCommand();
 				commandQualsLeft = new AutoFile(new File("qualsLeft" + AUTO_TYPE + ".txt")).toCommand();
 				commandQualsRight = new AutoFile(new File("qualsRight" + AUTO_TYPE + ".txt")).toCommand();
-				commandPlayoffsRight = new AutoFile(new File("playoffsRight" + AUTO_TYPE + ".txt")).toCommand();
 			} catch (IOException e) {
 				throw new Error(e.getMessage());
+			}
+			
+			// playoff autos are optional
+			try {
+				commandPlayoffsRight = new AutoFile(new File("playoffsRight" + AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				commandPlayoffsRight = null;
+			}
+			
+			try {
+				commandPlayoffsLeft = new AutoFile(new File("playoffsLeft" + AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				commandPlayoffsLeft = null;
 			}
 		}
 
@@ -212,14 +224,22 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		if (AUTO_TYPE.contains("test")) {
 			Commands.run(commandTest);
 		} else {
+			// always starts with initial run
 			Commands.run(commandInitialRun);
+			
 			if (gameData.length() > 0) {
 				if (DriverStation.getInstance().getMatchType() == DriverStation.MatchType.Elimination || IS_PLAYOFF) {
-					if (gameData.charAt(1) == 'R') { // if our side of the scale is on the right
+					if (gameData.charAt(1) == 'R' && commandPlayoffsRight != null) {
+						// if our side of the scale is on the right
 						Commands.run(commandPlayoffsRight);
-					} else if (gameData.charAt(0) == 'R') { // if our side of the switch is on the right
+					} else if (gameData.charAt(1) == 'L' && commandPlayoffsLeft != null) {
+						// if our side of the scale is on the left
+						Commands.run(commandPlayoffsLeft);
+					} else if (gameData.charAt(0) == 'R') {
+						// if our side of the switch is on the right
 						Commands.run(commandQualsRight);
-					} else {
+					} else if (gameData.charAt(0) == 'L') {
+						// if our side of the switch is on the left
 						Commands.run(commandQualsLeft);
 					}
 				} else {
