@@ -256,9 +256,9 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 			int distance = Integer.parseInt(args.get(0)); // Sets distance to the first arg
-			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10; // If there is more than one argument (.size) then grabs the value, else by default it's 10
-			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000; // Same as above.
-			double speed = args.size() > 3 ? Double.parseDouble(args.get(3)) : 1; // Used as a coefficient for speedOutput
+			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10; // number of loops required to stop
+			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000; // time limit for command in milliseconds
+			double speed = args.size() > 3 ? Double.parseDouble(args.get(3)) : 1; // coefficient for speedOutput
 
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
 				int correctIterations = 0;
@@ -497,7 +497,12 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					case "":
 						throw new Error("Error in SetArm: No direction set");
 					default:
-						throw new Error("Error in SetArm: Direction set incorrectly");
+						try {
+							RotationalArm.armPID.setSetpoint(ARM_PID_TOP - Double.parseDouble(cmd));
+						} catch (NumberFormatException e) {
+							throw new Error("Error in SetArm: Direction set incorrectly");
+						}
+						break;
 					}
 				}
 			};
