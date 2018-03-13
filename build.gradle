@@ -20,6 +20,10 @@ deploy {
         artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) {
             targets << "roborio"
         }
+        fileArtifact('settings') {
+            file = file('settings')
+            filename = 'settings.txt'
+        }
     }
 }
 

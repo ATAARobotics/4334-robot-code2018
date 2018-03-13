@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.subsystems.Arm;
 import main.java.ca.fourthreethreefour.subsystems.Drive;
 import main.java.ca.fourthreethreefour.subsystems.DriveSensors;
@@ -43,15 +44,15 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	 */
 	static {
 		COMMANDS.put("print", new Print());
-		COMMANDS.put("blindDrive", new BlindDrive());
-		COMMANDS.put("driveDistance", new DriveDistance());
-		COMMANDS.put("driveStraight", new DriveStraight());
+		COMMANDS.put("blinddrive", new BlindDrive());
+		COMMANDS.put("drivedistance", new DriveDistance());
+		COMMANDS.put("drivestraight", new DriveStraight());
 		COMMANDS.put("turn", new Turn());
 		COMMANDS.put("stop", new Stop());
 		COMMANDS.put("wait", new Wait());
-		COMMANDS.put("waitUntil", new WaitUntil());
-		COMMANDS.put("setGear", new SetGear());
-		COMMANDS.put("setArm", new SetArm());
+		COMMANDS.put("waituntil", new WaitUntil());
+		COMMANDS.put("setgear", new SetGear());
+		COMMANDS.put("setarm", new SetArm());
 		//COMMANDS.put("driveupto", new DriveUpTo());
 	}
 
@@ -106,7 +107,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			// If the driver station isn't in autonomous, or is disabled, stop the command
 			// from looping
 			if (!DriverStation.getInstance().isAutonomous() || !DriverStation.getInstance().isEnabled()) {
-				Logging.log("command interrupted");
+				Logging.log("Command interrupted");
 				return false;
 			}
 			if (!timeout.started()) {
@@ -116,6 +117,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			if (timeout.done()) {
 				Logging.log("Command timed out");
 			}
+			
 			return !timeout.done();
 		}
 	}
@@ -203,8 +205,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 					if (distancePID.isEnabled() && distancePID.onTarget()) {
 						correctIterations++;
-						Logging.logf("error", distancePID.getError());
-						Logging.logf("threshold", distancePID.getTolerance());
 					} else {
 						correctIterations = 0;
 					}
@@ -216,7 +216,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				public void firstLoop() {
 					distancePID.setSetpoint(distance);
 					distancePID.enable();
-					Logging.log("DriveDistance Started");
 				}
 
 				@Override
@@ -225,7 +224,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						distancePID.wait(20);
 					} catch (InterruptedException e) {
 					}
-					Logging.put("Distance Error", distancePID.getError());
 					double output = speedOutput.get();
 					drivetrain.set(output + compensation, output - compensation);
 				}
@@ -235,7 +233,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					distancePID.disable();
 					leftEncoder.reset();
 					rightEncoder.reset();
-					Logging.log("DriveDistance Ended");
 				}
 			};
 		}
@@ -255,24 +252,21 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 			int distance = Integer.parseInt(args.get(0)); // Sets distance to the first arg
-			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10; // If there is more than one argument (.size) then grabs the value, else by default it's 10
-			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000; // Same as above.
-			double speed = args.size() > 3 ? Double.parseDouble(args.get(3)) : 1; // Used as a coefficient for speedOutput
+			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10; // number of loops required to stop
+			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000; // time limit for command in milliseconds
+			double speed = args.size() > 3 ? Double.parseDouble(args.get(3)) : 1; // coefficient for speedOutput
 
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
 				int correctIterations = 0;
 
 				@Override
 				public boolean continueLoop() {
-
 					if (!super.continueLoop()) { // If this continueLoop isn't original continueLoop, return false
 						return false;
 					}
 
 					if (distancePID.isEnabled() && distancePID.onTarget()) { // If it's enabled and on target
 						correctIterations++; // Add one per loop when at the Target.
-						Logging.logf("error", distancePID.getError());
-						Logging.logf("threshold", distancePID.getTolerance());
 					} else { // If it's not on target
 						correctIterations = 0; // Set the amount to 0
 					}
@@ -290,8 +284,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					double angle = navx.getAngle(); // Sets angle to the current angle.
 					turnPID.setSetpoint(angle); // Sets the angle
 					turnPID.enable(); // Enables the turn PID
-
-					Logging.logf("DriveStraight Setpoint", distancePID.getSetpoint());
 				}
 
 				@Override
@@ -303,16 +295,15 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						}
 					}
 
-					Logging.put("Distance Error", distancePID.getError());
 					drivetrain.arcadeDrive(speedOutput.get() * speed, turningOutput.get());
 					// Sets speed and turn to speedOutput and turningOutput. These values are set by the PID controllers.
 				}
 
 				@Override
 				public void end() {
-					Logging.log("DriveStraight Ended");
 					distancePID.disable();
 					turnPID.disable();
+					drivetrain.stopMotor();
 				}
 			};
 		}
@@ -331,7 +322,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 			double angle = Double.parseDouble(args.get(0));
-			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10;
+			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 5;
 			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 8000;
 
 			return new LoopingCommandWithTimeout(new Timeout(time)) {
@@ -344,8 +335,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					}
 
 					if (turnPID.isEnabled() && turnPID.onTarget()) {
-						Logging.logf("error", turnPID.getError());
-						Logging.logf("threshold", turnPID.getTolerance());
 						correctIterations++;
 					} else {
 						correctIterations = 0;
@@ -359,7 +348,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					navx.reset();
 					turnPID.setSetpoint(angle);
 					turnPID.enable();
-					Logging.log("Turn Started");
 				}
 
 				@Override
@@ -370,14 +358,13 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						} catch (InterruptedException e) {} // no? (look at 2017)
 					}
 					// Turns it by the turningOutput, but doesn't move forwards.
-					drivetrain.arcadeDrive(0, turningOutput.get()); 
-					Logging.put("Turning Error", turnPID.getError());
+					drivetrain.arcadeDrive(0, turningOutput.get());
 				}
 
 				@Override
 				public void end() {
-					Logging.log("Turn Ended");
 					turnPID.disable();
+					drivetrain.stopMotor();
 				}
 			};
 		}
@@ -481,17 +468,25 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						break;
 					case "high":
 						RotationalArm.armPID.setSetpoint(ARM_PID_HIGH);
+						RotationalArm.armPID.enable();
 						break;
 					case "medium":
 						RotationalArm.armPID.setSetpoint(ARM_PID_MEDIUM);
+						RotationalArm.armPID.enable();
 						break;
 					case "low":
 						RotationalArm.armPID.setSetpoint(ARM_PID_LOW);
+						RotationalArm.armPID.enable();
 						break;
 					case "":
 						throw new Error("Error in SetArm: No direction set");
 					default:
-						throw new Error("Error in SetArm: Direction set incorrectly");
+						try {
+							RotationalArm.armPID.setSetpoint(ARM_PID_TOP - Double.parseDouble(cmd));
+						} catch (NumberFormatException e) {
+							throw new Error("Error in SetArm: Direction set incorrectly");
+						}
+						break;
 					}
 				}
 			};
@@ -574,7 +569,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		 * .txt file is a separate command.
 		 */
 		for (String line : contents.split("\n")) {
-			if (line.trim().length() == 0) { // ignores blank lines
+			if (line.trim().length() == 0 || line.trim().startsWith("//")) { // ignores blank lines or comments
 				continue;
 			} else if (line.contains("=")) {
 				/*
@@ -656,11 +651,11 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			if (key.startsWith("!")) { // if the line starts with '!', make it concurrent
 				// concurrent commands run at the same time as the command before them
 				this.concurrent = true;
-				this.name = key.substring(1);
+				this.name = key.substring(1).toLowerCase();
 			} else {
 				// if commands are not concurrent, they will run in the order they are written
 				this.concurrent = false;
-				this.name = key;
+				this.name = key.toLowerCase();
 			}
 
 			// trims brackets

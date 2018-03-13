@@ -15,23 +15,24 @@ import main.java.ca.fourthreethreefour.settings.Settings;
  */
 public class RotationalArm extends Subsystem implements Settings, Arm {
 	
-	public static MotorModule armMotor = new MotorModule(TYPE_ARM_MOTOR, ARM_MOTOR);
+	private static MotorModule armMotor = new MotorModule(TYPE_ARM_MOTOR, ARM_MOTOR);
 
 	public static boolean shouldArmBeFlexed() { // Checks if the arm's angle A.K.A the potentiometer value is between the set points.
-		double armAngle = potentiometer.get();
+		double armAngle = ARM_PID_TOP - potentiometer.get();
 		return (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX && flexSolenoid.get() == FLEX_EXTEND);
 	}
 	
-	public static PIDController armPID = new PIDController(potentiometer, new Output() {
+	public static Output output = new Output() {
 		@Override
 		public void set(double value) {
-			// Sets the setpoint for MotionMagic.
 			armMotor.set(-value);
 
 			// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
 			if (shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
 		}
-	}, ARM_P, ARM_I, ARM_D);
+	};
+	
+	public static PIDController armPID = new PIDController(potentiometer, output, ARM_P, ARM_I, ARM_D);
 	
 	public RotationalArm() {
 		super(new Module[] { armMotor });

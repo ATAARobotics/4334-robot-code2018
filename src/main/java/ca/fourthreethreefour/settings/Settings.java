@@ -29,7 +29,8 @@ public interface Settings {
 	SettingsFile settingsFile = new SettingsFile(new File("/settings.txt"));
 
 	String ROBOT_TYPE = settingsFile.getProperty("ROBOT_TYPE", "");
-    String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "");
+    String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "Right");
+    boolean IS_PLAYOFF = settingsFile.getBooleanProperty("IS_PLAYOFF", false);
 	
     boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
 	
@@ -43,19 +44,17 @@ public interface Settings {
 	int DRIVE_RIGHT_1 = settingsFile.getIntProperty("DRIVE_RIGHT_1", 2);
 	int DRIVE_RIGHT_2 = settingsFile.getIntProperty("DRIVE_RIGHT_2", 3);
 
-	int GEAR_SHIFTER_SOLENOID_1 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_1", 4);
-	int GEAR_SHIFTER_SOLENOID_2 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_2", 5);
+	int GEAR_SHIFTER_SOLENOID_1 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_1", 0);
+	int GEAR_SHIFTER_SOLENOID_2 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_2", 1);
 	
 	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 8);
 	double ARM_SPEED = settingsFile.getDoubleProperty("ARM_SPEED", 0.5);
 	
 	int RAMP_LEFT_1 = settingsFile.getIntProperty("RAMP_LEFT_1", 4);
-	int RAMP_LEFT_2 = settingsFile.getIntProperty("RAMP_LEFT_2", 5);
 	int RAMP_RIGHT_1 = settingsFile.getIntProperty("RAMP_RIGHT_1", 6);
-	int RAMP_RIGHT_2 = settingsFile.getIntProperty("RAMP_RIGHT_2", 7);
 
-	int RAMP_RELEASE_LEFT = settingsFile.getIntProperty("RAMP_RELEASE_LEFT", 6);
-	int RAMP_RELEASE_RIGHT = settingsFile.getIntProperty("RAMP_RELEASE_RIGHT", 7);
+	int RAMP_RELEASE_LEFT = settingsFile.getIntProperty("RAMP_RELEASE_LEFT", 2);
+	int RAMP_RELEASE_RIGHT = settingsFile.getIntProperty("RAMP_RELEASE_RIGHT", 3);
 	
 	double RAMP_RETRACT_SPEED = settingsFile.getDoubleProperty("RAMP_RETRACT_SPEED", -0.1);
 	
@@ -71,11 +70,11 @@ public interface Settings {
 	MotorModule.Type TYPE_RAMP_RIGHT_1 = toType(settingsFile.getProperty("TYPE_RAMP_RIGHT_1", "talonsrx"));
 	MotorModule.Type TYPE_RAMP_RIGHT_2 = toType(settingsFile.getProperty("TYPE_RAMP_RIGHT_2", "talonsrx"));
 	
-	int CLAW_SOLENOID_1 = settingsFile.getIntProperty("CLAW_SOLENOID_1", 0);
-	int CLAW_SOLENOID_2 = settingsFile.getIntProperty("CLAW_SOLENOID_2", 1);
+	int CLAW_SOLENOID_1 = settingsFile.getIntProperty("CLAW_SOLENOID_1", 4);
+	int CLAW_SOLENOID_2 = settingsFile.getIntProperty("CLAW_SOLENOID_2", 5);
 	
-	int FLEX_SOLENOID_1 = settingsFile.getIntProperty("FLEX_SOLENOID_1", 2);
-	int FLEX_SOLENOID_2 = settingsFile.getIntProperty("FLEX_SOLENOID_2", 3);
+	int FLEX_SOLENOID_1 = settingsFile.getIntProperty("FLEX_SOLENOID_1", 6);
+	int FLEX_SOLENOID_2 = settingsFile.getIntProperty("FLEX_SOLENOID_2", 7);
 	
 	int ENCODER_LEFT_1 = settingsFile.getIntProperty("ENCODER_LEFT_1", 0);
 	int ENCODER_LEFT_2 = settingsFile.getIntProperty("ENCODER_LEFT_2", 1);
@@ -88,13 +87,13 @@ public interface Settings {
 
 	// PID values
 	// TODO get default values
-	int SPEED_P = settingsFile.getIntProperty("SPEED_P", 0);
-	int SPEED_I = settingsFile.getIntProperty("SPEED_I", 0);
-	int SPEED_D = settingsFile.getIntProperty("SPEED_D", 0);
-	
-	int TURN_P = settingsFile.getIntProperty("TURN_P", 0);
-	int TURN_I = settingsFile.getIntProperty("TURN_I", 0);
-	int TURN_D = settingsFile.getIntProperty("TURN_D", 0);
+	double SPEED_P = settingsFile.getDoubleProperty("SPEED_P", 0);
+	double SPEED_I = settingsFile.getDoubleProperty("SPEED_I", 0);
+	double SPEED_D = settingsFile.getDoubleProperty("SPEED_D", 0);
+
+	double TURN_P = settingsFile.getDoubleProperty("TURN_P", 0);
+	double TURN_I = settingsFile.getDoubleProperty("TURN_I", 0);
+	double TURN_D = settingsFile.getDoubleProperty("TURN_D", 0);
 	
 	double ARM_P = settingsFile.getDoubleProperty("ARM_P", 2.5);
 	double ARM_I = settingsFile.getDoubleProperty("ARM_I", 0);
@@ -107,4 +106,12 @@ public interface Settings {
 	double ARM_PID_HIGH = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_HIGH", 0.02);
 	double ARM_ANGLE_MIN = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.25);
 	double ARM_ANGLE_MAX = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.73);
+
+	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 50);
+	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);
+	
+	int RAMP_CHANNEL_LEFT = settingsFile.getIntProperty("RAMP_CHANNEL_LEFT", 6);
+	int RAMP_CHANNEL_RIGHT = settingsFile.getIntProperty("RAMP_CHANNEL_RIGHT", 7);
+	
+	double RAMP_STALL_CURRENT = settingsFile.getIntProperty("RAMP_STALL_CURRENT", 0);
 }

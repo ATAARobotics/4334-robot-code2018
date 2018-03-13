@@ -8,13 +8,14 @@ import edu.first.command.Commands;
 import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
-import edu.first.module.actuators.DualActionSolenoid.Direction;
+import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
-import edu.first.module.joysticks.BindingJoystick.WhilePressed;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
@@ -48,11 +49,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		super("ATA 2018");
 	}
 
-	// Creates a bind to be used, with button and command RampRetract
-	private WhilePressed 
-		leftRampRetractionBind = new WhilePressed(controller2.getBack(), new SetOutput(leftRamp, RAMP_RETRACT_SPEED)),
-		rightRampRetractionBind = new WhilePressed(controller2.getStart(), new SetOutput(rightRamp, RAMP_RETRACT_SPEED));
-
 	String settingsActive = settingsFile.toString();
 
 	// runs when the robot is first turned on
@@ -61,22 +57,25 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Initializes all modules
 		ALL_MODULES.init();
 
+		distancePID.setTolerance(DISTANCE_TOLERANCE);
+		turnPID.setTolerance(TURN_TOLERANCE);
+
 		// Initializes the CameraServer twice. That's how it's done
+        CameraServer.getInstance().startAutomaticCapture();
         //CameraServer.getInstance().startAutomaticCapture();
-        //CameraServer.getInstance().startAutomaticCapture();
-		
+        
 		// Controller 1/driver
 		/*
 		 * Sets the deadband for LEFT_FROM_MIDDLE and RIGHT_X. If the input value from
 		 * either of those axes does not exceed the deadband, the value will be set to
 		 * zero.
 		 */
-		controller1.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.20);
+		controller1.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.12);
 		controller1.changeAxis(XboxController.LEFT_FROM_MIDDLE, speedFunction);
-		controller1.addDeadband(XboxController.RIGHT_X, 0.20);
+		controller1.addDeadband(XboxController.RIGHT_X, 0.12);
 		controller1.invertAxis(XboxController.RIGHT_X);
 		controller1.changeAxis(XboxController.RIGHT_X, turnFunction);
-		controller1.addDeadband(XboxController.TRIGGERS, 0.20);
+		controller1.addDeadband(XboxController.TRIGGERS, 0.15);
 
 		// Creates an axis bind for the left and right sticks
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
@@ -95,8 +94,13 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
-		controller2.addBind(rightRampRetractionBind);
-		controller2.addBind(leftRampRetractionBind);
+		// Creates a bind to be used, with button and command RampRetract
+		controller2.addWhenPressed(XboxController.START, leftRelease.setPositionCommand(true));
+		controller2.addWhilePressed(XboxController.START, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
+		controller2.addWhenReleased(XboxController.START, new SetOutput(leftRamp1, 0));
+		controller2.addWhenPressed(XboxController.BACK, rightRelease.setPositionCommand(true));
+		controller2.addWhilePressed(XboxController.BACK, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
+		controller2.addWhenReleased(XboxController.BACK, new SetOutput(rightRamp1, 0));
 
 		//TODO Up scale, sides switch, down ground
 		
@@ -118,7 +122,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 					}
 				}
 				if (!RotationalArm.armPID.isEnabled()) {
-					RotationalArm.armMotor.set(v);
+					RotationalArm.output.set(-v);
 				}
 			}
 		});
@@ -130,22 +134,34 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		controller2.addWhenPressed(XboxController.DPAD_UP, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));
+
+		controller2.addWhenPressed(controller2.getBack(), new Command() {
+			@Override
+			public void run() {
+
+			}
+		});
 	}
 
 	private Command // Declares these as Command
-		commandLRL,
-		commandRLR,
-		commandLLL,
-		commandRRR;
+		commandInitialRun,
+		commandQualsLeft,
+		commandQualsRight,
+		commandPlayoffsRight,
+		commandPlayoffsLeft,
+		commandTest;
 
 	@Override
 	public void initDisabled() {
 		ALL_MODULES.disable();
 		RotationalArm.armPID.disable();
+		potentiometer.enable();
 	}
 
 	@Override
 	public void periodicDisabled() {
+		Logging.logf("Potentiometer value: (abs: %.2f) (rel: %.2f)", potentiometer.get(), ARM_PID_TOP - potentiometer.get());
+		Timer.delay(1);
 		
 		try {
 			settingsFile.reload();
@@ -162,14 +178,34 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		if (AUTO_TYPE == "") { // If no type specified, ends method.
 			return;
 		}
-		
-		try { // Creates a new AutoFile with the file of each game, and makes it a command.
-			commandLRL = new AutoFile(new File("LRL" + AUTO_TYPE + ".txt")).toCommand();
-			commandRLR = new AutoFile(new File("RLR" + AUTO_TYPE + ".txt")).toCommand();
-			commandLLL = new AutoFile(new File("LLL" + AUTO_TYPE + ".txt")).toCommand();
-			commandRRR = new AutoFile(new File("RRR" + AUTO_TYPE + ".txt")).toCommand();
-		} catch (IOException e) {
-			throw new Error(e.getMessage());
+
+		if (AUTO_TYPE.contains("test")) {
+			try {
+				commandTest = new AutoFile(new File(AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				throw new Error(e.getMessage());
+			}
+		} else {
+			try { // Creates a new AutoFile with the file of each game, and makes it a command.
+				commandInitialRun = new AutoFile(new File("initialRun" + ".txt")).toCommand();
+				commandQualsLeft = new AutoFile(new File("qualsLeft" + AUTO_TYPE + ".txt")).toCommand();
+				commandQualsRight = new AutoFile(new File("qualsRight" + AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				throw new Error(e.getMessage());
+			}
+			
+			// playoff autos are optional
+			try {
+				commandPlayoffsRight = new AutoFile(new File("playoffsRight" + AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				commandPlayoffsRight = null;
+			}
+			
+			try {
+				commandPlayoffsLeft = new AutoFile(new File("playoffsLeft" + AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				commandPlayoffsLeft = null;
+			}
 		}
 
 		Timer.delay(1);
@@ -179,27 +215,47 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	@Override
 	public void initAutonomous() {
 		AUTO_MODULES.enable();
+		
+		gearShifter.set(LOW_GEAR);
+		
 		// Gets game-specific information (switch and scale orientations) from FMS.
 		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
-		if (gameData.length() > 0) {
-			switch (gameData) {
-			case "LRL":
-				Commands.run(commandLRL);
-				break;
-			case "RLR":
-				Commands.run(commandRLR);
-				break;
-			case "LLL":
-				Commands.run(commandLLL);
-				break;
-			case "RRR":
-				Commands.run(commandRRR);
-				break;
+		if (AUTO_TYPE.contains("test")) {
+			Commands.run(commandTest);
+		} else {
+			// always starts with initial run
+			Commands.run(commandInitialRun);
+			
+			if (gameData.length() > 0) {
+				if (DriverStation.getInstance().getMatchType() == DriverStation.MatchType.Elimination || IS_PLAYOFF) {
+					if (gameData.charAt(1) == 'R' && commandPlayoffsRight != null) {
+						// if our side of the scale is on the right
+						Commands.run(commandPlayoffsRight);
+					} else if (gameData.charAt(1) == 'L' && commandPlayoffsLeft != null) {
+						// if our side of the scale is on the left
+						Commands.run(commandPlayoffsLeft);
+					} else if (gameData.charAt(0) == 'R') {
+						// if our side of the switch is on the right
+						Commands.run(commandQualsRight);
+					} else if (gameData.charAt(0) == 'L') {
+						// if our side of the switch is on the left
+						Commands.run(commandQualsLeft);
+					}
+				} else {
+					if (gameData.charAt(0) == 'R') { // if our side of the switch is on the right
+						Commands.run(commandQualsRight);
+					} else {
+						Commands.run(commandQualsLeft);
+					}
+				}
 			}
 		}
 	}
 
+	@Override
+	public void periodicAutonomous() {
+	}
 	// Runs at the end of autonomous
 	@Override
 	public void endAutonomous() {
@@ -211,21 +267,10 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	public void initTeleoperated() {
 		TELEOP_MODULES.enable();
 		drivetrain.setSafetyEnabled(true); // Maybe we do...
-		/*
-		 * If any of these solenoids are are in the OFF position, set them to a default
-		 * position. Necessary because most of our code for operating solenoids requires
-		 * them to not be in the OFF position.
-		 */
-		if (clawSolenoid.get() == Direction.OFF) {
-			clawSolenoid.set(CLAW_OPEN);
-		}
-		if (flexSolenoid.get() == Direction.OFF) {
-			flexSolenoid.set(FLEX_RETRACT);
-		}
-		if (gearShifter.get() == Direction.OFF) {
-			gearShifter.set(LOW_GEAR);
-		}
 		
+		flexSolenoid.set(FLEX_RETRACT);
+		clawSolenoid.set(CLAW_CLOSE);
+		gearShifter.set(LOW_GEAR);
 	}
 
 	// Runs every (approx.) 20ms in teleop
@@ -234,18 +279,12 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
-
-        if (RotationalArm.shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
-
-		Logging.log("potentiometer: " + (ARM_PID_TOP - potentiometer.get()));
 	}
 	
 
 	// Runs at the end of teleop
 	@Override
 	public void endTeleoperated() {
-		controller1.removeBind(leftRampRetractionBind);
-		controller1.removeBind(rightRampRetractionBind);
 		RotationalArm.armPID.disable();
 		TELEOP_MODULES.disable();
 	}
