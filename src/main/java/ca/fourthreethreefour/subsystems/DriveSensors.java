@@ -2,10 +2,6 @@ package main.java.ca.fourthreethreefour.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import main.java.ca.fourthreethreefour.commands.debug.Logging;
-import main.java.ca.fourthreethreefour.identifiers.VolatileInputOutput;
-import main.java.ca.fourthreethreefour.module.actuators.DualEncoderInput;
-import main.java.ca.fourthreethreefour.settings.Settings;
 import edu.first.identifiers.Input;
 import edu.first.module.Module;
 import edu.first.module.controllers.PIDController;
@@ -13,6 +9,9 @@ import edu.first.module.sensors.EncoderModule;
 import edu.first.module.sensors.EncoderModule.InputType;
 import edu.first.module.subsystems.Subsystem;
 import edu.wpi.first.wpilibj.SPI;
+import main.java.ca.fourthreethreefour.identifiers.VolatileInputOutput;
+import main.java.ca.fourthreethreefour.module.actuators.DualEncoderInput;
+import main.java.ca.fourthreethreefour.settings.Settings;
 
 public interface DriveSensors extends Settings {
 	
