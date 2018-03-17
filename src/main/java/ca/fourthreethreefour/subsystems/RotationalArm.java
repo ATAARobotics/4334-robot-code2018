@@ -28,7 +28,7 @@ public class RotationalArm extends Subsystem implements Settings, Arm {
 			armMotor.set(-value);
 
 			// If it's true, meaning that the angle is between the min and max angles, it will set it to retract.
-			if (shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
+			//if (shouldArmBeFlexed()) { flexSolenoid.set(FLEX_RETRACT); }
 		}
 	};
 	
