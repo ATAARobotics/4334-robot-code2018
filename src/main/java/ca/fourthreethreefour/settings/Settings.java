@@ -84,7 +84,7 @@ public interface Settings {
 	int XBOXCONTROLLER_1 = settingsFile.getIntProperty("XBOXCONTROLLER_1", 0);
 	int XBOXCONTROLLER_2 = settingsFile.getIntProperty("XBOXCONTROLLER_2", 1);
 
-	double INCHES_PER_ENCODER_TICK = settingsFile.getDoubleProperty("INCHES_PER_ENCODER_TICK", 0);
+	double ENCODER_TICKS_PER_INCH = settingsFile.getDoubleProperty("ENCODER_TICKS_PER_INCH", 0);
 	
 	// PID values
 	double SPEED_P = settingsFile.getDoubleProperty("SPEED_P", 0);
