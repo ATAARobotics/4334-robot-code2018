@@ -28,14 +28,13 @@ public interface Settings {
 	
 	SettingsFile settingsFile = new SettingsFile(new File("/settings.txt"));
 
-	String ROBOT_TYPE = settingsFile.getProperty("ROBOT_TYPE", "");
     String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "Right");
     boolean IS_PLAYOFF = settingsFile.getBooleanProperty("IS_PLAYOFF", false);
 	
     boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
 	
     double TURN_CURVE = settingsFile.getDoubleProperty("TURN_CURVE", 1.5);
-    double TURN_CONSTANT = settingsFile.getDoubleProperty("TURN_CONSTANT", 1);
+
     // Ports
 	// TODO get default ports
 	// int EXAMPLE_PORT = settingsFile.getIntProperty("EXAMPLE_PORT", [default port])
@@ -46,7 +45,9 @@ public interface Settings {
 
 	int GEAR_SHIFTER_SOLENOID_1 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_1", 0);
 	int GEAR_SHIFTER_SOLENOID_2 = settingsFile.getIntProperty("GEAR_SHIFTER_SOLENOID_2", 1);
-	
+
+	double LOW_GEAR_THRESHOLD = settingsFile.getDoubleProperty("LOW_GEAR_THRESHOLD", 0.1);
+
 	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 8);
 	double ARM_SPEED = settingsFile.getDoubleProperty("ARM_SPEED", 0.5);
 	
@@ -66,9 +67,7 @@ public interface Settings {
 	MotorModule.Type TYPE_ARM_MOTOR = toType(settingsFile.getProperty("TYPE_ARM_MOTOR", "victorspx"));
 
 	MotorModule.Type TYPE_RAMP_LEFT_1 = toType(settingsFile.getProperty("TYPE_RAMP_LEFT_1", "talonsrx"));
-	MotorModule.Type TYPE_RAMP_LEFT_2 = toType(settingsFile.getProperty("TYPE_RAMP_LEFT_2", "victorspx"));
 	MotorModule.Type TYPE_RAMP_RIGHT_1 = toType(settingsFile.getProperty("TYPE_RAMP_RIGHT_1", "talonsrx"));
-	MotorModule.Type TYPE_RAMP_RIGHT_2 = toType(settingsFile.getProperty("TYPE_RAMP_RIGHT_2", "talonsrx"));
 	
 	int CLAW_SOLENOID_1 = settingsFile.getIntProperty("CLAW_SOLENOID_1", 4);
 	int CLAW_SOLENOID_2 = settingsFile.getIntProperty("CLAW_SOLENOID_2", 5);
@@ -104,8 +103,8 @@ public interface Settings {
 	double ARM_PID_LOW = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_LOW", 0.6);
 	double ARM_PID_MEDIUM = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_MEDIUM", 0.51);
 	double ARM_PID_HIGH = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_HIGH", 0.02);
-	double ARM_ANGLE_MIN = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.25);
-	double ARM_ANGLE_MAX = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.73);
+	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.25);
+	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.73);
 
 	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 50);
 	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);
