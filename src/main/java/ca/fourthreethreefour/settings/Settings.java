@@ -51,13 +51,8 @@ public interface Settings {
 	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 8);
 	double ARM_SPEED = settingsFile.getDoubleProperty("ARM_SPEED", 0.5);
 	
-	int RAMP_LEFT_1 = settingsFile.getIntProperty("RAMP_LEFT_1", 4);
-	int RAMP_RIGHT_1 = settingsFile.getIntProperty("RAMP_RIGHT_1", 6);
-
-	int RAMP_RELEASE_LEFT = settingsFile.getIntProperty("RAMP_RELEASE_LEFT", 2);
-	int RAMP_RELEASE_RIGHT = settingsFile.getIntProperty("RAMP_RELEASE_RIGHT", 3);
-	
-	double RAMP_RETRACT_SPEED = settingsFile.getDoubleProperty("RAMP_RETRACT_SPEED", -0.1);
+	int INTAKE_LEFT = settingsFile.getIntProperty("INTAKE_LEFT", 4);
+	int INTAKE_RIGHT = settingsFile.getIntProperty("INTAKE_RIGHT", 6);
 	
 	MotorModule.Type TYPE_DRIVE_LEFT_1 = toType(settingsFile.getProperty("TYPE_DRIVE_LEFT_1", "talonsrx"));
 	MotorModule.Type TYPE_DRIVE_LEFT_2 = toType(settingsFile.getProperty("TYPE_DRIVE_LEFT_2", "talonsrx"));
@@ -66,8 +61,8 @@ public interface Settings {
 
 	MotorModule.Type TYPE_ARM_MOTOR = toType(settingsFile.getProperty("TYPE_ARM_MOTOR", "victorspx"));
 
-	MotorModule.Type TYPE_RAMP_LEFT_1 = toType(settingsFile.getProperty("TYPE_RAMP_LEFT_1", "talonsrx"));
-	MotorModule.Type TYPE_RAMP_RIGHT_1 = toType(settingsFile.getProperty("TYPE_RAMP_RIGHT_1", "talonsrx"));
+	MotorModule.Type TYPE_INTAKE_LEFT = toType(settingsFile.getProperty("TYPE_INTAKE_LEFT", "talonsrx"));
+	MotorModule.Type TYPE_INTAKE_RIGHT = toType(settingsFile.getProperty("TYPE_INTAKE_RIGHT", "talonsrx"));
 	
 	int CLAW_SOLENOID_1 = settingsFile.getIntProperty("CLAW_SOLENOID_1", 4);
 	int CLAW_SOLENOID_2 = settingsFile.getIntProperty("CLAW_SOLENOID_2", 5);
@@ -108,9 +103,4 @@ public interface Settings {
 
 	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 50);
 	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);
-	
-	int RAMP_CHANNEL_LEFT = settingsFile.getIntProperty("RAMP_CHANNEL_LEFT", 6);
-	int RAMP_CHANNEL_RIGHT = settingsFile.getIntProperty("RAMP_CHANNEL_RIGHT", 7);
-	
-	double RAMP_STALL_CURRENT = settingsFile.getIntProperty("RAMP_STALL_CURRENT", 0);
 }
