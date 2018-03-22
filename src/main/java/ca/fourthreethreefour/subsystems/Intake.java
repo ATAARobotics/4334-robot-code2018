@@ -16,8 +16,8 @@ public interface Intake extends Settings {
 	 */
 	
 	MotorModule // Creates a TalonSRXModule for the left side and right
-		leftRamp1 = new MotorModule(TYPE_RAMP_LEFT_1, RAMP_LEFT_1),
-		rightRamp1 = new MotorModule(TYPE_RAMP_RIGHT_1, RAMP_RIGHT_1);
+		leftIntake = new MotorModule(TYPE_RAMP_LEFT_1, RAMP_LEFT_1),
+		rightIntake = new MotorModule(TYPE_RAMP_RIGHT_1, RAMP_RIGHT_1);
 	
 	/*SolenoidModule // Creates a single action solenoid, with set ports.
 		leftRelease = new SolenoidModule(RAMP_RELEASE_LEFT),
@@ -26,7 +26,7 @@ public interface Intake extends Settings {
 	
 	// Makes a subsystem called ramp with parts above
 	public Subsystem intake = new Subsystem(new Module[] {
-			leftRamp1, rightRamp1,
+			leftIntake, rightIntake,
 	});
 	
 }
