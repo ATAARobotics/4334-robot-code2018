@@ -95,10 +95,10 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
-		// Creates a bind to be used, with button and command RampRetract
-
+		// Binds the Intake motors to the Right stick
 		controller2.addDeadband(XboxController.RIGHT_FROM_MIDDLE, 0.12);
 		controller2.changeAxis(XboxController.RIGHT_FROM_MIDDLE, speedFunction);
+		controller2.invertAxis(XboxController.RIGHT_FROM_MIDDLE);
 		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), leftIntake);
 		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), rightIntake);
 
