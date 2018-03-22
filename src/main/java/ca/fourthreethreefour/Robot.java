@@ -30,7 +30,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	 */
 	private final Subsystem 
 		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders }),
-		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, ramp }),
+		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, intake }),
 		ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 
 	/*
@@ -96,12 +96,20 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
 		// Creates a bind to be used, with button and command RampRetract
+		
 		controller2.addWhenPressed(XboxController.BACK, leftRelease.setPositionCommand(true));
 		controller2.addWhilePressed(XboxController.BACK, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
 		controller2.addWhenReleased(XboxController.BACK, new SetOutput(leftRamp1, 0));
 		controller2.addWhenPressed(XboxController.START, rightRelease.setPositionCommand(true));
 		controller2.addWhilePressed(XboxController.START, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
 		controller2.addWhenReleased(XboxController.START, new SetOutput(rightRamp1, 0));
+		
+		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), new Output() {
+			@Override
+			public void set(double speed) {
+				
+			}
+		});
 
 		//TODO Up scale, sides switch, down ground
 		
