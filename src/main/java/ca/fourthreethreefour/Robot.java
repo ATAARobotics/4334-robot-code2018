@@ -29,7 +29,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	 * then puts the two subsystems into ALL_MODULES subsystem. Subsystemception!
 	 */
 	private final Subsystem 
-		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders }),
+		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders, intake }),
 		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, intake }),
 		ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 

@@ -23,6 +23,7 @@ import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.subsystems.Arm;
 import main.java.ca.fourthreethreefour.subsystems.Drive;
 import main.java.ca.fourthreethreefour.subsystems.DriveSensors;
+import main.java.ca.fourthreethreefour.subsystems.Intake;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 // TODO Fix the spelling and capitalization.
@@ -52,6 +53,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		COMMANDS.put("waituntil", new WaitUntil());
 		COMMANDS.put("setgear", new SetGear());
 		COMMANDS.put("setarm", new SetArm());
+		COMMANDS.put("intake", new IntakeCommand());
 		//COMMANDS.put("driveupto", new DriveUpTo());
 	}
 
@@ -527,6 +529,39 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		}
 	}
 	
+	/**
+	 * Takes arguments for running the intake.
+	 * Arguments are speed between -1 and 1, and time for running.
+	 * 
+	 * @author Cool
+	 * @since 2018
+	 *
+	 */
+
+	private static class IntakeCommand implements RuntimeCommand, Intake {
+
+		@Override
+		public Command getCommand(List<String> args) {
+			double setSpeed = Double.parseDouble(args.get(0)),
+				speed = setSpeed < -1 ? -1 : setSpeed > 1 ? 1 : setSpeed; // If setSpeed is less than -1, it will be set to -1, if
+					// greater than 1, then it will be set to 1. Otherwise it just uses the normal setSpeed value.
+			long time = Long.parseLong(args.get(1));
+			return new LoopingCommandWithTimeout(new Timeout(time)) {
+				@Override
+				public void runLoop() {
+					leftIntake.setSpeed(speed);
+					rightIntake.setSpeed(speed);
+				}
+
+				@Override
+				public void end() {
+					leftIntake.setSpeed(0);
+					rightIntake.setSpeed(0);
+				}
+			};
+		}
+
+	}
 	// End of commands section
 
 	// TODO Comment this section
