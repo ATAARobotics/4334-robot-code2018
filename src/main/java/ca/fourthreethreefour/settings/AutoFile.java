@@ -53,7 +53,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		COMMANDS.put("waituntil", new WaitUntil());
 		COMMANDS.put("setgear", new SetGear());
 		COMMANDS.put("setarm", new SetArm());
-		COMMANDS.put("intake", new IntakeCommand());
+		COMMANDS.put("runintake", new IntakeCommand());
 		//COMMANDS.put("driveupto", new DriveUpTo());
 	}
 
