@@ -543,9 +543,9 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		@Override
 		public Command getCommand(List<String> args) {
 			String cmd = args.get(0).toLowerCase();
-			long time = Long.parseLong(args.get(1));
+			long time = args.size() > 1 ? Long.parseLong(args.get(1)) : 5000;
 
-			if (args.size() > 1) {
+			if (args.size() > 0) {
 				switch (cmd) {
 				case "in":
 					return new LoopingCommandWithTimeout(new Timeout(time)) {
