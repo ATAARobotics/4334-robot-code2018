@@ -102,7 +102,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), leftIntake);
 		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), rightIntake);
 
-		//TODO Up scale, sides switch, down ground
+		controller2.addWhenPressed(XboxController.RIGHT_STICK, new ReverseSolenoid(intakeSolenoid));
 		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
@@ -126,6 +126,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		});
+		
 		controller2.addWhenPressed(XboxController.DPAD_DOWN, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_DOWN, new SetOutput(RotationalArm.armPID, ARM_PID_LOW));
 
@@ -263,6 +264,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		flexSolenoid.set(FLEX_RETRACT);
 		clawSolenoid.set(CLAW_CLOSE);
 		gearShifter.set(LOW_GEAR);
+		intakeSolenoid.set(CLOSE_INTAKE);
 	}
 
 	// Runs every (approx.) 20ms in teleop
