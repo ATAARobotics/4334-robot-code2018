@@ -531,7 +531,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	
 	/**
 	 * Takes arguments for running the intake.
-	 * Arguments are cmd (in, out, open, close) and time (needed for running motor)
+	 * Arguments are cmd (in, out, open, close) and time
 	 * 
 	 * @author Cool
 	 * @since 2018
@@ -545,59 +545,53 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 			String cmd = args.get(0).toLowerCase();
 			long time = args.size() > 1 ? Long.parseLong(args.get(1)) : 5000;
 
-			if (args.size() > 0) {
-				switch (cmd) {
-				case "in":
-					return new LoopingCommandWithTimeout(new Timeout(time)) {
-						@Override
-						public void runLoop() {
-							leftIntake.setSpeed(1);
-							rightIntake.setSpeed(1);
-						}
+			switch (cmd) {
+			case "in":
+				return new LoopingCommandWithTimeout(new Timeout(time)) {
+					@Override
+					public void runLoop() {
+						leftIntake.setSpeed(-INTAKE_AUTO_SPEED);
+						rightIntake.setSpeed(INTAKE_AUTO_SPEED);
+					}
 
-						@Override
-						public void end() {
-							leftIntake.setSpeed(0);
-							rightIntake.setSpeed(0);
-						}
-					};
-				case "out":
-					return new LoopingCommandWithTimeout(new Timeout(time)) {
-						@Override
-						public void runLoop() {
-							leftIntake.setSpeed(-1);
-							rightIntake.setSpeed(-1);
-						}
+					@Override
+					public void end() {
+						leftIntake.setSpeed(0);
+						rightIntake.setSpeed(0);
+					}
+				};
+			case "out":
+				return new LoopingCommandWithTimeout(new Timeout(time)) {
+					@Override
+					public void runLoop() {
+						leftIntake.setSpeed(INTAKE_AUTO_SPEED);
+						rightIntake.setSpeed(-INTAKE_AUTO_SPEED);
+					}
 
-						@Override
-						public void end() {
-							leftIntake.setSpeed(0);
-							rightIntake.setSpeed(0);
-						}
-					};
-				case "":
-					throw new Error("Error in SetIntake: No cmd set");
-				default:
-					throw new Error("Error in SetIntake: Intake set incorrectly");
-				}
-			} else {
+					@Override
+					public void end() {
+						leftIntake.setSpeed(0);
+						rightIntake.setSpeed(0);
+					}
+				};
+			case "open":
 				return new Command() {
 					@Override
 					public void run() {
-						switch (cmd) {
-						case "open":
-							Intake.intakeSolenoid.set(OPEN_INTAKE);
-							break;
-						case "close":
-							Intake.intakeSolenoid.set(CLOSE_INTAKE);
-							break;
-						case "":
-							throw new Error("Error in SetIntake: No cmd set");
-						default:
-							throw new Error("Error in SetIntake: Intake set incorrectly");
-						}
+						Intake.intakeSolenoid.set(OPEN_INTAKE);
 					}
 				};
+			case "close":
+				return new Command() {
+					@Override
+					public void run() {
+						Intake.intakeSolenoid.set(CLOSE_INTAKE);
+					}
+				};
+			case "":
+				throw new Error("Error in SetIntake: No cmd set");
+			default:
+				throw new Error("Error in SetIntake: Intake set incorrectly");
 			}
 		}
 
