@@ -245,6 +245,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	@Override
 	public void periodicAutonomous() {
+		Logging.logf("Encoder value: (left: %.2f) (right: %.2f)", leftEncoder.get(), rightEncoder.get());
+		Timer.delay(0.5);
 	}
 	// Runs at the end of autonomous
 	@Override
