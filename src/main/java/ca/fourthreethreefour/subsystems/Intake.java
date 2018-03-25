@@ -18,7 +18,7 @@ public interface Intake extends Settings {
 	DualActionSolenoidModule intakeSolenoid = new DualActionSolenoidModule(INTAKE_SOLENOID_1, INTAKE_SOLENOID_2);
 	
 	// Makes a subsystem called ramp with parts above
-	public Subsystem intake = new Subsystem(new Module[] { leftIntake, rightIntake, intakeSolenoid });
+	public Subsystem intake = new Subsystem(new Module[] { leftIntake, rightIntake, intakeSolenoid, armIntake });
 	
 	DualActionSolenoid.Direction
 		OPEN_INTAKE = Direction.LEFT,
