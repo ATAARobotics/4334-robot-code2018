@@ -55,7 +55,8 @@ public interface Settings {
 	int INTAKE_RIGHT = settingsFile.getIntProperty("INTAKE_RIGHT", 6);
 	int INTAKE_ARM = settingsFile.getIntProperty("INTAKE_ARM", 5);
 	
-	double INTAKE_ARM_SPEED = settingsFile.getDoubleProperty("INTAKE_ARM_SPEED", 0.95);
+	double INTAKE_ARM_SPEED_UP = settingsFile.getDoubleProperty("INTAKE_ARM_SPEED_UP", 0.95);
+	double INTAKE_ARM_SPEED_DOWN = settingsFile.getDoubleProperty("INTAKE_ARM_SPEED_DOWN", 0.95);
 	
 	int INTAKE_SOLENOID_1 = settingsFile.getIntProperty("INTAKE_SOLENOID_1", 2);
 	int INTAKE_SOLENOID_2 = settingsFile.getIntProperty("INTAKE_SOLENOID_2", 3);

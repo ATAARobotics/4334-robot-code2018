@@ -28,8 +28,7 @@ public interface Intake extends Settings {
 	Function intakeArmFunction = new Function() {
 		@Override
 		public double F(double in) {
-			// if in is greater than 0, multiply it by itself, otherwise multiply by itself and make it negative
-			return in > 0 ? in * in * INTAKE_ARM_SPEED : -(in * in * INTAKE_ARM_SPEED);
+			return in > 0 ? in * in * INTAKE_ARM_SPEED_UP : -(in * in * INTAKE_ARM_SPEED_DOWN);
 		}
 };
 	
