@@ -79,6 +79,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
 			@Override
 			public void doBind(double speed, double turn) {
+                turn += (speed > 0) ? DRIVE_COMPENSATION : 0;
 				drivetrain.arcadeDrive(speed, turn);
 				if(Math.abs(speed) < LOW_GEAR_THRESHOLD) {
 					gearShifter.set(LOW_GEAR);
