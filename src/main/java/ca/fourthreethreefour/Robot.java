@@ -106,6 +106,9 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				rightIntake.set(-value);
 			}
 		});
+		controller2.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.12);
+		controller2.changeAxis(XboxController.LEFT_FROM_MIDDLE, speedFunction);
+		controller2.addAxisBind(controller2.getLeftDistanceFromMiddle(), armIntake);
 
 		controller2.addWhenPressed(XboxController.RIGHT_STICK, new ReverseSolenoid(intakeSolenoid));
 		

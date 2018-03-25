@@ -12,7 +12,8 @@ public interface Intake extends Settings {
 	
 	MotorModule // Creates a TalonSRXModule for the left side and right
 		leftIntake = new MotorModule(TYPE_INTAKE_LEFT, INTAKE_LEFT),
-		rightIntake = new MotorModule(TYPE_INTAKE_RIGHT, INTAKE_RIGHT);
+		rightIntake = new MotorModule(TYPE_INTAKE_RIGHT, INTAKE_RIGHT),
+		armIntake = new MotorModule(TYPE_INTAKE_ARM, INTAKE_ARM);
 	
 	DualActionSolenoidModule intakeSolenoid = new DualActionSolenoidModule(INTAKE_SOLENOID_1, INTAKE_SOLENOID_2);
 	

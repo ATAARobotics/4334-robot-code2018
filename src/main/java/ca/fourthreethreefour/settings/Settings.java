@@ -53,6 +53,7 @@ public interface Settings {
 	
 	int INTAKE_LEFT = settingsFile.getIntProperty("INTAKE_LEFT", 4);
 	int INTAKE_RIGHT = settingsFile.getIntProperty("INTAKE_RIGHT", 6);
+	int INTAKE_ARM = settingsFile.getIntProperty("INTAKE_ARM", 5);
 	
 	int INTAKE_SOLENOID_1 = settingsFile.getIntProperty("INTAKE_SOLENOID_1", 2);
 	int INTAKE_SOLENOID_2 = settingsFile.getIntProperty("INTAKE_SOLENOID_2", 3);
@@ -68,6 +69,7 @@ public interface Settings {
 
 	MotorModule.Type TYPE_INTAKE_LEFT = toType(settingsFile.getProperty("TYPE_INTAKE_LEFT", "talonsrx"));
 	MotorModule.Type TYPE_INTAKE_RIGHT = toType(settingsFile.getProperty("TYPE_INTAKE_RIGHT", "talonsrx"));
+	MotorModule.Type TYPE_INTAKE_ARM = toType(settingsFile.getProperty("TYPE_INTAKE_ARM", "talonsrx"));
 	
 	int CLAW_SOLENOID_1 = settingsFile.getIntProperty("CLAW_SOLENOID_1", 4);
 	int CLAW_SOLENOID_2 = settingsFile.getIntProperty("CLAW_SOLENOID_2", 5);
