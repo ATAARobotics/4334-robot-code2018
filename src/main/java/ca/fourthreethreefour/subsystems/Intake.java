@@ -1,5 +1,6 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
+import edu.first.identifiers.Function;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoidModule;
@@ -24,5 +25,12 @@ public interface Intake extends Settings {
 		OPEN_INTAKE = Direction.LEFT,
 		CLOSE_INTAKE = Direction.RIGHT;
 	
+	Function intakeArmFunction = new Function() {
+		@Override
+		public double F(double in) {
+			// if in is greater than 0, multiply it by itself, otherwise multiply by itself and make it negative
+			return in > 0 ? in * in * INTAKE_ARM_SPEED : -(in * in * INTAKE_ARM_SPEED);
+		}
+};
 	
 }
