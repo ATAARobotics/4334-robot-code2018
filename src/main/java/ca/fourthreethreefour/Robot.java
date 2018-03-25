@@ -80,6 +80,9 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			@Override
 			public void doBind(double speed, double turn) {
 				drivetrain.arcadeDrive(speed, turn);
+				if(Math.abs(speed) < LOW_GEAR_THRESHOLD) {
+					gearShifter.set(LOW_GEAR);
+				}
 			}
 		});
 
@@ -93,12 +96,12 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
 		// Creates a bind to be used, with button and command RampRetract
-		controller2.addWhenPressed(XboxController.START, leftRelease.setPositionCommand(true));
-		controller2.addWhilePressed(XboxController.START, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
-		controller2.addWhenReleased(XboxController.START, new SetOutput(leftRamp1, 0));
-		controller2.addWhenPressed(XboxController.BACK, rightRelease.setPositionCommand(true));
-		controller2.addWhilePressed(XboxController.BACK, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
-		controller2.addWhenReleased(XboxController.BACK, new SetOutput(rightRamp1, 0));
+		controller2.addWhenPressed(XboxController.BACK, leftRelease.setPositionCommand(true));
+		controller2.addWhilePressed(XboxController.BACK, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
+		controller2.addWhenReleased(XboxController.BACK, new SetOutput(leftRamp1, 0));
+		controller2.addWhenPressed(XboxController.START, rightRelease.setPositionCommand(true));
+		controller2.addWhilePressed(XboxController.START, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
+		controller2.addWhenReleased(XboxController.START, new SetOutput(rightRamp1, 0));
 
 		//TODO Up scale, sides switch, down ground
 		
@@ -132,21 +135,14 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		controller2.addWhenPressed(XboxController.DPAD_UP, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));
-
-		controller2.addWhenPressed(controller2.getBack(), new Command() {
-			@Override
-			public void run() {
-
-			}
-		});
 	}
 
 	private Command // Declares these as Command
-		commandInitialRun,
 		commandQualsLeft,
 		commandQualsRight,
 		commandPlayoffsRight,
 		commandPlayoffsLeft,
+		commandTwoCube,
 		commandTest;
 
 	@Override
@@ -159,12 +155,12 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	@Override
 	public void periodicDisabled() {
 		Logging.logf("Potentiometer value: (abs: %.2f) (rel: %.2f)", potentiometer.get(), ARM_PID_TOP - potentiometer.get());
-		Timer.delay(1);
+		Timer.delay(0.25);
 		
 		try {
 			settingsFile.reload();
 		} catch (NullPointerException e) {
-			Timer.delay(1);
+			Timer.delay(0.25);
 		}
 
 		// TODO add limit switch button to set ARM_PID_TOP constant to current potentiometer value
@@ -185,7 +181,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			}
 		} else {
 			try { // Creates a new AutoFile with the file of each game, and makes it a command.
-				commandInitialRun = new AutoFile(new File("initialRun" + ".txt")).toCommand();
 				commandQualsLeft = new AutoFile(new File("qualsLeft" + AUTO_TYPE + ".txt")).toCommand();
 				commandQualsRight = new AutoFile(new File("qualsRight" + AUTO_TYPE + ".txt")).toCommand();
 			} catch (IOException e) {
@@ -204,9 +199,15 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			} catch (IOException e) {
 				commandPlayoffsLeft = null;
 			}
+
+			try {
+				commandTwoCube = new AutoFile(new File("twocube.txt")).toCommand();
+			} catch (IOException e) {
+				commandTwoCube = null;
+			}
 		}
 
-		Timer.delay(1);
+		Timer.delay(0.25);
 	}
 
 	// Runs at the beginning of autonomous
@@ -222,12 +223,12 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		if (AUTO_TYPE.contains("test")) {
 			Commands.run(commandTest);
 		} else {
-			// always starts with initial run
-			Commands.run(commandInitialRun);
-			
 			if (gameData.length() > 0) {
 				if (DriverStation.getInstance().getMatchType() == DriverStation.MatchType.Elimination || IS_PLAYOFF) {
-					if (gameData.charAt(1) == 'R' && commandPlayoffsRight != null) {
+					if (gameData.charAt(1) == 'R' && gameData.charAt(0) == 'R' && commandTwoCube != null) {
+						// if our side of the scale is on the right
+						Commands.run(commandTwoCube);
+					} else if (gameData.charAt(1) == 'R' && commandPlayoffsRight != null) {
 						// if our side of the scale is on the right
 						Commands.run(commandPlayoffsRight);
 					} else if (gameData.charAt(1) == 'L' && commandPlayoffsLeft != null) {
@@ -272,7 +273,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller1.doBinds();
 		controller2.doBinds();
 	}
-	
 
 	// Runs at the end of teleop
 	@Override
