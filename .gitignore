@@ -13,4 +13,4 @@ bin/*
 /bin/
 /.gradle/
 /.idea/
-.classpath
+/.classpath
