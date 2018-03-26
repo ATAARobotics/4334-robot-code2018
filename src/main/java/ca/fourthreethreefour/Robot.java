@@ -159,12 +159,12 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	public void initDisabled() {
 		ALL_MODULES.disable();
 		RotationalArm.armPID.disable();
-		potentiometer.enable();
+		armPotentiometer.enable();
 	}
 
 	@Override
 	public void periodicDisabled() {
-		Logging.logf("Potentiometer value: (abs: %.2f) (rel: %.2f)", potentiometer.get(), ARM_PID_TOP - potentiometer.get());
+		Logging.logf("Potentiometer value: (abs: %.2f) (rel: %.2f)", armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get());
 		Timer.delay(0.25);
 		
 		try {
