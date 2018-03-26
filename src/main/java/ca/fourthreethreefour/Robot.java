@@ -110,7 +110,17 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.12);
 		controller2.changeAxis(XboxController.LEFT_FROM_MIDDLE, intakeArmFunction);
 		controller2.invertAxis(XboxController.LEFT_FROM_MIDDLE);
-		controller2.addAxisBind(controller2.getLeftDistanceFromMiddle(), armIntake);
+		controller2.addAxisBind(controller2.getLeftDistanceFromMiddle(), new Output() {
+			@Override
+			public void set(double v) {
+				if (intakePID.isEnabled()) {
+					intakePID.disable();
+				}
+				if (!intakePID.isEnabled()) {
+					armIntake.set(v);
+				}
+			}
+		});
 
 		controller2.addWhenPressed(XboxController.RIGHT_STICK, new ReverseSolenoid(intakeSolenoid));
 		
@@ -121,6 +131,19 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
+			
+			@Override
+			public void run() {
+				double armAngle = ARM_PID_TOP - armPotentiometer.get();
+				if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
+					if (!intakePID.isEnabled()) {
+						intakePID.enable();
+						intakePID.set(INTAKE_PID_TOP); // TODO Might have to make this a different value.
+					}
+				}
+			}
+		});
 
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
@@ -164,7 +187,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	@Override
 	public void periodicDisabled() {
-		Logging.logf("Potentiometer value: (abs: %.2f) (rel: %.2f)", armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get());
+		Logging.logf("Arm Potentiometer value: (abs: %.2f) (rel: %.2f)", armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get());
+		//Logging.logf("Intake Potentiometer value: (ams: %.2f) (rel: %.2f)", intakePotentiometer.get(), INTAKE_PID_TOP - intakePotentiometer.get()); TODO Uncomment this when the time comes
 		Timer.delay(0.25);
 		
 		try {

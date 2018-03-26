@@ -85,6 +85,7 @@ public interface Settings {
 	int ENCODER_RIGHT_1 = settingsFile.getIntProperty("ENCODER_RIGHT_1", 2);
 	int ENCODER_RIGHT_2 = settingsFile.getIntProperty("ENCODER_RIGHT_2", 3);
 	int ARM_POTENTIOMETER = settingsFile.getIntProperty("ARM_POTENTIOMETER", 0);
+	int INTAKE_POTENTIOMETER = settingsFile.getIntProperty("INTAKE_POTENTIOMETER", 0);
 	
 	int XBOXCONTROLLER_1 = settingsFile.getIntProperty("XBOXCONTROLLER_1", 0);
 	int XBOXCONTROLLER_2 = settingsFile.getIntProperty("XBOXCONTROLLER_2", 1);
@@ -102,6 +103,10 @@ public interface Settings {
 	double ARM_P = settingsFile.getDoubleProperty("ARM_P", 2.5);
 	double ARM_I = settingsFile.getDoubleProperty("ARM_I", 0);
 	double ARM_D = settingsFile.getDoubleProperty("ARM_D", 3);
+	
+	double INTAKE_P = settingsFile.getDoubleProperty("INTAKE_P", 0);
+	double INTAKE_I = settingsFile.getDoubleProperty("INTAKE_I", 0);
+	double INTAKE_D = settingsFile.getDoubleProperty("INTAKE_D", 0);
 
 	// absolute highest position of the arm, all PID setpoints are relative to this
 	double ARM_PID_TOP = settingsFile.getDoubleProperty("ARM_PID_TOP", 0.797119);
@@ -110,6 +115,10 @@ public interface Settings {
 	double ARM_PID_HIGH = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_HIGH", 0.02);
 	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.25);
 	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.73);
+	
+	double INTAKE_PID_TOP = settingsFile.getDoubleProperty("INTAKE_PID_TOP", 1);
+	double INTAKE_ANGLE_MIN = settingsFile.getDoubleProperty("INTAKE_ANGLE_MIN", 0.10);
+	double INTAKE_ANGLE_MAX = settingsFile.getDoubleProperty("INTAKE_ANGLE_MAX", 0.25);
 
 	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 50);
 	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);
