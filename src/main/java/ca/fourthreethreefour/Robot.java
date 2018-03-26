@@ -7,6 +7,7 @@ import edu.first.command.Command;
 import edu.first.command.Commands;
 import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
+import edu.first.lang.OutOfSyncException;
 import edu.first.module.Module;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
 import edu.first.module.joysticks.XboxController;
@@ -48,6 +49,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	}
 
 	String settingsActive = settingsFile.toString();
+	boolean intakeActive = false;
 
 	// runs when the robot is first turned on
 	@Override
@@ -168,6 +170,18 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		controller2.addWhenPressed(XboxController.DPAD_UP, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));
+		
+		controller2.addWhenPressed(XboxController.A, new Command() {
+			
+			@Override
+			public void run() {
+				if (intakeActive) {
+					intakeActive = false;
+				} else {
+					intakeActive = true;
+				}
+			}
+		});
 	}
 
 	private Command // Declares these as Command
@@ -299,6 +313,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		clawSolenoid.set(CLAW_CLOSE);
 		gearShifter.set(LOW_GEAR);
 		intakeSolenoid.set(CLOSE_INTAKE);
+		intakeActive = false;
 	}
 
 	// Runs every (approx.) 20ms in teleop
@@ -307,6 +322,26 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
+		if (intakeActive) {
+			double leftSpeed = 0, rightSpeed = 0;
+			try {
+				leftSpeed = left.get();
+				rightSpeed = right.get();
+			} catch (OutOfSyncException e) {
+				Timer.delay(0.5);
+			}
+			if (leftSpeed >= rightSpeed) {
+				if (leftSpeed > 0) {
+					leftIntake.set(leftSpeed / 2);
+					rightIntake.set(leftSpeed / 2);
+				}
+			} else {
+				if (rightSpeed > 0) {
+					leftIntake.set(rightSpeed / 2);
+					rightIntake.set(rightSpeed / 2);
+				}
+			}
+		}
 	}
 
 	// Runs at the end of teleop
