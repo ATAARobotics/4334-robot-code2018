@@ -289,6 +289,12 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 						// if our side of the switch is on the left
 						Commands.run(commandQualsLeft);
 					}
+				} else {
+					if (gameData.charAt(0) == 'R') { // if our side of the switch is on the right
+-						Commands.run(commandQualsRight);
+-					} else {
+-						Commands.run(commandQualsLeft);
+-					}
 				}
 			}
 		}
@@ -330,7 +336,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			} catch (OutOfSyncException e) {
 				Timer.delay(0.5);
 			}
-			//Logging.logf("Speed values: (left: %.2f) (right: %.2f)", leftSpeed, rightSpeed);
+			Logging.logf("Speed values: (left: %.2f) (right: %.2f)", leftSpeed, rightSpeed);
 			
 			
 			if (leftSpeed >= rightSpeed) {
