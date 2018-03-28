@@ -133,7 +133,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
+		/*controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
 			
 			@Override
 			public void run() {
@@ -145,7 +145,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 					}
 				}
 			}
-		});
+		});*/
 
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
@@ -325,8 +325,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		if (intakeActive) {
 			double leftSpeed = 0, rightSpeed = 0;
 			try {
-				leftSpeed = left.get();
-				rightSpeed = right.get();
+				leftSpeed = drivetrain.getLeftSpeed();
+				rightSpeed = drivetrain.getRightSpeed();
 			} catch (OutOfSyncException e) {
 				Timer.delay(0.5);
 			}
