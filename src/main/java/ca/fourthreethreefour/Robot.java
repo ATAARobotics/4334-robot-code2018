@@ -102,13 +102,13 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.changeAxis(XboxController.RIGHT_FROM_MIDDLE, speedFunction);
 		controller2.invertAxis(XboxController.RIGHT_FROM_MIDDLE);
 		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), leftIntake);
-		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), rightIntake);
-		/*controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), new Output() {
+		//controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), rightIntake);
+		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), new Output() {
 			@Override
 			public void set(double value) {
 				rightIntake.set(-value);
 			}
-		});*/
+		});
 		controller2.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.12);
 		controller2.changeAxis(XboxController.LEFT_FROM_MIDDLE, intakeArmFunction);
 		controller2.invertAxis(XboxController.LEFT_FROM_MIDDLE);
@@ -171,7 +171,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.addWhenPressed(XboxController.DPAD_UP, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));
 		
-		controller2.addWhenPressed(XboxController.A, new Command() {
+		controller1.addWhenPressed(XboxController.A, new Command() {
 			
 			@Override
 			public void run() {
@@ -326,19 +326,22 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			double leftSpeed = 0, rightSpeed = 0;
 			try {
 				leftSpeed = drivetrain.getLeftSpeed();
-				rightSpeed = drivetrain.getRightSpeed();
+				rightSpeed = -drivetrain.getRightSpeed();
 			} catch (OutOfSyncException e) {
 				Timer.delay(0.5);
 			}
+			//Logging.logf("Speed values: (left: %.2f) (right: %.2f)", leftSpeed, rightSpeed);
+			
+			
 			if (leftSpeed >= rightSpeed) {
 				if (leftSpeed > 0) {
 					leftIntake.set(leftSpeed / 2);
-					rightIntake.set(leftSpeed / 2);
+					rightIntake.set(-leftSpeed / 2);
 				}
 			} else {
 				if (rightSpeed > 0) {
 					leftIntake.set(rightSpeed / 2);
-					rightIntake.set(rightSpeed / 2);
+					rightIntake.set(-rightSpeed / 2);
 				}
 			}
 		}
