@@ -279,7 +279,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					leftEncoder.reset(); // Resets the encoders
 					rightEncoder.reset();
 					// Sets the distance and multiplies by the constant of encoder ticks per inch.
-					distancePID.setSetpoint(distance * ENCODER_TICKS_PER_INCH); 
+					distancePID.setSetpoint(ENCODER_TICKS_PER_INCH_COEFFICIENT*distance + ENCODER_TICKS_PER_INCH_CONSTANT); 
 					distancePID.enable(); // Enables the distance PID
 
 					double angle = navx.getAngle(); // Sets angle to the current angle.
