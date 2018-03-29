@@ -23,6 +23,7 @@ import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.subsystems.Arm;
 import main.java.ca.fourthreethreefour.subsystems.Drive;
 import main.java.ca.fourthreethreefour.subsystems.DriveSensors;
+import main.java.ca.fourthreethreefour.subsystems.Intake;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 // TODO Fix the spelling and capitalization.
@@ -52,6 +53,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		COMMANDS.put("waituntil", new WaitUntil());
 		COMMANDS.put("setgear", new SetGear());
 		COMMANDS.put("setarm", new SetArm());
+		COMMANDS.put("setintake", new SetIntake());
 		//COMMANDS.put("driveupto", new DriveUpTo());
 	}
 
@@ -528,6 +530,73 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		}
 	}
 	
+	/**
+	 * Takes arguments for running the intake.
+	 * Arguments are cmd (in, out, open, close) and time
+	 * 
+	 * @author Cool
+	 * @since 2018
+	 *
+	 */
+
+	private static class SetIntake implements RuntimeCommand, Intake {
+
+		@Override
+		public Command getCommand(List<String> args) {
+			String cmd = args.get(0).toLowerCase();
+			long time = args.size() > 1 ? Long.parseLong(args.get(1)) : 5000;
+
+			switch (cmd) {
+			case "in":
+				return new LoopingCommandWithTimeout(new Timeout(time)) {
+					@Override
+					public void runLoop() {
+						leftIntake.setSpeed(-INTAKE_AUTO_SPEED);
+						rightIntake.setSpeed(INTAKE_AUTO_SPEED);
+					}
+
+					@Override
+					public void end() {
+						leftIntake.setSpeed(0);
+						rightIntake.setSpeed(0);
+					}
+				};
+			case "out":
+				return new LoopingCommandWithTimeout(new Timeout(time)) {
+					@Override
+					public void runLoop() {
+						leftIntake.setSpeed(INTAKE_AUTO_SPEED);
+						rightIntake.setSpeed(-INTAKE_AUTO_SPEED);
+					}
+
+					@Override
+					public void end() {
+						leftIntake.setSpeed(0);
+						rightIntake.setSpeed(0);
+					}
+				};
+			case "open":
+				return new Command() {
+					@Override
+					public void run() {
+						Intake.intakeSolenoid.set(OPEN_INTAKE);
+					}
+				};
+			case "close":
+				return new Command() {
+					@Override
+					public void run() {
+						Intake.intakeSolenoid.set(CLOSE_INTAKE);
+					}
+				};
+			case "":
+				throw new Error("Error in SetIntake: No cmd set");
+			default:
+				throw new Error("Error in SetIntake: Intake set incorrectly");
+			}
+		}
+
+	}
 	// End of commands section
 
 	// TODO Comment this section
