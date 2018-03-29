@@ -10,11 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import main.java.ca.fourthreethreefour.subsystems.Arm;
-import main.java.ca.fourthreethreefour.subsystems.Drive;
-import main.java.ca.fourthreethreefour.subsystems.DriveSensors;
-import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 import edu.first.command.Command;
 import edu.first.commands.CommandGroup;
 import edu.first.commands.common.LoopingCommand;
@@ -25,6 +20,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import main.java.ca.fourthreethreefour.Robot;
 import main.java.ca.fourthreethreefour.commands.CommandGroupFactory;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
+import main.java.ca.fourthreethreefour.subsystems.Arm;
+import main.java.ca.fourthreethreefour.subsystems.Drive;
+import main.java.ca.fourthreethreefour.subsystems.DriveSensors;
+import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 // TODO Fix the spelling and capitalization.
 

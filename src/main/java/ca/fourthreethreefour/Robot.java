@@ -8,14 +8,12 @@ import edu.first.command.Commands;
 import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
-import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
@@ -140,10 +138,11 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	}
 
 	private Command // Declares these as Command
+		commandQualsLeft,
+		commandQualsRight,
+		commandPlayoffsRight,
+		commandPlayoffsLeft,
 		commandTwoCube,
-		commandRightScale,
-		commandRightSwitch,
-		commandAutoRun,
 		commandTest;
 
 	@Override
@@ -181,28 +180,30 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				throw new Error(e.getMessage());
 			}
 		} else {
+			try { // Creates a new AutoFile with the file of each game, and makes it a command.
+				commandQualsLeft = new AutoFile(new File("qualsLeft" + AUTO_TYPE + ".txt")).toCommand();
+				commandQualsRight = new AutoFile(new File("qualsRight" + AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				throw new Error(e.getMessage());
+			}
+			
+			// playoff autos are optional
+			try {
+				commandPlayoffsRight = new AutoFile(new File("playoffsRight" + AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				commandPlayoffsRight = null;
+			}
+			
+			try {
+				commandPlayoffsLeft = new AutoFile(new File("playoffsLeft" + AUTO_TYPE + ".txt")).toCommand();
+			} catch (IOException e) {
+				commandPlayoffsLeft = null;
+			}
+
 			try {
 				commandTwoCube = new AutoFile(new File("twocube.txt")).toCommand();
 			} catch (IOException e) {
 				commandTwoCube = null;
-			}
-
-			try {
-				commandRightScale = new AutoFile(new File("rightscale.txt")).toCommand();
-			} catch (IOException e) {
-				commandRightScale = null;
-			}
-
-			try {
-				commandRightSwitch = new AutoFile(new File("rightswitch.txt")).toCommand();
-			} catch (IOException e) {
-				commandRightSwitch = null;
-			}
-
-			try {
-				commandAutoRun = new AutoFile(new File("autorun.txt")).toCommand();
-			} catch (IOException e) {
-				commandAutoRun = null;
 			}
 		}
 
@@ -223,22 +224,30 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			Commands.run(commandTest);
 		} else {
 			if (gameData.length() > 0) {
-				if (gameData.charAt(1) == 'R' && gameData.charAt(0) == 'R' && commandTwoCube != null) {
-					// if our side of the scale is on the right
-					Commands.run(commandTwoCube);
-				} else if (gameData.charAt(1) == 'R' && commandRightScale != null) {
-					// if our side of the scale is on the right
-					Commands.run(commandRightScale);
-				} else if (gameData.charAt(0) == 'R' && commandRightSwitch != null) {
-					// if our side of the switch is on the right
-					Commands.run(commandRightSwitch);
+				if (DriverStation.getInstance().getMatchType() == DriverStation.MatchType.Elimination || IS_PLAYOFF) {
+					if (gameData.charAt(1) == 'R' && gameData.charAt(0) == 'R' && commandTwoCube != null) {
+						// if our side of the scale is on the right
+						Commands.run(commandTwoCube);
+					} else if (gameData.charAt(1) == 'R' && commandPlayoffsRight != null) {
+						// if our side of the scale is on the right
+						Commands.run(commandPlayoffsRight);
+					} else if (gameData.charAt(1) == 'L' && commandPlayoffsLeft != null) {
+						// if our side of the scale is on the left
+						Commands.run(commandPlayoffsLeft);
+					} else if (gameData.charAt(0) == 'R') {
+						// if our side of the switch is on the right
+						Commands.run(commandQualsRight);
+					} else if (gameData.charAt(0) == 'L') {
+						// if our side of the switch is on the left
+						Commands.run(commandQualsLeft);
+					}
 				} else {
-					// if our side of the switch is on the right
-					Commands.run(commandAutoRun);
+					if (gameData.charAt(0) == 'R') { // if our side of the switch is on the right
+						Commands.run(commandQualsRight);
+					} else {
+						Commands.run(commandQualsLeft);
+					}
 				}
-			} else {
-				// if there's no game-specific data
-				Commands.run(commandAutoRun);
 			}
 		}
 	}
