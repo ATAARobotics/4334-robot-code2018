@@ -7,6 +7,7 @@ import edu.first.command.Command;
 import edu.first.command.Commands;
 import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
+import edu.first.lang.OutOfSyncException;
 import edu.first.module.Module;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
 import edu.first.module.joysticks.XboxController;
@@ -29,8 +30,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	 * then puts the two subsystems into ALL_MODULES subsystem. Subsystemception!
 	 */
 	private final Subsystem 
-		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders }),
-		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, ramp }),
+		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders, intake }),
+		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, intake }),
 		ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 
 	/*
@@ -48,6 +49,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	}
 
 	String settingsActive = settingsFile.toString();
+	boolean intakeActive = false;
 
 	// runs when the robot is first turned on
 	@Override
@@ -95,15 +97,34 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
-		// Creates a bind to be used, with button and command RampRetract
-		controller2.addWhenPressed(XboxController.BACK, leftRelease.setPositionCommand(true));
-		controller2.addWhilePressed(XboxController.BACK, new SetOutput(leftRamp1, RAMP_RETRACT_SPEED));
-		controller2.addWhenReleased(XboxController.BACK, new SetOutput(leftRamp1, 0));
-		controller2.addWhenPressed(XboxController.START, rightRelease.setPositionCommand(true));
-		controller2.addWhilePressed(XboxController.START, new SetOutput(rightRamp1, RAMP_RETRACT_SPEED));
-		controller2.addWhenReleased(XboxController.START, new SetOutput(rightRamp1, 0));
+		// Binds the Intake motors to the Right stick
+		controller2.addDeadband(XboxController.RIGHT_FROM_MIDDLE, 0.12);
+		controller2.changeAxis(XboxController.RIGHT_FROM_MIDDLE, speedFunction);
+		controller2.invertAxis(XboxController.RIGHT_FROM_MIDDLE);
+		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), leftIntake);
+		//controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), rightIntake);
+		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), new Output() {
+			@Override
+			public void set(double value) {
+				rightIntake.set(-value);
+			}
+		});
+		controller2.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.12);
+		controller2.changeAxis(XboxController.LEFT_FROM_MIDDLE, intakeArmFunction);
+		controller2.invertAxis(XboxController.LEFT_FROM_MIDDLE);
+		controller2.addAxisBind(controller2.getLeftDistanceFromMiddle(), new Output() {
+			@Override
+			public void set(double v) {
+				if (intakePID.isEnabled()) {
+					intakePID.disable();
+				}
+				if (!intakePID.isEnabled()) {
+					armIntake.set(v);
+				}
+			}
+		});
 
-		//TODO Up scale, sides switch, down ground
+		controller2.addWhenPressed(XboxController.RIGHT_STICK, new ReverseSolenoid(intakeSolenoid));
 		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
@@ -112,6 +133,24 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
+			@Override
+			public void run() {
+				double armAngle = ARM_PID_TOP - armPotentiometer.get();
+				if (flexSolenoid.get() == FLEX_EXTEND) {
+					if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
+						int i = 0;
+						while (i < INTAKE_RELEASE_LENGTH) {
+							Logging.log("Length: " + i);
+							Logging.log("Intake Running");
+							leftIntake.set(-INTAKE_RELEASE_SPEED);
+							rightIntake.set(INTAKE_RELEASE_SPEED);
+							i++;
+						}
+					}
+				}
+			}
+		});
 
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
@@ -127,6 +166,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		});
+		
 		controller2.addWhenPressed(XboxController.DPAD_DOWN, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_DOWN, new SetOutput(RotationalArm.armPID, ARM_PID_LOW));
 
@@ -135,6 +175,18 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		controller2.addWhenPressed(XboxController.DPAD_UP, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));
+		
+		controller1.addWhenPressed(XboxController.A, new Command() {
+			
+			@Override
+			public void run() {
+				if (intakeActive) {
+					intakeActive = false;
+				} else {
+					intakeActive = true;
+				}
+			}
+		});
 	}
 
 	private Command // Declares these as Command
@@ -149,12 +201,13 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	public void initDisabled() {
 		ALL_MODULES.disable();
 		RotationalArm.armPID.disable();
-		potentiometer.enable();
+		armPotentiometer.enable();
 	}
 
 	@Override
 	public void periodicDisabled() {
-		Logging.logf("Potentiometer value: (abs: %.2f) (rel: %.2f)", potentiometer.get(), ARM_PID_TOP - potentiometer.get());
+		Logging.logf("Arm Potentiometer value: (abs: %.2f) (rel: %.2f)", armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get());
+		//Logging.logf("Intake Potentiometer value: (ams: %.2f) (rel: %.2f)", intakePotentiometer.get(), INTAKE_PID_TOP - intakePotentiometer.get()); TODO Uncomment this when the time comes
 		Timer.delay(0.25);
 		
 		try {
@@ -272,6 +325,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		flexSolenoid.set(FLEX_RETRACT);
 		clawSolenoid.set(CLAW_CLOSE);
 		gearShifter.set(LOW_GEAR);
+		intakeSolenoid.set(CLOSE_INTAKE);
+		intakeActive = false;
 	}
 
 	// Runs every (approx.) 20ms in teleop
@@ -280,6 +335,29 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
+		if (intakeActive) {
+			double leftSpeed = 0, rightSpeed = 0;
+			try {
+				leftSpeed = drivetrain.getLeftSpeed();
+				rightSpeed = -drivetrain.getRightSpeed();
+			} catch (OutOfSyncException e) {
+				Timer.delay(0.5);
+			}
+			Logging.logf("Speed values: (left: %.2f) (right: %.2f)", leftSpeed, rightSpeed);
+			
+			
+			if (leftSpeed >= rightSpeed) {
+				if (leftSpeed > 0) {
+					leftIntake.set(leftSpeed / 2);
+					rightIntake.set(-leftSpeed / 2);
+				}
+			} else {
+				if (rightSpeed > 0) {
+					leftIntake.set(rightSpeed / 2);
+					rightIntake.set(-rightSpeed / 2);
+				}
+			}
+		}
 	}
 
 	// Runs at the end of teleop

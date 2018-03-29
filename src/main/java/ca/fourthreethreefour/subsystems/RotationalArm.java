@@ -18,7 +18,7 @@ public class RotationalArm extends Subsystem implements Settings, Arm {
 	private static MotorModule armMotor = new MotorModule(TYPE_ARM_MOTOR, ARM_MOTOR);
 
 	public static boolean shouldArmBeFlexed() { // Checks if the arm's angle A.K.A the potentiometer value is between the set points.
-		double armAngle = ARM_PID_TOP - potentiometer.get();
+		double armAngle = ARM_PID_TOP - armPotentiometer.get();
 		return (armAngle >= ARM_ANGLE_MIN && armAngle <= ARM_ANGLE_MAX && flexSolenoid.get() == FLEX_EXTEND);
 	}
 	
@@ -32,7 +32,7 @@ public class RotationalArm extends Subsystem implements Settings, Arm {
 		}
 	};
 	
-	public static PIDController armPID = new PIDController(potentiometer, output, ARM_P, ARM_I, ARM_D);
+	public static PIDController armPID = new PIDController(armPotentiometer, output, ARM_P, ARM_I, ARM_D);
 	
 	public RotationalArm() {
 		super(new Module[] { armMotor });
