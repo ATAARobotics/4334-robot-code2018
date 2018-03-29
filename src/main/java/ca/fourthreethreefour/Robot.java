@@ -207,6 +207,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	@Override
 	public void periodicDisabled() {
 		Logging.logf("Arm Potentiometer value: (abs: %.2f) (rel: %.2f)", armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get());
+		Logging.logf("Encoder value: (left: %.2f) (right: %.2f)", leftEncoder.get(), rightEncoder.get());
 		//Logging.logf("Intake Potentiometer value: (ams: %.2f) (rel: %.2f)", intakePotentiometer.get(), INTAKE_PID_TOP - intakePotentiometer.get()); TODO Uncomment this when the time comes
 		Timer.delay(0.25);
 		
@@ -307,8 +308,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	@Override
 	public void periodicAutonomous() {
-		Logging.logf("Encoder value: (left: %.2f) (right: %.2f)", leftEncoder.get(), rightEncoder.get());
-		Timer.delay(0.5);
 	}
 	// Runs at the end of autonomous
 	@Override
