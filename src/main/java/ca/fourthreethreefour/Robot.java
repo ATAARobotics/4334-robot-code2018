@@ -133,20 +133,21 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
+	controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
 			@Override
 			public void run() {
-				if (flexSolenoid.get() == FLEX_EXTEND) {
 					double armAngle = ARM_PID_TOP - armPotentiometer.get();
 					if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
-						intakeRelease = true;
-						Timer.delay(1);
+						int i = 0;
+						while (i < 10) {
+							intakeRelease = true;
+							i++;
+						}
 						intakeRelease = false;
 					}
 				}
-			}
 		});
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
 
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
@@ -352,10 +353,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		}
-		{
 		Logging.logf("intakeRelease value", intakeRelease);
-		Timer.delay(0.5);
-		}
 		if (intakeRelease) {
 			leftIntake.set(INTAKE_RELEASE_SPEED);
 			rightIntake.set(-INTAKE_RELEASE_SPEED);
