@@ -62,6 +62,9 @@ public interface Settings {
 	int INTAKE_SOLENOID_2 = settingsFile.getIntProperty("INTAKE_SOLENOID_2", 3);
 	
 	double INTAKE_AUTO_SPEED = settingsFile.getDoubleProperty("INTAKE_AUTO_SPEED", 1);
+	double INTAKE_RELEASE_SPEED = settingsFile.getDoubleProperty("INTAKE_RELEASE_SPEED", 1);
+	
+	int INTAKE_RELEASE_LENGTH = settingsFile.getIntProperty("INTAKE_RELEASE_LENGTH", 300);
 	
 	MotorModule.Type TYPE_DRIVE_LEFT_1 = toType(settingsFile.getProperty("TYPE_DRIVE_LEFT_1", "talonsrx"));
 	MotorModule.Type TYPE_DRIVE_LEFT_2 = toType(settingsFile.getProperty("TYPE_DRIVE_LEFT_2", "talonsrx"));
@@ -90,8 +93,10 @@ public interface Settings {
 	int XBOXCONTROLLER_1 = settingsFile.getIntProperty("XBOXCONTROLLER_1", 0);
 	int XBOXCONTROLLER_2 = settingsFile.getIntProperty("XBOXCONTROLLER_2", 1);
 
+	double ENCODER_TICKS_PER_INCH_CONSTANT = settingsFile.getDoubleProperty("ENCODER_TICKS_PER_INCH_CONSTANT", 40.525);
+	double ENCODER_TICKS_PER_INCH_COEFFICIENT = settingsFile.getDoubleProperty("ENCODER_TICKS_PER_INCH_COEFFICIENT", 1.4772);
+	
 	// PID values
-	// TODO get default values
 	double SPEED_P = settingsFile.getDoubleProperty("SPEED_P", 0);
 	double SPEED_I = settingsFile.getDoubleProperty("SPEED_I", 0);
 	double SPEED_D = settingsFile.getDoubleProperty("SPEED_D", 0);

@@ -134,19 +134,24 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
-		/*controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
-			
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
 			@Override
 			public void run() {
 				double armAngle = ARM_PID_TOP - armPotentiometer.get();
-				if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
-					if (!intakePID.isEnabled()) {
-						intakePID.enable();
-						intakePID.set(INTAKE_PID_TOP); // TODO Might have to make this a different value.
+				if (flexSolenoid.get() == FLEX_EXTEND) {
+					if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
+						int i = 0;
+						while (i < INTAKE_RELEASE_LENGTH) {
+							Logging.log("Length: " + i);
+							Logging.log("Intake Running");
+							leftIntake.set(-INTAKE_RELEASE_SPEED);
+							rightIntake.set(INTAKE_RELEASE_SPEED);
+							i++;
+						}
 					}
 				}
 			}
-		});*/
+		});
 
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
@@ -303,6 +308,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	@Override
 	public void periodicAutonomous() {
+		Logging.logf("Encoder value: (left: %.2f) (right: %.2f)", leftEncoder.get(), rightEncoder.get());
+		Timer.delay(0.5);
 	}
 	// Runs at the end of autonomous
 	@Override

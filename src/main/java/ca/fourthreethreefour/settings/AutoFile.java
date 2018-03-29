@@ -252,7 +252,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 	private static class DriveStraight implements RuntimeCommand {
 		@Override
 		public Command getCommand(List<String> args) {
-			int distance = Integer.parseInt(args.get(0)); // Sets distance to the first arg
+			double distance = Double.parseDouble(args.get(0)); // Sets distance to the first arg
 			final int threshold = args.size() > 1 ? Integer.parseInt(args.get(1)) : 10; // number of loops required to stop
 			long time = args.size() > 2 ? Long.parseLong(args.get(2)) : 5000; // time limit for command in milliseconds
 			double speed = args.size() > 3 ? Double.parseDouble(args.get(3)) : 1; // coefficient for speedOutput
@@ -277,9 +277,10 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 				@Override
 				public void firstLoop() {
-					leftEncoder.reset(); // Resets the encoders
+					leftEncoder.reset(); // Resets the encoders 
 					rightEncoder.reset();
-					distancePID.setSetpoint(distance); // Sets the distance
+					// Sets the distance and multiplies by the constant of encoder ticks per inch.
+					distancePID.setSetpoint(ENCODER_TICKS_PER_INCH_COEFFICIENT*distance + ENCODER_TICKS_PER_INCH_CONSTANT); 
 					distancePID.enable(); // Enables the distance PID
 
 					double angle = navx.getAngle(); // Sets angle to the current angle.

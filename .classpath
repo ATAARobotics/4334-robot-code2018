@@ -10,9 +10,6 @@
 	<classpathentry kind="lib" path="lib/navx_frc.jar"/>
 	<classpathentry kind="lib" path="lib/CTRE_Phoenix-sources.jar"/>
 	<classpathentry kind="lib" path="lib/CTRE_Phoenix.jar" sourcepath="lib/CTRE_Phoenix-sources.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix-sources.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
 	<classpathentry kind="lib" path="lib/atalibj.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
