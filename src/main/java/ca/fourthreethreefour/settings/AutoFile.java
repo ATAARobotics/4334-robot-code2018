@@ -275,7 +275,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 				@Override
 				public void firstLoop() {
-					leftEncoder.reset(); // Resets the encoders
+					leftEncoder.reset(); // Resets the encoders 
 					rightEncoder.reset();
 					// Sets the distance and multiplies by the constant of encoder ticks per inch.
 					distancePID.setSetpoint(ENCODER_TICKS_PER_INCH_COEFFICIENT*distance + ENCODER_TICKS_PER_INCH_CONSTANT); 
