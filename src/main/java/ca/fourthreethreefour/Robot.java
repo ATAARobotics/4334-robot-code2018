@@ -50,7 +50,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	String settingsActive = settingsFile.toString();
 	boolean intakeActive = false;
-	boolean intakeRelease = false;
 
 	// runs when the robot is first turned on
 	@Override
@@ -138,16 +137,17 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			@Override
 			public void run() {
 				double armAngle = ARM_PID_TOP - armPotentiometer.get();
-				if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
-					int i = 0;
-					while (i < 100) {
-						Logging.log("Length: " + i + " " + intakeRelease);
-						intakeRelease = true;
-						i++;
+				if (flexSolenoid.get() == FLEX_EXTEND) {
+					if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
+						int i = 0;
+						while (i < 300) {
+							Logging.log("Length: " + i);
+							Logging.log("Intake Running");
+							leftIntake.set(-INTAKE_RELEASE_SPEED);
+							rightIntake.set(INTAKE_RELEASE_SPEED);
+							i++;
+						}
 					}
-					if (i < 100) {
-						intakeRelease = true;
-					} else { intakeRelease = false; }
 				}
 			}
 		});
@@ -355,12 +355,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 					rightIntake.set(-rightSpeed / 2);
 				}
 			}
-		}
-		Logging.log("intakeRelease: " + intakeRelease);
-		if (intakeRelease) {
-			Logging.log("Intake Running");
-			leftIntake.set(INTAKE_RELEASE_SPEED);
-			rightIntake.set(-INTAKE_RELEASE_SPEED);
 		}
 	}
 
