@@ -140,7 +140,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				if (flexSolenoid.get() == FLEX_EXTEND) {
 					if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
 						int i = 0;
-						while (i < 300) {
+						while (i < INTAKE_RELEASE_LENGTH) {
 							Logging.log("Length: " + i);
 							Logging.log("Intake Running");
 							leftIntake.set(-INTAKE_RELEASE_SPEED);

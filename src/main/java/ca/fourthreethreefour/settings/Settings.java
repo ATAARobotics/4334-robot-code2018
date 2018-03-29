@@ -64,6 +64,8 @@ public interface Settings {
 	double INTAKE_AUTO_SPEED = settingsFile.getDoubleProperty("INTAKE_AUTO_SPEED", 1);
 	double INTAKE_RELEASE_SPEED = settingsFile.getDoubleProperty("INTAKE_RELEASE_SPEED", 1);
 	
+	int INTAKE_RELEASE_LENGTH = settingsFile.getIntProperty("INTAKE_RELEASE_LENGTH", 300);
+	
 	MotorModule.Type TYPE_DRIVE_LEFT_1 = toType(settingsFile.getProperty("TYPE_DRIVE_LEFT_1", "talonsrx"));
 	MotorModule.Type TYPE_DRIVE_LEFT_2 = toType(settingsFile.getProperty("TYPE_DRIVE_LEFT_2", "talonsrx"));
 	MotorModule.Type TYPE_DRIVE_RIGHT_1 = toType(settingsFile.getProperty("TYPE_DRIVE_RIGHT_1", "talonsrx"));
