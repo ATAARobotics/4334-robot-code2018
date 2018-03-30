@@ -188,8 +188,15 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		});
-		
-		controller1.addWhenPressed(XboxController.DPAD_DOWN, intakePID.enableCommand());
+
+		controller2.addWhenPressed(XboxController.A, intakePID.enableCommand());
+		controller2.addWhenPressed(XboxController.A, new SetOutput(intakePID, INTAKE_PID_BOTTOM));
+
+		controller2.addWhenPressed(XboxController.B, intakePID.enableCommand());
+		controller2.addWhenPressed(XboxController.B, new SetOutput(intakePID, INTAKE_PID_GROUND));
+
+		controller2.addWhenPressed(XboxController.Y, intakePID.enableCommand());
+		controller2.addWhenPressed(XboxController.Y, new SetOutput(intakePID, INTAKE_PID_SHOOTING));
 	}
 
 	private Command // Declares these as Command
