@@ -188,6 +188,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		});
+		
+		controller1.addWhenPressed(XboxController.DPAD_DOWN, intakePID.enableCommand());
 	}
 
 	private Command // Declares these as Command
@@ -203,12 +205,14 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		ALL_MODULES.disable();
 		RotationalArm.armPID.disable();
 		armPotentiometer.enable();
+		intakePotentiometer.enable();
+		intakePID.disable();
 	}
 
 	@Override
 	public void periodicDisabled() {
 		Logging.logf("Arm Potentiometer value: (abs: %.2f) (rel: %.2f)", armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get());
-		//Logging.logf("Intake Potentiometer value: (ams: %.2f) (rel: %.2f)", intakePotentiometer.get(), INTAKE_PID_TOP - intakePotentiometer.get()); TODO Uncomment this when the time comes
+		Logging.logf("Intake Potentiometer value: (abs: %.2f) (rel: %.2f)", intakePotentiometer.get(), INTAKE_PID_BOTTOM - intakePotentiometer.get());
 		Timer.delay(0.25);
 		
 		try {

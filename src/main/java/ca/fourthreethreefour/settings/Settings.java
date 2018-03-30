@@ -121,7 +121,7 @@ public interface Settings {
 	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.25);
 	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.73);
 	
-	double INTAKE_PID_TOP = settingsFile.getDoubleProperty("INTAKE_PID_TOP", 1);
+	double INTAKE_PID_BOTTOM = settingsFile.getDoubleProperty("INTAKE_PID_TOP", 3.47);
 	double INTAKE_ANGLE_MIN = settingsFile.getDoubleProperty("INTAKE_ANGLE_MIN", 0.10);
 	double INTAKE_ANGLE_MAX = settingsFile.getDoubleProperty("INTAKE_ANGLE_MAX", 0.25);
 
