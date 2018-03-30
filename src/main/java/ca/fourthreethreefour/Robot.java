@@ -81,6 +81,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
 			@Override
 			public void doBind(double speed, double turn) {
+                turn += (speed > 0) ? DRIVE_COMPENSATION : (speed < 0) ? -DRIVE_COMPENSATION : 0;
 				drivetrain.arcadeDrive(speed, turn);
 				if(Math.abs(speed) < LOW_GEAR_THRESHOLD) {
 					gearShifter.set(LOW_GEAR);
@@ -98,15 +99,15 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
 		// Binds the Intake motors to the Right stick
-		controller2.addDeadband(XboxController.RIGHT_FROM_MIDDLE, 0.12);
-		controller2.changeAxis(XboxController.RIGHT_FROM_MIDDLE, speedFunction);
-		controller2.invertAxis(XboxController.RIGHT_FROM_MIDDLE);
-		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), leftIntake);
+		controller1.addDeadband(XboxController.TRIGGERS, 0.12);
+		controller1.changeAxis(XboxController.TRIGGERS, speedFunction);
+		controller1.invertAxis(XboxController.TRIGGERS);
+		controller1.addAxisBind(controller1.getTriggers(), rightIntake);
 		//controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), rightIntake);
-		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), new Output() {
+		controller1.addAxisBind(controller1.getTriggers(), new Output() {
 			@Override
 			public void set(double value) {
-				rightIntake.set(-value);
+				leftIntake.set(-value);
 			}
 		});
 		controller2.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.12);
@@ -326,7 +327,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		clawSolenoid.set(CLAW_CLOSE);
 		gearShifter.set(LOW_GEAR);
 		intakeSolenoid.set(CLOSE_INTAKE);
-		intakeActive = false;
+		intakeActive = true;
 	}
 
 	// Runs every (approx.) 20ms in teleop
