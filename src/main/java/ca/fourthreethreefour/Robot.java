@@ -31,7 +31,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	 * then puts the two subsystems into ALL_MODULES subsystem. Subsystemception!
 	 */
 	private final Subsystem 
-		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders, intake }),
+		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders}),
 		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, intake }),
 		ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 
@@ -127,8 +127,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		});
-
-		controller2.addWhenPressed(XboxController.RIGHT_STICK, new ReverseSolenoid(intakeSolenoid));
 		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid

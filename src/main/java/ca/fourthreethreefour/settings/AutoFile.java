@@ -575,20 +575,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						rightIntake.setSpeed(0);
 					}
 				};
-			case "open":
-				return new Command() {
-					@Override
-					public void run() {
-						Intake.intakeSolenoid.set(OPEN_INTAKE);
-					}
-				};
-			case "close":
-				return new Command() {
-					@Override
-					public void run() {
-						Intake.intakeSolenoid.set(CLOSE_INTAKE);
-					}
-				};
 			case "":
 				throw new Error("Error in SetIntake: No cmd set");
 			default:

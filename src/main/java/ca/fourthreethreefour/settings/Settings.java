@@ -58,9 +58,6 @@ public interface Settings {
 	double INTAKE_ARM_SPEED_UP = settingsFile.getDoubleProperty("INTAKE_ARM_SPEED_UP", 0.95);
 	double INTAKE_ARM_SPEED_DOWN = settingsFile.getDoubleProperty("INTAKE_ARM_SPEED_DOWN", 0.95);
 	
-	int INTAKE_SOLENOID_1 = settingsFile.getIntProperty("INTAKE_SOLENOID_1", 2);
-	int INTAKE_SOLENOID_2 = settingsFile.getIntProperty("INTAKE_SOLENOID_2", 3);
-	
 	double INTAKE_AUTO_SPEED = settingsFile.getDoubleProperty("INTAKE_AUTO_SPEED", 1);
 	double INTAKE_RELEASE_SPEED = settingsFile.getDoubleProperty("INTAKE_RELEASE_SPEED", 1);
 	
