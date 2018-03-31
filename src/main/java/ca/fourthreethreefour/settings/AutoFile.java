@@ -17,6 +17,7 @@ import edu.first.commands.common.SetOutput;
 import edu.first.commands.common.WaitCommand;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.Robot;
 import main.java.ca.fourthreethreefour.commands.CommandGroupFactory;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
@@ -280,7 +281,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					leftEncoder.reset(); // Resets the encoders 
 					rightEncoder.reset();
 					// Sets the distance and multiplies by the constant of encoder ticks per inch.
-					distancePID.setSetpoint(ENCODER_TICKS_PER_INCH_COEFFICIENT*distance + ENCODER_TICKS_PER_INCH_CONSTANT); 
+					distancePID.setSetpoint(distance*TICKS_PER_INCH); 
 					distancePID.enable(); // Enables the distance PID
 
 					double angle = navx.getAngle(); // Sets angle to the current angle.
@@ -299,6 +300,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 					drivetrain.arcadeDrive(speedOutput.get() * speed, turningOutput.get());
 					// Sets speed and turn to speedOutput and turningOutput. These values are set by the PID controllers.
+					Logging.logf("Encoder value: (left: %.2f) (right: %.2f) (encoder: %.2f)", leftEncoder.get(), rightEncoder.get(), encoderInput.get());
+					SmartDashboard.putNumber("Drive PID ", distancePID.getError());
 				}
 
 				@Override
@@ -573,20 +576,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					public void end() {
 						leftIntake.setSpeed(0);
 						rightIntake.setSpeed(0);
-					}
-				};
-			case "open":
-				return new Command() {
-					@Override
-					public void run() {
-						Intake.intakeSolenoid.set(OPEN_INTAKE);
-					}
-				};
-			case "close":
-				return new Command() {
-					@Override
-					public void run() {
-						Intake.intakeSolenoid.set(CLOSE_INTAKE);
 					}
 				};
 			case "":

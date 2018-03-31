@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
+import main.java.ca.fourthreethreefour.subsystems.Intake;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 
@@ -30,7 +31,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	 * then puts the two subsystems into ALL_MODULES subsystem. Subsystemception!
 	 */
 	private final Subsystem 
-		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders, intake }),
+		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders}),
 		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, intake }),
 		ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 
@@ -81,6 +82,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller1.addAxisBind(new DualAxisBind(controller1.getLeftDistanceFromMiddle(), controller1.getRightX()) {
 			@Override
 			public void doBind(double speed, double turn) {
+                turn += (speed > 0) ? DRIVE_COMPENSATION : (speed < 0) ? -DRIVE_COMPENSATION : 0;
 				drivetrain.arcadeDrive(speed, turn);
 				if(Math.abs(speed) < LOW_GEAR_THRESHOLD) {
 					gearShifter.set(LOW_GEAR);
@@ -98,15 +100,15 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.changeAxis(XboxController.TRIGGERS, armFunction);
 
 		// Binds the Intake motors to the Right stick
-		controller2.addDeadband(XboxController.RIGHT_FROM_MIDDLE, 0.12);
-		controller2.changeAxis(XboxController.RIGHT_FROM_MIDDLE, speedFunction);
-		controller2.invertAxis(XboxController.RIGHT_FROM_MIDDLE);
-		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), leftIntake);
+		controller1.addDeadband(XboxController.TRIGGERS, 0.12);
+		controller1.changeAxis(XboxController.TRIGGERS, speedFunction);
+		controller1.invertAxis(XboxController.TRIGGERS);
+		controller1.addAxisBind(controller1.getTriggers(), rightIntake);
 		//controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), rightIntake);
-		controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), new Output() {
+		controller1.addAxisBind(controller1.getTriggers(), new Output() {
 			@Override
 			public void set(double value) {
-				rightIntake.set(-value);
+				leftIntake.set(-value);
 			}
 		});
 		controller2.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.12);
@@ -115,16 +117,16 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.addAxisBind(controller2.getLeftDistanceFromMiddle(), new Output() {
 			@Override
 			public void set(double v) {
-				if (intakePID.isEnabled()) {
-					intakePID.disable();
+				if (Math.abs(v) > 0.2) {
+					if (intakePID.isEnabled()) {
+						intakePID.disable();
+					}
 				}
 				if (!intakePID.isEnabled()) {
 					armIntake.set(v);
 				}
 			}
 		});
-
-		controller2.addWhenPressed(XboxController.RIGHT_STICK, new ReverseSolenoid(intakeSolenoid));
 		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
@@ -133,19 +135,24 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
-		/*controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
-			
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
 			@Override
 			public void run() {
 				double armAngle = ARM_PID_TOP - armPotentiometer.get();
-				if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
-					if (!intakePID.isEnabled()) {
-						intakePID.enable();
-						intakePID.set(INTAKE_PID_TOP); // TODO Might have to make this a different value.
+				if (flexSolenoid.get() == FLEX_EXTEND) {
+					if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
+						int i = 0;
+						while (i < INTAKE_RELEASE_LENGTH) {
+							Logging.log("Length: " + i);
+							Logging.log("Intake Running");
+							leftIntake.set(-INTAKE_RELEASE_SPEED);
+							rightIntake.set(INTAKE_RELEASE_SPEED);
+							i++;
+						}
 					}
 				}
 			}
-		});*/
+		});
 
 		// Binds the axis to the motor
 		controller2.addAxisBind(XboxController.TRIGGERS, new Output() {
@@ -182,6 +189,15 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		});
+
+		controller2.addWhenPressed(XboxController.A, intakePID.enableCommand());
+		controller2.addWhenPressed(XboxController.A, new SetOutput(intakePID, INTAKE_PID_BOTTOM));
+
+		controller2.addWhenPressed(XboxController.B, intakePID.enableCommand());
+		controller2.addWhenPressed(XboxController.B, new SetOutput(intakePID, INTAKE_PID_GROUND));
+
+		controller2.addWhenPressed(XboxController.Y, intakePID.enableCommand());
+		controller2.addWhenPressed(XboxController.Y, new SetOutput(intakePID, INTAKE_PID_SHOOTING));
 	}
 
 	private Command // Declares these as Command
@@ -197,12 +213,17 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		ALL_MODULES.disable();
 		RotationalArm.armPID.disable();
 		armPotentiometer.enable();
+		intakePotentiometer.enable();
+		Intake.intakePID.disable();
 	}
 
 	@Override
 	public void periodicDisabled() {
-		Logging.logf("Arm Potentiometer value: (abs: %.2f) (rel: %.2f)", armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get());
-		//Logging.logf("Intake Potentiometer value: (ams: %.2f) (rel: %.2f)", intakePotentiometer.get(), INTAKE_PID_TOP - intakePotentiometer.get()); TODO Uncomment this when the time comes
+		Logging.logf(
+				"Arm Potentiometer value: (abs: %.2f) (rel: %.2f)"
+						+ " Intake Potentiometer value: (abs: %.2f) (rel: %.2f)",
+				armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get(), intakePotentiometer.get(),
+				INTAKE_PID_BOTTOM - intakePotentiometer.get());
 		Timer.delay(0.25);
 		
 		try {
@@ -302,7 +323,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	@Override
 	public void periodicAutonomous() {
-		Logging.logf("Encoder value: (left: %.2f) (right: %.2f)", leftEncoder.get(), rightEncoder.get());
+		Logging.logf("Encoder value: (left: %.2f) (right: %.2f) (encoder: %.2f)", leftEncoder.get(), rightEncoder.get(), encoderInput.get());
 		Timer.delay(0.5);
 	}
 	// Runs at the end of autonomous
@@ -320,8 +341,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		flexSolenoid.set(FLEX_RETRACT);
 		clawSolenoid.set(CLAW_CLOSE);
 		gearShifter.set(LOW_GEAR);
-		intakeSolenoid.set(CLOSE_INTAKE);
-		intakeActive = false;
+		intakeActive = true;
 	}
 
 	// Runs every (approx.) 20ms in teleop
