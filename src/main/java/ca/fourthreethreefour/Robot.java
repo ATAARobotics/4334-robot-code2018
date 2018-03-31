@@ -341,7 +341,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		flexSolenoid.set(FLEX_RETRACT);
 		clawSolenoid.set(CLAW_CLOSE);
 		gearShifter.set(LOW_GEAR);
-		intakeSolenoid.set(CLOSE_INTAKE);
 		intakeActive = true;
 	}
 
