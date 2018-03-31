@@ -16,9 +16,11 @@ import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
+import main.java.ca.fourthreethreefour.subsystems.Intake;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 
@@ -116,8 +118,10 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.addAxisBind(controller2.getLeftDistanceFromMiddle(), new Output() {
 			@Override
 			public void set(double v) {
-				if (intakePID.isEnabled()) {
-					intakePID.disable();
+				if (Math.abs(v) > 0.2) {
+					if (intakePID.isEnabled()) {
+						intakePID.disable();
+					}
 				}
 				if (!intakePID.isEnabled()) {
 					armIntake.set(v);
@@ -213,13 +217,16 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		RotationalArm.armPID.disable();
 		armPotentiometer.enable();
 		intakePotentiometer.enable();
-		intakePID.disable();
+		Intake.intakePID.disable();
 	}
 
 	@Override
 	public void periodicDisabled() {
-		Logging.logf("Arm Potentiometer value: (abs: %.2f) (rel: %.2f)", armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get());
-		Logging.logf("Intake Potentiometer value: (abs: %.2f) (rel: %.2f)", intakePotentiometer.get(), INTAKE_PID_BOTTOM - intakePotentiometer.get());
+		Logging.logf(
+				"Arm Potentiometer value: (abs: %.2f) (rel: %.2f)"
+						+ " Intake Potentiometer value: (abs: %.2f) (rel: %.2f)",
+				armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get(), intakePotentiometer.get(),
+				INTAKE_PID_BOTTOM - intakePotentiometer.get());
 		Timer.delay(0.25);
 		
 		try {
