@@ -16,6 +16,7 @@ import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
@@ -373,6 +374,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		}
+		SmartDashboard.putNumber("Arm PID ", RotationalArm.armPID.getError());
 	}
 
 	// Runs at the end of teleop
