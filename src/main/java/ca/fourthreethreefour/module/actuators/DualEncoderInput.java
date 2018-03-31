@@ -18,7 +18,7 @@ public class DualEncoderInput implements Input {
 	
 	@Override
 	public double get() {
-		return left.get() + right.get();
+		return -left.get() + right.get();
 	}
 	
 }
