@@ -1,6 +1,7 @@
 package main.java.ca.fourthreethreefour.subsystems;
 
 import edu.first.identifiers.Function;
+import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoidModule;
@@ -18,14 +19,21 @@ public interface Intake extends Settings {
 		rightIntake = new MotorModule(TYPE_INTAKE_RIGHT, INTAKE_RIGHT),
 		armIntake = new MotorModule(TYPE_INTAKE_ARM, INTAKE_ARM);
 	
-	DualActionSolenoidModule intakeSolenoid = new DualActionSolenoidModule(INTAKE_SOLENOID_1, INTAKE_SOLENOID_2);
-	
     AnalogInput intakePotentiometer = new AnalogInput(INTAKE_POTENTIOMETER);
+
+    public Output intakeOutput = new Output() {
+
+		@Override
+		public void set(double value) {
+			armIntake.set(-value);
+		}
+    	
+    };
     
-    PIDController intakePID = new PIDController(intakePotentiometer, armIntake, INTAKE_P, INTAKE_I, INTAKE_D);
-	
+    PIDController intakePID = new PIDController(intakePotentiometer, intakeOutput, INTAKE_P, INTAKE_I, INTAKE_D);
+	    
 	// Makes a subsystem called ramp with parts above
-	public Subsystem intake = new Subsystem(new Module[] { leftIntake, rightIntake, intakeSolenoid, armIntake, intakePotentiometer, intakePID });
+	public Subsystem intake = new Subsystem(new Module[] { leftIntake, rightIntake, armIntake, intakePotentiometer, intakePID });
 	
 	DualActionSolenoid.Direction
 		OPEN_INTAKE = Direction.LEFT,

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
+import main.java.ca.fourthreethreefour.subsystems.Intake;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 
@@ -30,7 +31,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	 * then puts the two subsystems into ALL_MODULES subsystem. Subsystemception!
 	 */
 	private final Subsystem 
-		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders, intake }),
+		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders}),
 		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, intake }),
 		ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 
@@ -116,16 +117,16 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.addAxisBind(controller2.getLeftDistanceFromMiddle(), new Output() {
 			@Override
 			public void set(double v) {
-				if (intakePID.isEnabled()) {
-					intakePID.disable();
+				if (Math.abs(v) > 0.2) {
+					if (intakePID.isEnabled()) {
+						intakePID.disable();
+					}
 				}
 				if (!intakePID.isEnabled()) {
 					armIntake.set(v);
 				}
 			}
 		});
-
-		controller2.addWhenPressed(XboxController.RIGHT_STICK, new ReverseSolenoid(intakeSolenoid));
 		
 		// When left bumper is pressed, it closes the clawSolenoid
 		// When right bumper is pressed, it opens the clawSolenoid
@@ -188,6 +189,15 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		});
+
+		controller2.addWhenPressed(XboxController.A, intakePID.enableCommand());
+		controller2.addWhenPressed(XboxController.A, new SetOutput(intakePID, INTAKE_PID_BOTTOM));
+
+		controller2.addWhenPressed(XboxController.B, intakePID.enableCommand());
+		controller2.addWhenPressed(XboxController.B, new SetOutput(intakePID, INTAKE_PID_GROUND));
+
+		controller2.addWhenPressed(XboxController.Y, intakePID.enableCommand());
+		controller2.addWhenPressed(XboxController.Y, new SetOutput(intakePID, INTAKE_PID_SHOOTING));
 	}
 
 	private Command // Declares these as Command
@@ -203,12 +213,17 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		ALL_MODULES.disable();
 		RotationalArm.armPID.disable();
 		armPotentiometer.enable();
+		intakePotentiometer.enable();
+		Intake.intakePID.disable();
 	}
 
 	@Override
 	public void periodicDisabled() {
-		Logging.logf("Arm Potentiometer value: (abs: %.2f) (rel: %.2f)", armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get());
-		//Logging.logf("Intake Potentiometer value: (ams: %.2f) (rel: %.2f)", intakePotentiometer.get(), INTAKE_PID_TOP - intakePotentiometer.get()); TODO Uncomment this when the time comes
+		Logging.logf(
+				"Arm Potentiometer value: (abs: %.2f) (rel: %.2f)"
+						+ " Intake Potentiometer value: (abs: %.2f) (rel: %.2f)",
+				armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get(), intakePotentiometer.get(),
+				INTAKE_PID_BOTTOM - intakePotentiometer.get());
 		Timer.delay(0.25);
 		
 		try {
@@ -308,7 +323,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 	@Override
 	public void periodicAutonomous() {
-		Logging.logf("Encoder value: (left: %.2f) (right: %.2f)", leftEncoder.get(), rightEncoder.get());
+		Logging.logf("Encoder value: (left: %.2f) (right: %.2f) (encoder: %.2f)", leftEncoder.get(), rightEncoder.get(), encoderInput.get());
 		Timer.delay(0.5);
 	}
 	// Runs at the end of autonomous
@@ -326,7 +341,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		flexSolenoid.set(FLEX_RETRACT);
 		clawSolenoid.set(CLAW_CLOSE);
 		gearShifter.set(LOW_GEAR);
-		intakeSolenoid.set(CLOSE_INTAKE);
 		intakeActive = true;
 	}
 

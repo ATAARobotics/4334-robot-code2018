@@ -58,9 +58,6 @@ public interface Settings {
 	double INTAKE_ARM_SPEED_UP = settingsFile.getDoubleProperty("INTAKE_ARM_SPEED_UP", 0.95);
 	double INTAKE_ARM_SPEED_DOWN = settingsFile.getDoubleProperty("INTAKE_ARM_SPEED_DOWN", 0.95);
 	
-	int INTAKE_SOLENOID_1 = settingsFile.getIntProperty("INTAKE_SOLENOID_1", 2);
-	int INTAKE_SOLENOID_2 = settingsFile.getIntProperty("INTAKE_SOLENOID_2", 3);
-	
 	double INTAKE_AUTO_SPEED = settingsFile.getDoubleProperty("INTAKE_AUTO_SPEED", 1);
 	double INTAKE_RELEASE_SPEED = settingsFile.getDoubleProperty("INTAKE_RELEASE_SPEED", 1);
 	
@@ -93,8 +90,7 @@ public interface Settings {
 	int XBOXCONTROLLER_1 = settingsFile.getIntProperty("XBOXCONTROLLER_1", 0);
 	int XBOXCONTROLLER_2 = settingsFile.getIntProperty("XBOXCONTROLLER_2", 1);
 
-	double ENCODER_TICKS_PER_INCH_CONSTANT = settingsFile.getDoubleProperty("ENCODER_TICKS_PER_INCH_CONSTANT", 40.525);
-	double ENCODER_TICKS_PER_INCH_COEFFICIENT = settingsFile.getDoubleProperty("ENCODER_TICKS_PER_INCH_COEFFICIENT", 1.4772);
+	double TICKS_PER_INCH = settingsFile.getDoubleProperty("TICKS_PER_INCH", 1);
 	
 	// PID values
 	double SPEED_P = settingsFile.getDoubleProperty("SPEED_P", 0);
@@ -121,11 +117,13 @@ public interface Settings {
 	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.25);
 	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.73);
 	
-	double INTAKE_PID_TOP = settingsFile.getDoubleProperty("INTAKE_PID_TOP", 1);
+	double INTAKE_PID_BOTTOM = settingsFile.getDoubleProperty("INTAKE_PID_BOTTOM", 4.89);
+	double INTAKE_PID_GROUND = INTAKE_PID_BOTTOM + settingsFile.getDoubleProperty("INTAKE_PID_GROUND", 0.21);
+	double INTAKE_PID_SHOOTING = INTAKE_PID_BOTTOM + settingsFile.getDoubleProperty("INTAKE_PID_SHOOTING", 1.91);
 	double INTAKE_ANGLE_MIN = settingsFile.getDoubleProperty("INTAKE_ANGLE_MIN", 0.10);
 	double INTAKE_ANGLE_MAX = settingsFile.getDoubleProperty("INTAKE_ANGLE_MAX", 0.25);
 
-	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 50);
+	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 5);
 	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);
 	
 	double DRIVE_COMPENSATION = settingsFile.getDoubleProperty("DRIVE_COMPENSATION", 0);
