@@ -49,7 +49,7 @@ public interface Settings {
 	double LOW_GEAR_THRESHOLD = settingsFile.getDoubleProperty("LOW_GEAR_THRESHOLD", 0.1);
 
 	int ARM_MOTOR = settingsFile.getIntProperty("ARM_MOTOR", 8);
-	double ARM_SPEED = settingsFile.getDoubleProperty("ARM_SPEED", 0.5);
+	double ARM_SPEED = settingsFile.getDoubleProperty("ARM_SPEED", 0.7);
 	
 	int INTAKE_LEFT = settingsFile.getIntProperty("INTAKE_LEFT", 4);
 	int INTAKE_RIGHT = settingsFile.getIntProperty("INTAKE_RIGHT", 6);
@@ -93,29 +93,29 @@ public interface Settings {
 	double TICKS_PER_INCH = settingsFile.getDoubleProperty("TICKS_PER_INCH", 1);
 	
 	// PID values
-	double SPEED_P = settingsFile.getDoubleProperty("SPEED_P", 0);
+	double SPEED_P = settingsFile.getDoubleProperty("SPEED_P", 0.003);
 	double SPEED_I = settingsFile.getDoubleProperty("SPEED_I", 0);
-	double SPEED_D = settingsFile.getDoubleProperty("SPEED_D", 0);
+	double SPEED_D = settingsFile.getDoubleProperty("SPEED_D", 0.07);
 
-	double TURN_P = settingsFile.getDoubleProperty("TURN_P", 0);
+	double TURN_P = settingsFile.getDoubleProperty("TURN_P", -0.023);
 	double TURN_I = settingsFile.getDoubleProperty("TURN_I", 0);
-	double TURN_D = settingsFile.getDoubleProperty("TURN_D", 0);
+	double TURN_D = settingsFile.getDoubleProperty("TURN_D", -0.055);
 	
-	double ARM_P = settingsFile.getDoubleProperty("ARM_P", 2.5);
+	double ARM_P = settingsFile.getDoubleProperty("ARM_P", 2.1);
 	double ARM_I = settingsFile.getDoubleProperty("ARM_I", 0);
-	double ARM_D = settingsFile.getDoubleProperty("ARM_D", 3);
-	
+	double ARM_D = settingsFile.getDoubleProperty("ARM_D", 1);
+
 	double INTAKE_P = settingsFile.getDoubleProperty("INTAKE_P", 0);
 	double INTAKE_I = settingsFile.getDoubleProperty("INTAKE_I", 0);
 	double INTAKE_D = settingsFile.getDoubleProperty("INTAKE_D", 0);
 
 	// absolute highest position of the arm, all PID setpoints are relative to this
-	double ARM_PID_TOP = settingsFile.getDoubleProperty("ARM_PID_TOP", 0.797119);
-	double ARM_PID_LOW = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_LOW", 0.6);
-	double ARM_PID_MEDIUM = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_MEDIUM", 0.51);
+	double ARM_PID_TOP = settingsFile.getDoubleProperty("ARM_PID_TOP", 3.86);
+	double ARM_PID_LOW = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_LOW", 0.58);
+	double ARM_PID_MEDIUM = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_MEDIUM", 0.38);
 	double ARM_PID_HIGH = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_HIGH", 0.02);
-	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.25);
-	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.73);
+	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.23);
+	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.39);
 	
 	double INTAKE_PID_BOTTOM = settingsFile.getDoubleProperty("INTAKE_PID_BOTTOM", 4.89);
 	double INTAKE_PID_GROUND = INTAKE_PID_BOTTOM + settingsFile.getDoubleProperty("INTAKE_PID_GROUND", 0.21);
