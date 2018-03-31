@@ -475,10 +475,6 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						RotationalArm.armPID.setSetpoint(ARM_PID_HIGH);
 						RotationalArm.armPID.enable();
 						break;
-					case "medium":
-						RotationalArm.armPID.setSetpoint(ARM_PID_MEDIUM);
-						RotationalArm.armPID.enable();
-						break;
 					case "low":
 						RotationalArm.armPID.setSetpoint(ARM_PID_LOW);
 						RotationalArm.armPID.enable();
