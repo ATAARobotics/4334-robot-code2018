@@ -17,6 +17,7 @@ import edu.first.commands.common.SetOutput;
 import edu.first.commands.common.WaitCommand;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.Robot;
 import main.java.ca.fourthreethreefour.commands.CommandGroupFactory;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
@@ -299,6 +300,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 
 					drivetrain.arcadeDrive(speedOutput.get() * speed, turningOutput.get());
 					// Sets speed and turn to speedOutput and turningOutput. These values are set by the PID controllers.
+					Logging.logf("Encoder value: (left: %.2f) (right: %.2f) (encoder: %.2f)", leftEncoder.get(), rightEncoder.get(), encoderInput.get());
+					SmartDashboard.putNumber("Drive PID ", distancePID.getError());
 				}
 
 				@Override
