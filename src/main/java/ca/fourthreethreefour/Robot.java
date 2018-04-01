@@ -190,21 +190,23 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		});
 
 		controller2.addWhenPressed(XboxController.A, intakePID.enableCommand());
-		controller2.addWhenPressed(XboxController.A, new SetOutput(intakePID, INTAKE_PID_BOTTOM));
-
-		controller2.addWhenPressed(XboxController.B, intakePID.enableCommand());
-		controller2.addWhenPressed(XboxController.B, new SetOutput(intakePID, INTAKE_PID_GROUND));
+		controller2.addWhenPressed(XboxController.A, new SetOutput(intakePID, INTAKE_PID_GROUND));
 
 		controller2.addWhenPressed(XboxController.Y, intakePID.enableCommand());
 		controller2.addWhenPressed(XboxController.Y, new SetOutput(intakePID, INTAKE_PID_SHOOTING));
 	}
 
 	private Command // Declares these as Command
-		commandQualsLeft,
-		commandQualsRight,
-		commandPlayoffsRight,
-		commandPlayoffsLeft,
 		commandTwoCube,
+		commandRRRScale,
+		commandRRRSwitch,
+		commandLLLSwitch,
+		commandLLLScale,
+		//commandRLRSwitch,
+		//commandRLRScale,
+		//commandLRLSwitch,
+		//commandLRLScale,
+		commandAutoRun,
 		commandTest;
 
 	@Override
@@ -248,30 +250,64 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				throw new Error(e.getMessage());
 			}
 		} else {
-			try { // Creates a new AutoFile with the file of each game, and makes it a command.
-				commandQualsLeft = new AutoFile(new File("qualsLeft" + AUTO_TYPE + ".txt")).toCommand();
-				commandQualsRight = new AutoFile(new File("qualsRight" + AUTO_TYPE + ".txt")).toCommand();
-			} catch (IOException e) {
-				throw new Error(e.getMessage());
-			}
-			
-			// playoff autos are optional
-			try {
-				commandPlayoffsRight = new AutoFile(new File("playoffsRight" + AUTO_TYPE + ".txt")).toCommand();
-			} catch (IOException e) {
-				commandPlayoffsRight = null;
-			}
-			
-			try {
-				commandPlayoffsLeft = new AutoFile(new File("playoffsLeft" + AUTO_TYPE + ".txt")).toCommand();
-			} catch (IOException e) {
-				commandPlayoffsLeft = null;
-			}
-
 			try {
 				commandTwoCube = new AutoFile(new File("twocube.txt")).toCommand();
 			} catch (IOException e) {
 				commandTwoCube = null;
+			}
+
+			try {
+				commandRRRScale = new AutoFile(new File("rrr" + AUTO_TYPE + "scale.txt")).toCommand();
+			} catch (IOException e) {
+				commandRRRScale = null;
+			}
+
+			try {
+				commandRRRSwitch = new AutoFile(new File("rrr" + AUTO_TYPE + "switch.txt")).toCommand();
+			} catch (IOException e) {
+				commandRRRSwitch = null;
+			}
+			
+			try {
+				commandLLLScale = new AutoFile(new File("lll" + AUTO_TYPE + "scale.txt")).toCommand();
+			} catch (IOException e) {
+				commandLLLScale = null;
+			}
+
+			try {
+				commandLLLSwitch = new AutoFile(new File("lll" + AUTO_TYPE + "switch.txt")).toCommand();
+			} catch (IOException e) {
+				commandLLLSwitch = null;
+			}
+			
+			/*try {
+				commandRLRScale = new AutoFile(new File("rlr" + AUTO_TYPE + "scale.txt")).toCommand();
+			} catch (IOException e) {
+				commandRLRScale = null;
+			}
+
+			try {
+				commandRLRSwitch = new AutoFile(new File("rlr" + AUTO_TYPE + "switch.txt")).toCommand();
+			} catch (IOException e) {
+				commandRLRSwitch = null;
+			}
+			
+			try {
+				commandLRLScale = new AutoFile(new File("lrl" + AUTO_TYPE + "scale.txt")).toCommand();
+			} catch (IOException e) {
+				commandLRLScale = null;
+			}
+
+			try {
+				commandLRLSwitch = new AutoFile(new File("lrl" + AUTO_TYPE + "switch.txt")).toCommand();
+			} catch (IOException e) {
+				commandLRLSwitch = null;
+			}*/
+
+			try {
+				commandAutoRun = new AutoFile(new File("autorun.txt")).toCommand();
+			} catch (IOException e) {
+				commandAutoRun = null;
 			}
 		}
 
@@ -292,30 +328,47 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			Commands.run(commandTest);
 		} else {
 			if (gameData.length() > 0) {
-				if (DriverStation.getInstance().getMatchType() == DriverStation.MatchType.Elimination || IS_PLAYOFF) {
-					if (gameData.charAt(1) == 'R' && gameData.charAt(0) == 'R' && commandTwoCube != null) {
-						// if our side of the scale is on the right
-						Commands.run(commandTwoCube);
-					} else if (gameData.charAt(1) == 'R' && commandPlayoffsRight != null) {
-						// if our side of the scale is on the right
-						Commands.run(commandPlayoffsRight);
-					} else if (gameData.charAt(1) == 'L' && commandPlayoffsLeft != null) {
-						// if our side of the scale is on the left
-						Commands.run(commandPlayoffsLeft);
-					} else if (gameData.charAt(0) == 'R') {
-						// if our side of the switch is on the right
-						Commands.run(commandQualsRight);
-					} else if (gameData.charAt(0) == 'L') {
-						// if our side of the switch is on the left
-						Commands.run(commandQualsLeft);
-					}
-				} else {
-					if (gameData.charAt(0) == 'R') { // if our side of the switch is on the right
-						Commands.run(commandQualsRight);
+				switch (AUTO_TYPE.toLowerCase()) {
+				case "center":
+					if (gameData.charAt(0) == 'R') {
+						Commands.run(commandRRRSwitch);
 					} else {
-						Commands.run(commandQualsLeft);
+						Commands.run(commandLLLSwitch);
 					}
+				case "right":
+					if (IS_PLAYOFF || DriverStation.getInstance().getMatchType() == MatchType.Elimination) {
+						if (gameData.charAt(1) == 'R') {
+							Commands.run(commandRRRScale);
+						} else {
+							Commands.run(commandLLLScale);
+						}
+					} else {
+						if (gameData.charAt(0) == 'R') {
+							Commands.run(commandRRRSwitch);
+						} else {
+							Commands.run(commandLLLSwitch);
+						}
+					}
+				case "left":
+					if (IS_PLAYOFF || DriverStation.getInstance().getMatchType() == MatchType.Elimination) {
+						if (gameData.charAt(1) == 'R') {
+							Commands.run(commandRRRScale);
+						} else {
+							Commands.run(commandLLLScale);
+						}
+					} else {
+						if (gameData.charAt(0) == 'R') {
+							Commands.run(commandRRRSwitch);
+						} else {
+							Commands.run(commandLLLSwitch);
+						}
+					}
+				default:
+					Commands.run(commandAutoRun);
 				}
+			} else {
+				// if there's no game-specific data
+				Commands.run(commandAutoRun);
 			}
 		}
 	}
