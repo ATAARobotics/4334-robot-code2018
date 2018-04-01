@@ -591,6 +591,14 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						intakePID.enable();
 					}
 				};
+			case "top":
+				return new Command() {
+					@Override
+					public void run() {
+						intakePID.setSetpoint(INTAKE_PID_TOP);
+						intakePID.enable();
+					}
+				};
 			case "":
 				throw new Error("Error in SetIntake: No cmd set");
 			default:

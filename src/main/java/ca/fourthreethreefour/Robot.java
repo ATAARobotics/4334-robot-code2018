@@ -62,6 +62,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		distancePID.setTolerance(DISTANCE_TOLERANCE);
 		turnPID.setTolerance(TURN_TOLERANCE);
+		intakePID.setTolerance(INTAKE_TOLERANCE);
 
 		// Initializes the CameraServer twice. That's how it's done
         CameraServer.getInstance().startAutomaticCapture();
@@ -173,6 +174,9 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		
 		controller2.addWhenPressed(XboxController.DPAD_DOWN, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_DOWN, new SetOutput(RotationalArm.armPID, ARM_PID_LOW));
+		
+		controller2.addWhenPressed(XboxController.DPAD_RIGHT, RotationalArm.armPID.enableCommand());
+		controller2.addWhenPressed(XboxController.DPAD_RIGHT, new SetOutput(RotationalArm.armPID, ARM_PID_MIDDLE));
 
 		controller2.addWhenPressed(XboxController.DPAD_UP, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));

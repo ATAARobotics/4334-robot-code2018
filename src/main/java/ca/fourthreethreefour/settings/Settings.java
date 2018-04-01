@@ -113,6 +113,7 @@ public interface Settings {
 	// absolute highest position of the arm, all PID setpoints are relative to this
 	double ARM_PID_TOP = settingsFile.getDoubleProperty("ARM_PID_TOP", 3.86);
 	double ARM_PID_LOW = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_LOW", 0.58);
+	double ARM_PID_MIDDLE = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_MIDDLE", 0.30);
 	double ARM_PID_HIGH = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_HIGH", 0.02);
 	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.23);
 	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.39);
@@ -120,13 +121,15 @@ public interface Settings {
 	double INTAKE_PID_BOTTOM = settingsFile.getDoubleProperty("INTAKE_PID_BOTTOM", 4.89);
 	double INTAKE_PID_GROUND = INTAKE_PID_BOTTOM - settingsFile.getDoubleProperty("INTAKE_PID_GROUND", 0.21);
 	double INTAKE_PID_SHOOTING = INTAKE_PID_BOTTOM - settingsFile.getDoubleProperty("INTAKE_PID_SHOOTING", 1.91);
+	double INTAKE_PID_TOP = INTAKE_PID_BOTTOM - settingsFile.getDoubleProperty("INTAKE_PID_TOP", 2.41);
 	double INTAKE_ANGLE_MIN = settingsFile.getDoubleProperty("INTAKE_ANGLE_MIN", 0.10);
 	double INTAKE_ANGLE_MAX = settingsFile.getDoubleProperty("INTAKE_ANGLE_MAX", 0.61);
 	
 	double INTAKE_PID_SPEED = settingsFile.getDoubleProperty("INTAKE_PID_SPEED", 1);
 
-	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 5);
+	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 10);
 	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);
+	double INTAKE_TOLERANCE = settingsFile.getDoubleProperty("INTAKE_TOLERANCE", 0.25);
 	
 	double DRIVE_COMPENSATION = settingsFile.getDoubleProperty("DRIVE_COMPENSATION", 0);
 }
