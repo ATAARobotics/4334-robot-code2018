@@ -102,7 +102,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		// Binds the Intake motors to the Right stick
 		controller1.addDeadband(XboxController.TRIGGERS, 0.12);
-		controller1.changeAxis(XboxController.TRIGGERS, speedFunction);
+		controller1.changeAxis(XboxController.TRIGGERS, intakeFunction);
 		controller1.invertAxis(XboxController.TRIGGERS);
 		controller1.addAxisBind(controller1.getTriggers(), rightIntake);
 		//controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), rightIntake);
@@ -140,7 +140,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			@Override
 			public void run() {
 				double armAngle = ARM_PID_TOP - armPotentiometer.get();
-				if (flexSolenoid.get() == FLEX_EXTEND) {
+				if (flexSolenoid.get() == FLEX_EXTEND && clawSolenoid.get() == CLAW_CLOSE) {
 					if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
 						int i = 0;
 						while (i < INTAKE_RELEASE_LENGTH) {

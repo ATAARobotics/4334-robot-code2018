@@ -60,6 +60,7 @@ public interface Settings {
 	
 	double INTAKE_AUTO_SPEED = settingsFile.getDoubleProperty("INTAKE_AUTO_SPEED", 1);
 	double INTAKE_RELEASE_SPEED = settingsFile.getDoubleProperty("INTAKE_RELEASE_SPEED", 1);
+	double INTAKE_SPEED = settingsFile.getDoubleProperty("INTAKE_SPEED", 1);
 	
 	int INTAKE_RELEASE_LENGTH = settingsFile.getIntProperty("INTAKE_RELEASE_LENGTH", 300);
 	
@@ -120,7 +121,7 @@ public interface Settings {
 	double INTAKE_PID_GROUND = INTAKE_PID_BOTTOM + settingsFile.getDoubleProperty("INTAKE_PID_GROUND", 0.21);
 	double INTAKE_PID_SHOOTING = INTAKE_PID_BOTTOM + settingsFile.getDoubleProperty("INTAKE_PID_SHOOTING", 1.91);
 	double INTAKE_ANGLE_MIN = settingsFile.getDoubleProperty("INTAKE_ANGLE_MIN", 0.10);
-	double INTAKE_ANGLE_MAX = settingsFile.getDoubleProperty("INTAKE_ANGLE_MAX", 0.25);
+	double INTAKE_ANGLE_MAX = settingsFile.getDoubleProperty("INTAKE_ANGLE_MAX", 0.61);
 
 	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 5);
 	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);

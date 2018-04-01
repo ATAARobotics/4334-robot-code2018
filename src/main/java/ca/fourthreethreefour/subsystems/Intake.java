@@ -44,6 +44,13 @@ public interface Intake extends Settings {
 		public double F(double in) {
 			return in > 0 ? in * in * INTAKE_ARM_SPEED_UP : -(in * in * INTAKE_ARM_SPEED_DOWN);
 		}
+},
+			intakeFunction = new Function() {
+
+				@Override
+				public double F(double in) {
+					return in > 0 ? in * in * INTAKE_SPEED : -(in * in * INTAKE_SPEED);
+				}
 };
 	
 }
