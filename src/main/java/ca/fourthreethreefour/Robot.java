@@ -323,6 +323,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	public void initAutonomous() {
 		AUTO_MODULES.enable();
 
+		clawSolenoid.set(CLAW_OPEN);
 		gearShifter.set(LOW_GEAR);
 
 		// Gets game-specific information (switch and scale orientations) from FMS.
@@ -339,6 +340,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 					} else {
 						Commands.run(commandLLLSwitch);
 					}
+					break;
 				case "right":
 					if (IS_PLAYOFF || DriverStation.getInstance().getMatchType() == MatchType.Elimination) {
 						if (gameData.charAt(1) == 'R') {
@@ -353,6 +355,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 							Commands.run(commandLLLSwitch);
 						}
 					}
+					break;
 				case "left":
 					if (IS_PLAYOFF || DriverStation.getInstance().getMatchType() == MatchType.Elimination) {
 						if (gameData.charAt(1) == 'R') {
@@ -367,8 +370,10 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 							Commands.run(commandLLLSwitch);
 						}
 					}
+					break;
 				default:
 					Commands.run(commandAutoRun);
+					break;
 				}
 			} else {
 				// if there's no game-specific data
