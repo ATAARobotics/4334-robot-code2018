@@ -20,18 +20,18 @@ public interface Intake extends Settings {
 		armIntake = new MotorModule(TYPE_INTAKE_ARM, INTAKE_ARM);
 	
     AnalogInput intakePotentiometer = new AnalogInput(INTAKE_POTENTIOMETER);
-
+    
     public Output intakeOutput = new Output() {
 
 		@Override
 		public void set(double value) {
-			armIntake.set(value * INTAKE_PID_SPEED);
+			armIntake.set(intakePID.getSetpoint() == INTAKE_PID_GROUND ? value * INTAKE_PID_SPEED_GROUND : value * INTAKE_PID_SPEED);
 		}
     	
     };
     
     PIDController intakePID = new PIDController(intakePotentiometer, intakeOutput, INTAKE_P, INTAKE_I, INTAKE_D);
-	    
+    
 	// Makes a subsystem called ramp with parts above
 	public Subsystem intake = new Subsystem(new Module[] { leftIntake, rightIntake, armIntake, intakePotentiometer });
 	

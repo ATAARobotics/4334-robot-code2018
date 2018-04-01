@@ -125,7 +125,8 @@ public interface Settings {
 	double INTAKE_ANGLE_MIN = settingsFile.getDoubleProperty("INTAKE_ANGLE_MIN", 0.10);
 	double INTAKE_ANGLE_MAX = settingsFile.getDoubleProperty("INTAKE_ANGLE_MAX", 0.61);
 	
-	double INTAKE_PID_SPEED = settingsFile.getDoubleProperty("INTAKE_PID_SPEED", 1);
+	double INTAKE_PID_SPEED = settingsFile.getDoubleProperty("INTAKE_PID_SPEED", 0.6);
+	double INTAKE_PID_SPEED_GROUND = settingsFile.getDoubleProperty("INTAKE_PID_SPEED_GROUND", 0.3);
 
 	double DISTANCE_TOLERANCE = settingsFile.getDoubleProperty("DISTANCE_TOLERANCE", 10);
 	double TURN_TOLERANCE = settingsFile.getDoubleProperty("TURN_TOLERANCE", 5);
