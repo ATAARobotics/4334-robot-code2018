@@ -16,6 +16,7 @@ import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
@@ -32,7 +33,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	 * then puts the two subsystems into ALL_MODULES subsystem. Subsystemception!
 	 */
 	private final Subsystem 
-		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders}),
+		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders, intake }),
 		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, intake }),
 		ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 
@@ -212,7 +213,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		RotationalArm.armPID.disable();
 		armPotentiometer.enable();
 		intakePotentiometer.enable();
-		Intake.intakePID.disable();
 	}
 
 	@Override
@@ -230,12 +230,13 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			Timer.delay(0.25);
 		}
 
-		// TODO add limit switch button to set ARM_PID_TOP constant to current potentiometer value
-		
+		// TODO add limit switch button to set ARM_PID_TOP constant to current
+		// potentiometer value
+
 		if (!settingsActive.equalsIgnoreCase(settingsFile.toString())) {
 			throw new RuntimeException(); // If it HAS changed, best to crash the Robot so it gets the update.
 		}
-		
+
 		if (AUTO_TYPE == "") { // If no type specified, ends method.
 			return;
 		}
@@ -281,9 +282,9 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	@Override
 	public void initAutonomous() {
 		AUTO_MODULES.enable();
-		
+
 		gearShifter.set(LOW_GEAR);
-		
+
 		// Gets game-specific information (switch and scale orientations) from FMS.
 		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
@@ -327,6 +328,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	// Runs at the end of autonomous
 	@Override
 	public void endAutonomous() {
+		RotationalArm.armPID.disable();
+		intakePID.disable();
 		AUTO_MODULES.disable();
 	}
 
@@ -356,7 +359,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			} catch (OutOfSyncException e) {
 				Timer.delay(0.5);
 			}
-			Logging.logf("Speed values: (left: %.2f) (right: %.2f)", leftSpeed, rightSpeed);
+			//Logging.logf("Speed values: (left: %.2f) (right: %.2f)", leftSpeed, rightSpeed);
 			
 			
 			if (leftSpeed >= rightSpeed) {
@@ -371,13 +374,16 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		}
+		Logging.log("intakePID enabled: " + intakePID.isEnabled());
 		SmartDashboard.putNumber("Arm PID ", RotationalArm.armPID.getError());
+		SmartDashboard.putNumber("Intake PID ", intakePID.getError());
 	}
 
 	// Runs at the end of teleop
 	@Override
 	public void endTeleoperated() {
 		RotationalArm.armPID.disable();
+		intakePID.disable();
 		TELEOP_MODULES.disable();
 	}
 

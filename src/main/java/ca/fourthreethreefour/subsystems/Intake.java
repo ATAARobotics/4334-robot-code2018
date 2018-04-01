@@ -25,7 +25,7 @@ public interface Intake extends Settings {
 
 		@Override
 		public void set(double value) {
-			armIntake.set(-value);
+			armIntake.set(value * INTAKE_PID_SPEED);
 		}
     	
     };
@@ -33,24 +33,23 @@ public interface Intake extends Settings {
     PIDController intakePID = new PIDController(intakePotentiometer, intakeOutput, INTAKE_P, INTAKE_I, INTAKE_D);
 	    
 	// Makes a subsystem called ramp with parts above
-	public Subsystem intake = new Subsystem(new Module[] { leftIntake, rightIntake, armIntake, intakePotentiometer, intakePID });
+	public Subsystem intake = new Subsystem(new Module[] { leftIntake, rightIntake, armIntake, intakePotentiometer });
 	
 	DualActionSolenoid.Direction
 		OPEN_INTAKE = Direction.LEFT,
 		CLOSE_INTAKE = Direction.RIGHT;
-	
+
 	Function intakeArmFunction = new Function() {
 		@Override
 		public double F(double in) {
 			return in > 0 ? in * in * INTAKE_ARM_SPEED_UP : -(in * in * INTAKE_ARM_SPEED_DOWN);
 		}
-},
-			intakeFunction = new Function() {
+	}, intakeFunction = new Function() {
 
-				@Override
-				public double F(double in) {
-					return in > 0 ? in * in * INTAKE_SPEED : -(in * in * INTAKE_SPEED);
-				}
-};
+		@Override
+		public double F(double in) {
+			return in > 0 ? in * in * INTAKE_SPEED : -(in * in * INTAKE_SPEED);
+		}
+	};
 	
 }
