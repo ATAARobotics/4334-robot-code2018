@@ -322,8 +322,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	@Override
 	public void initAutonomous() {
 		AUTO_MODULES.enable();
-
-		clawSolenoid.set(CLAW_OPEN);
+		
 		gearShifter.set(LOW_GEAR);
 
 		// Gets game-specific information (switch and scale orientations) from FMS.

@@ -115,6 +115,7 @@ public interface Settings {
 	double ARM_PID_LOW = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_LOW", 0.58);
 	double ARM_PID_MIDDLE = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_MIDDLE", 0.30);
 	double ARM_PID_HIGH = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_HIGH", 0.02);
+	double ARM_PID_START = ARM_PID_TOP - settingsFile.getDoubleProperty("ARM_PID_START", 0.6);
 	double ARM_ANGLE_MIN = settingsFile.getDoubleProperty("ARM_ANGLE_MIN", 0.23);
 	double ARM_ANGLE_MAX = settingsFile.getDoubleProperty("ARM_ANGLE_MAX", 0.39);
 	
