@@ -761,4 +761,37 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		public Command getCommand(List<String> args);
 	}
 
-}
+} /*				switch (cmd) {
+					case "in":
+						@Override
+						public void runLoop() {
+							leftIntake.setSpeed(speed);
+							rightIntake.setSpeed(-speed);
+						}
+
+						@Override
+						public void end() {
+							leftIntake.setSpeed(0);
+							rightIntake.setSpeed(0);
+						}
+						break;
+					case "out":
+						@Override
+						public void runLoop() {
+							leftIntake.setSpeed(-speed);
+							rightIntake.setSpeed(speed);
+						}
+
+						@Override
+						public void end() {
+							leftIntake.setSpeed(0);
+							rightIntake.setSpeed(0);
+						}
+						break;
+					case "":
+						throw new Error("Error in SetIntake: No cmd set");
+					default:
+						throw new Error("Error in SetIntake: Intake set incorrectly");
+			}
+		};
+		*/
