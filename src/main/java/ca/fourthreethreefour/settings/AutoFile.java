@@ -351,7 +351,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				@Override
 				public void firstLoop() {
 					navx.reset();
-					turnPID.setSetpoint(angle < 0 ? angle + TURN_COMPENSATION : angle);
+					turnPID.setSetpoint(angle);
 					turnPID.enable();
 				}
 
