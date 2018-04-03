@@ -9,6 +9,7 @@ import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
 import edu.first.lang.OutOfSyncException;
 import edu.first.module.Module;
+import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
@@ -400,8 +401,12 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		TELEOP_MODULES.enable();
 		drivetrain.setSafetyEnabled(true); // Maybe we do...
 		
-		flexSolenoid.set(FLEX_RETRACT);
-		clawSolenoid.set(CLAW_CLOSE);
+		if(flexSolenoid.get() == Direction.OFF) {
+			flexSolenoid.set(FLEX_RETRACT);
+		}
+		if (clawSolenoid.get() == Direction.OFF) {
+			clawSolenoid.set(CLAW_CLOSE);
+		}		
 		gearShifter.set(LOW_GEAR);
 		intakeActive = true;
 	}
