@@ -134,4 +134,5 @@ public interface Settings {
 	double INTAKE_TOLERANCE = settingsFile.getDoubleProperty("INTAKE_TOLERANCE", 0.25);
 	
 	double DRIVE_COMPENSATION = settingsFile.getDoubleProperty("DRIVE_COMPENSATION", 0);
+	double TURN_COMPENSATION = settingsFile.getDoubleProperty("TURN_COMPENSATION", 0);
 }

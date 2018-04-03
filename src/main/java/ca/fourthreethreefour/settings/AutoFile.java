@@ -351,7 +351,7 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				@Override
 				public void firstLoop() {
 					navx.reset();
-					turnPID.setSetpoint(angle);
+					turnPID.setSetpoint(angle < 0 ? angle + TURN_COMPENSATION : angle);
 					turnPID.enable();
 				}
 
@@ -364,6 +364,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					}
 					// Turns it by the turningOutput, but doesn't move forwards.
 					drivetrain.arcadeDrive(0, turningOutput.get());
+					Logging.log("NAVX Value: " + navx.getAngle());
+					SmartDashboard.putNumber("Turn PID ", turnPID.getError());
 				}
 
 				@Override
