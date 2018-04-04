@@ -440,9 +440,13 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				}
 			}
 		}
-		Logging.log("intakePID enabled: " + intakePID.isEnabled());
 		SmartDashboard.putNumber("Arm PID ", RotationalArm.armPID.getError());
 		SmartDashboard.putNumber("Intake PID ", intakePID.getError());
+		Logging.logf(
+				"Arm Potentiometer value: (abs: %.2f) (rel: %.2f)"
+						+ " Intake Potentiometer value: (abs: %.2f) (rel: %.2f)",
+				armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get(), intakePotentiometer.get(),
+				INTAKE_PID_BOTTOM - intakePotentiometer.get());
 	}
 
 	// Runs at the end of teleop
