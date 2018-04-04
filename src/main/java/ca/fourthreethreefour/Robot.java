@@ -345,6 +345,9 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 					if (IS_PLAYOFF || DriverStation.getInstance().getMatchType() == MatchType.Elimination) {
 						if (gameData.charAt(1) == 'R') {
 							Commands.run(commandRRRScale);
+							if (gameData.charAt(0) == 'R') {
+								Commands.run(commandTwoCube);
+							}
 						} else {
 							Commands.run(commandLLLScale);
 						}
