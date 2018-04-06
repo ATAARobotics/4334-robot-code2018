@@ -364,6 +364,8 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 					}
 					// Turns it by the turningOutput, but doesn't move forwards.
 					drivetrain.arcadeDrive(0, turningOutput.get());
+					Logging.log("NAVX Value: " + navx.getAngle());
+					SmartDashboard.putNumber("Turn PID ", turnPID.getError());
 				}
 
 				@Override
@@ -475,12 +477,16 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 						RotationalArm.armPID.setSetpoint(ARM_PID_HIGH);
 						RotationalArm.armPID.enable();
 						break;
-					case "medium":
-						RotationalArm.armPID.setSetpoint(ARM_PID_MEDIUM);
+					case "middle":
+						RotationalArm.armPID.setSetpoint(ARM_PID_MIDDLE);
 						RotationalArm.armPID.enable();
 						break;
 					case "low":
 						RotationalArm.armPID.setSetpoint(ARM_PID_LOW);
+						RotationalArm.armPID.enable();
+						break;
+					case "start":
+						RotationalArm.armPID.setSetpoint(ARM_PID_START);
 						RotationalArm.armPID.enable();
 						break;
 					case "":
@@ -548,14 +554,15 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 		public Command getCommand(List<String> args) {
 			String cmd = args.get(0).toLowerCase();
 			long time = args.size() > 1 ? Long.parseLong(args.get(1)) : 5000;
+			double speed = args.size() > 2 ? Double.parseDouble(args.get(2)) : 1;
 
 			switch (cmd) {
 			case "in":
 				return new LoopingCommandWithTimeout(new Timeout(time)) {
 					@Override
 					public void runLoop() {
-						leftIntake.setSpeed(-INTAKE_AUTO_SPEED);
-						rightIntake.setSpeed(INTAKE_AUTO_SPEED);
+						leftIntake.setSpeed(speed);
+						rightIntake.setSpeed(-speed);
 					}
 
 					@Override
@@ -568,14 +575,38 @@ public class AutoFile extends Robot implements Arm, Drive, DriveSensors {
 				return new LoopingCommandWithTimeout(new Timeout(time)) {
 					@Override
 					public void runLoop() {
-						leftIntake.setSpeed(INTAKE_AUTO_SPEED);
-						rightIntake.setSpeed(-INTAKE_AUTO_SPEED);
+						leftIntake.setSpeed(-speed);
+						rightIntake.setSpeed(speed);
 					}
 
 					@Override
 					public void end() {
 						leftIntake.setSpeed(0);
 						rightIntake.setSpeed(0);
+					}
+				};
+			case "shoot":
+				return new Command() {
+					@Override
+					public void run() {
+						intakePID.setSetpoint(INTAKE_PID_SHOOTING);
+						intakePID.enable();
+					}
+				};
+			case "ground":
+				return new Command() {
+					@Override
+					public void run() {
+						intakePID.setSetpoint(INTAKE_PID_GROUND);
+						intakePID.enable();
+					}
+				};
+			case "top":
+				return new Command() {
+					@Override
+					public void run() {
+						intakePID.setSetpoint(INTAKE_PID_TOP);
+						intakePID.enable();
 					}
 				};
 			case "":

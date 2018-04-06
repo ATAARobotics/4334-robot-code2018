@@ -9,6 +9,7 @@ import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
 import edu.first.lang.OutOfSyncException;
 import edu.first.module.Module;
+import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
@@ -16,6 +17,8 @@ import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
@@ -31,7 +34,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	 * then puts the two subsystems into ALL_MODULES subsystem. Subsystemception!
 	 */
 	private final Subsystem 
-		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders}),
+		AUTO_MODULES = new Subsystem(new Module[] { arm, drive, encoders, intake }),
 		TELEOP_MODULES = new Subsystem(new Module[] { arm, drive, controllers, intake }),
 		ALL_MODULES = new Subsystem(new Module[] { AUTO_MODULES, TELEOP_MODULES });
 
@@ -60,6 +63,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		distancePID.setTolerance(DISTANCE_TOLERANCE);
 		turnPID.setTolerance(TURN_TOLERANCE);
+		intakePID.setTolerance(INTAKE_TOLERANCE);
 
 		// Initializes the CameraServer twice. That's how it's done
         CameraServer.getInstance().startAutomaticCapture();
@@ -84,9 +88,21 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			public void doBind(double speed, double turn) {
                 turn += (speed > 0) ? DRIVE_COMPENSATION : (speed < 0) ? -DRIVE_COMPENSATION : 0;
 				drivetrain.arcadeDrive(speed, turn);
-				if(Math.abs(speed) < LOW_GEAR_THRESHOLD) {
+				if (Math.abs(speed) < LOW_GEAR_THRESHOLD) {
 					gearShifter.set(LOW_GEAR);
 				}
+                double maxSpeed = Math.max(Math.abs(left1.getSpeed()), Math.abs(right1.getSpeed()));
+
+                if ((speed < 0 || Math.abs(turn) > 0.2 ) && intakeActive) {
+                    leftIntake.set(maxSpeed * INTAKE_BACKDRIVE_SPEED);
+                    rightIntake.set(-maxSpeed * INTAKE_BACKDRIVE_SPEED);
+                }
+
+                if (speed >= 0 && Math.abs(turn) <= 0.2 && Math.abs(controller1.getTriggersValue()) < 0.1) {
+				    leftIntake.set(0);
+				    rightIntake.set(0);
+                }
+                Logging.logf("Left speed: %.2f Right speed: %.2f Max speed: %.2f", left1.getSpeed(), right1.getSpeed(), Math.max(Math.abs(left1.getSpeed()), Math.abs(right1.getSpeed())));
 			}
 		});
 
@@ -101,14 +117,16 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		// Binds the Intake motors to the Right stick
 		controller1.addDeadband(XboxController.TRIGGERS, 0.12);
-		controller1.changeAxis(XboxController.TRIGGERS, speedFunction);
+		controller1.changeAxis(XboxController.TRIGGERS, intakeFunction);
 		controller1.invertAxis(XboxController.TRIGGERS);
-		controller1.addAxisBind(controller1.getTriggers(), rightIntake);
 		//controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), rightIntake);
 		controller1.addAxisBind(controller1.getTriggers(), new Output() {
 			@Override
 			public void set(double value) {
-				leftIntake.set(-value);
+				if(value > 0.1 || value < -0.1) {
+                    leftIntake.set(-value);
+                    rightIntake.set(value);
+                }
 			}
 		});
 		controller2.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.12);
@@ -134,12 +152,12 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid, Direction.LEFT));
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
 			@Override
 			public void run() {
 				double armAngle = ARM_PID_TOP - armPotentiometer.get();
-				if (flexSolenoid.get() == FLEX_EXTEND) {
+				if (flexSolenoid.get() == FLEX_EXTEND && clawSolenoid.get() == CLAW_CLOSE) {
 					if (armAngle >= INTAKE_ANGLE_MIN && armAngle <= INTAKE_ANGLE_MAX) {
 						int i = 0;
 						while (i < INTAKE_RELEASE_LENGTH) {
@@ -171,9 +189,9 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		
 		controller2.addWhenPressed(XboxController.DPAD_DOWN, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_DOWN, new SetOutput(RotationalArm.armPID, ARM_PID_LOW));
-
+		
 		controller2.addWhenPressed(XboxController.DPAD_RIGHT, RotationalArm.armPID.enableCommand());
-		controller2.addWhenPressed(XboxController.DPAD_RIGHT, new SetOutput(RotationalArm.armPID, ARM_PID_MEDIUM));
+		controller2.addWhenPressed(XboxController.DPAD_RIGHT, new SetOutput(RotationalArm.armPID, ARM_PID_MIDDLE));
 
 		controller2.addWhenPressed(XboxController.DPAD_UP, RotationalArm.armPID.enableCommand());
 		controller2.addWhenPressed(XboxController.DPAD_UP, new SetOutput(RotationalArm.armPID, ARM_PID_HIGH));
@@ -182,30 +200,28 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			
 			@Override
 			public void run() {
-				if (intakeActive) {
-					intakeActive = false;
-				} else {
-					intakeActive = true;
-				}
+			    intakeActive = !intakeActive;
 			}
 		});
 
 		controller2.addWhenPressed(XboxController.A, intakePID.enableCommand());
-		controller2.addWhenPressed(XboxController.A, new SetOutput(intakePID, INTAKE_PID_BOTTOM));
-
-		controller2.addWhenPressed(XboxController.B, intakePID.enableCommand());
-		controller2.addWhenPressed(XboxController.B, new SetOutput(intakePID, INTAKE_PID_GROUND));
+		controller2.addWhenPressed(XboxController.A, new SetOutput(intakePID, INTAKE_PID_GROUND));
 
 		controller2.addWhenPressed(XboxController.Y, intakePID.enableCommand());
 		controller2.addWhenPressed(XboxController.Y, new SetOutput(intakePID, INTAKE_PID_SHOOTING));
 	}
 
 	private Command // Declares these as Command
-		commandQualsLeft,
-		commandQualsRight,
-		commandPlayoffsRight,
-		commandPlayoffsLeft,
 		commandTwoCube,
+		commandRRRScale,
+		commandRRRSwitch,
+		commandLLLSwitch,
+		commandLLLScale,
+		//commandRLRSwitch,
+		//commandRLRScale,
+		//commandLRLSwitch,
+		//commandLRLScale,
+		commandAutoRun,
 		commandTest;
 
 	@Override
@@ -214,7 +230,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		RotationalArm.armPID.disable();
 		armPotentiometer.enable();
 		intakePotentiometer.enable();
-		Intake.intakePID.disable();
 	}
 
 	@Override
@@ -232,12 +247,13 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			Timer.delay(0.25);
 		}
 
-		// TODO add limit switch button to set ARM_PID_TOP constant to current potentiometer value
-		
+		// TODO add limit switch button to set ARM_PID_TOP constant to current
+		// potentiometer value
+
 		if (!settingsActive.equalsIgnoreCase(settingsFile.toString())) {
 			throw new RuntimeException(); // If it HAS changed, best to crash the Robot so it gets the update.
 		}
-		
+
 		if (AUTO_TYPE == "") { // If no type specified, ends method.
 			return;
 		}
@@ -249,30 +265,64 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				throw new Error(e.getMessage());
 			}
 		} else {
-			try { // Creates a new AutoFile with the file of each game, and makes it a command.
-				commandQualsLeft = new AutoFile(new File("qualsLeft" + AUTO_TYPE + ".txt")).toCommand();
-				commandQualsRight = new AutoFile(new File("qualsRight" + AUTO_TYPE + ".txt")).toCommand();
-			} catch (IOException e) {
-				throw new Error(e.getMessage());
-			}
-			
-			// playoff autos are optional
-			try {
-				commandPlayoffsRight = new AutoFile(new File("playoffsRight" + AUTO_TYPE + ".txt")).toCommand();
-			} catch (IOException e) {
-				commandPlayoffsRight = null;
-			}
-			
-			try {
-				commandPlayoffsLeft = new AutoFile(new File("playoffsLeft" + AUTO_TYPE + ".txt")).toCommand();
-			} catch (IOException e) {
-				commandPlayoffsLeft = null;
-			}
-
 			try {
 				commandTwoCube = new AutoFile(new File("twocube.txt")).toCommand();
 			} catch (IOException e) {
 				commandTwoCube = null;
+			}
+
+			try {
+				commandRRRScale = new AutoFile(new File("rrr" + AUTO_TYPE + "scale.txt")).toCommand();
+			} catch (IOException e) {
+				commandRRRScale = null;
+			}
+
+			try {
+				commandRRRSwitch = new AutoFile(new File("rrr" + AUTO_TYPE + "switch.txt")).toCommand();
+			} catch (IOException e) {
+				commandRRRSwitch = null;
+			}
+			
+			try {
+				commandLLLScale = new AutoFile(new File("lll" + AUTO_TYPE + "scale.txt")).toCommand();
+			} catch (IOException e) {
+				commandLLLScale = null;
+			}
+
+			try {
+				commandLLLSwitch = new AutoFile(new File("lll" + AUTO_TYPE + "switch.txt")).toCommand();
+			} catch (IOException e) {
+				commandLLLSwitch = null;
+			}
+			
+			/*try {
+				commandRLRScale = new AutoFile(new File("rlr" + AUTO_TYPE + "scale.txt")).toCommand();
+			} catch (IOException e) {
+				commandRLRScale = null;
+			}
+
+			try {
+				commandRLRSwitch = new AutoFile(new File("rlr" + AUTO_TYPE + "switch.txt")).toCommand();
+			} catch (IOException e) {
+				commandRLRSwitch = null;
+			}
+			
+			try {
+				commandLRLScale = new AutoFile(new File("lrl" + AUTO_TYPE + "scale.txt")).toCommand();
+			} catch (IOException e) {
+				commandLRLScale = null;
+			}
+
+			try {
+				commandLRLSwitch = new AutoFile(new File("lrl" + AUTO_TYPE + "switch.txt")).toCommand();
+			} catch (IOException e) {
+				commandLRLSwitch = null;
+			}*/
+
+			try {
+				commandAutoRun = new AutoFile(new File("autorun.txt")).toCommand();
+			} catch (IOException e) {
+				commandAutoRun = null;
 			}
 		}
 
@@ -285,7 +335,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		AUTO_MODULES.enable();
 		
 		gearShifter.set(LOW_GEAR);
-		
+
 		// Gets game-specific information (switch and scale orientations) from FMS.
 		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
@@ -293,30 +343,54 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			Commands.run(commandTest);
 		} else {
 			if (gameData.length() > 0) {
-				if (DriverStation.getInstance().getMatchType() == DriverStation.MatchType.Elimination || IS_PLAYOFF) {
-					if (gameData.charAt(1) == 'R' && gameData.charAt(0) == 'R' && commandTwoCube != null) {
-						// if our side of the scale is on the right
-						Commands.run(commandTwoCube);
-					} else if (gameData.charAt(1) == 'R' && commandPlayoffsRight != null) {
-						// if our side of the scale is on the right
-						Commands.run(commandPlayoffsRight);
-					} else if (gameData.charAt(1) == 'L' && commandPlayoffsLeft != null) {
-						// if our side of the scale is on the left
-						Commands.run(commandPlayoffsLeft);
-					} else if (gameData.charAt(0) == 'R') {
-						// if our side of the switch is on the right
-						Commands.run(commandQualsRight);
-					} else if (gameData.charAt(0) == 'L') {
-						// if our side of the switch is on the left
-						Commands.run(commandQualsLeft);
-					}
-				} else {
-					if (gameData.charAt(0) == 'R') { // if our side of the switch is on the right
-						Commands.run(commandQualsRight);
+				switch (AUTO_TYPE.toLowerCase()) {
+				case "center":
+					if (gameData.charAt(0) == 'R') {
+						Commands.run(commandRRRSwitch);
 					} else {
-						Commands.run(commandQualsLeft);
+						Commands.run(commandLLLSwitch);
 					}
+					break;
+				case "right":
+					if (AUTO_TARGET.equals("scale")) {
+						if (gameData.charAt(1) == 'R') {
+							Commands.run(commandRRRScale);
+							if (gameData.charAt(0) == 'R') {
+								Commands.run(commandTwoCube);
+							}
+						} else {
+							Commands.run(commandLLLScale);
+						}
+					} else {
+						if (gameData.charAt(0) == 'R') {
+							Commands.run(commandRRRSwitch);
+						} else {
+							Commands.run(commandLLLSwitch);
+						}
+					}
+					break;
+				case "left":
+					if (AUTO_TARGET.equals("scale")) {
+						if (gameData.charAt(1) == 'R') {
+							Commands.run(commandRRRScale);
+						} else {
+							Commands.run(commandLLLScale);
+						}
+					} else {
+						if (gameData.charAt(0) == 'R') {
+							Commands.run(commandRRRSwitch);
+						} else {
+							Commands.run(commandLLLSwitch);
+						}
+					}
+					break;
+				default:
+					Commands.run(commandAutoRun);
+					break;
 				}
+			} else {
+				// if there's no game-specific data
+				Commands.run(commandAutoRun);
 			}
 		}
 	}
@@ -329,6 +403,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	// Runs at the end of autonomous
 	@Override
 	public void endAutonomous() {
+		RotationalArm.armPID.disable();
+		intakePID.disable();
 		AUTO_MODULES.disable();
 	}
 
@@ -337,9 +413,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	public void initTeleoperated() {
 		TELEOP_MODULES.enable();
 		drivetrain.setSafetyEnabled(true); // Maybe we do...
-		
-		flexSolenoid.set(FLEX_RETRACT);
-		clawSolenoid.set(CLAW_CLOSE);
+
 		gearShifter.set(LOW_GEAR);
 		intakeActive = true;
 	}
@@ -350,35 +424,21 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
-		if (intakeActive) {
-			double leftSpeed = 0, rightSpeed = 0;
-			try {
-				leftSpeed = drivetrain.getLeftSpeed();
-				rightSpeed = -drivetrain.getRightSpeed();
-			} catch (OutOfSyncException e) {
-				Timer.delay(0.5);
-			}
-			Logging.logf("Speed values: (left: %.2f) (right: %.2f)", leftSpeed, rightSpeed);
-			
-			
-			if (leftSpeed >= rightSpeed) {
-				if (leftSpeed > 0) {
-					leftIntake.set(leftSpeed / 2);
-					rightIntake.set(-leftSpeed / 2);
-				}
-			} else {
-				if (rightSpeed > 0) {
-					leftIntake.set(rightSpeed / 2);
-					rightIntake.set(-rightSpeed / 2);
-				}
-			}
-		}
-	}
+		SmartDashboard.putNumber("Arm PID ", RotationalArm.armPID.getError());
+		SmartDashboard.putNumber("Intake PID ", intakePID.getError());
+		Logging.logf(
+				"Arm Potentiometer value: (abs: %.2f) (rel: %.2f)"
+						+ " Intake Potentiometer value: (abs: %.2f) (rel: %.2f)",
+				armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get(), intakePotentiometer.get(),
+				INTAKE_PID_BOTTOM - intakePotentiometer.get());
+        //Logging.logf("Encoder value: (left: %.2f) (right: %.2f) (encoder: %.2f)", leftEncoder.get(), rightEncoder.get(), encoderInput.get());
+    }
 
 	// Runs at the end of teleop
 	@Override
 	public void endTeleoperated() {
 		RotationalArm.armPID.disable();
+		intakePID.disable();
 		TELEOP_MODULES.disable();
 	}
 

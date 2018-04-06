@@ -1,0 +1,8 @@
+drivestraight(-10, 10, 1000)
+setintake(in, 250)
+turn(-25, 10, 2000)
+setintake(in, 250)
+setintake(shoot)
+wait(0.5)
+drivestraight(10, 10, 1000)
+setintake(out, 1000)

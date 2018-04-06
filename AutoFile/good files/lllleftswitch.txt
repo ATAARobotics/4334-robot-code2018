@@ -1,0 +1,6 @@
+drivestraight(157)
+turn(90, 10, 1000)
+setintake(shoot)
+drivestraight(25, 10, 1000)
+setintake(out, 1000, 0.6)
+setintake(top)
