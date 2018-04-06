@@ -12,7 +12,7 @@ public class VictorSPXModule extends Module.StandardModule implements SpeedContr
 	
 	protected VictorSPXModule(VictorSPX victor) {
 		if (victor == null) {
-            throw new NullPointerException("Null talon given");
+            throw new NullPointerException("Null victor given");
 		}
 		this.victor = victor;
 	}
@@ -51,7 +51,7 @@ public class VictorSPXModule extends Module.StandardModule implements SpeedContr
 
 	@Override
 	public double getSpeed() {
-		return victor.getActiveTrajectoryVelocity();
+		return victor.getMotorOutputPercent();
 	}
 
 	@Override

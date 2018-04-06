@@ -28,8 +28,8 @@ public interface Settings {
 	
 	SettingsFile settingsFile = new SettingsFile(new File("/settings.txt"));
 
-    String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "Right");
-    boolean IS_PLAYOFF = settingsFile.getBooleanProperty("IS_PLAYOFF", false);
+    String AUTO_TYPE = settingsFile.getProperty("AUTO_TYPE", "center").toLowerCase().trim();
+    String AUTO_TARGET = settingsFile.getProperty("AUTO_TARGET", "scale").toLowerCase().trim();
 	
     boolean LOGGING_ENABLED = settingsFile.getBooleanProperty("LOGGING_ENABLED", false);
 	
@@ -124,6 +124,7 @@ public interface Settings {
 	double INTAKE_PID_TOP = INTAKE_PID_BOTTOM - settingsFile.getDoubleProperty("INTAKE_PID_TOP", 2.80);
 	double INTAKE_ANGLE_MIN = settingsFile.getDoubleProperty("INTAKE_ANGLE_MIN", 0.10);
 	double INTAKE_ANGLE_MAX = settingsFile.getDoubleProperty("INTAKE_ANGLE_MAX", 0.61);
+	double INTAKE_BACKDRIVE_SPEED = settingsFile.getDoubleProperty("INTAKE_BACKDRIVE_SPEED", 0.75);
 	
 	double INTAKE_PID_SPEED = settingsFile.getDoubleProperty("INTAKE_PID_SPEED", 0.6);
 	double INTAKE_PID_SPEED_GROUND = settingsFile.getDoubleProperty("INTAKE_PID_SPEED_GROUND", 0.31);

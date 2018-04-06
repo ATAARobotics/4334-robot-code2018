@@ -88,9 +88,21 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			public void doBind(double speed, double turn) {
                 turn += (speed > 0) ? DRIVE_COMPENSATION : (speed < 0) ? -DRIVE_COMPENSATION : 0;
 				drivetrain.arcadeDrive(speed, turn);
-				if(Math.abs(speed) < LOW_GEAR_THRESHOLD) {
+				if (Math.abs(speed) < LOW_GEAR_THRESHOLD) {
 					gearShifter.set(LOW_GEAR);
 				}
+                double maxSpeed = Math.max(Math.abs(left1.getSpeed()), Math.abs(right1.getSpeed()));
+
+                if ((speed < 0 || Math.abs(turn) > 0.2 ) && intakeActive) {
+                    leftIntake.set(maxSpeed * INTAKE_BACKDRIVE_SPEED);
+                    rightIntake.set(-maxSpeed * INTAKE_BACKDRIVE_SPEED);
+                }
+
+                if (speed >= 0 && Math.abs(turn) <= 0.2 && Math.abs(controller1.getTriggersValue()) < 0.1) {
+				    leftIntake.set(0);
+				    rightIntake.set(0);
+                }
+                Logging.logf("Left speed: %.2f Right speed: %.2f Max speed: %.2f", left1.getSpeed(), right1.getSpeed(), Math.max(Math.abs(left1.getSpeed()), Math.abs(right1.getSpeed())));
 			}
 		});
 
@@ -107,12 +119,14 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller1.addDeadband(XboxController.TRIGGERS, 0.12);
 		controller1.changeAxis(XboxController.TRIGGERS, intakeFunction);
 		controller1.invertAxis(XboxController.TRIGGERS);
-		controller1.addAxisBind(controller1.getTriggers(), rightIntake);
 		//controller2.addAxisBind(controller2.getRightDistanceFromMiddle(), rightIntake);
 		controller1.addAxisBind(controller1.getTriggers(), new Output() {
 			@Override
 			public void set(double value) {
-				leftIntake.set(-value);
+				if(value > 0.1 || value < -0.1) {
+                    leftIntake.set(-value);
+                    rightIntake.set(value);
+                }
 			}
 		});
 		controller2.addDeadband(XboxController.LEFT_FROM_MIDDLE, 0.12);
@@ -138,7 +152,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 
 		// When the A button is pressed, it extends the flexSolenoid
 		// When the B button is pressed, it retracts the flexSolenoid
-		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid));
+		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new ReverseSolenoid(flexSolenoid, Direction.LEFT));
 		controller2.addWhenPressed(XboxController.LEFT_BUMPER, new Command() {
 			@Override
 			public void run() {
@@ -186,11 +200,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			
 			@Override
 			public void run() {
-				if (intakeActive) {
-					intakeActive = false;
-				} else {
-					intakeActive = true;
-				}
+			    intakeActive = !intakeActive;
 			}
 		});
 
@@ -342,7 +352,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 					}
 					break;
 				case "right":
-					if (IS_PLAYOFF || DriverStation.getInstance().getMatchType() == MatchType.Elimination) {
+					if (AUTO_TARGET.equals("scale")) {
 						if (gameData.charAt(1) == 'R') {
 							Commands.run(commandRRRScale);
 							if (gameData.charAt(0) == 'R') {
@@ -360,7 +370,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 					}
 					break;
 				case "left":
-					if (IS_PLAYOFF || DriverStation.getInstance().getMatchType() == MatchType.Elimination) {
+					if (AUTO_TARGET.equals("scale")) {
 						if (gameData.charAt(1) == 'R') {
 							Commands.run(commandRRRScale);
 						} else {
@@ -403,13 +413,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	public void initTeleoperated() {
 		TELEOP_MODULES.enable();
 		drivetrain.setSafetyEnabled(true); // Maybe we do...
-		
-		if(flexSolenoid.get() == Direction.OFF) {
-			flexSolenoid.set(FLEX_RETRACT);
-		}
-		if (clawSolenoid.get() == Direction.OFF) {
-			clawSolenoid.set(CLAW_OPEN);
-		}		
+
 		gearShifter.set(LOW_GEAR);
 		intakeActive = true;
 	}
@@ -420,29 +424,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		// Performs the binds set in init()
 		controller1.doBinds();
 		controller2.doBinds();
-		if (intakeActive) {
-			double leftSpeed = 0, rightSpeed = 0;
-			try {
-				leftSpeed = drivetrain.getLeftSpeed();
-				rightSpeed = -drivetrain.getRightSpeed();
-			} catch (OutOfSyncException e) {
-				Timer.delay(0.5);
-			}
-			//Logging.logf("Speed values: (left: %.2f) (right: %.2f)", leftSpeed, rightSpeed);
-			
-			
-			if (leftSpeed >= rightSpeed) {
-				if (leftSpeed > 0) {
-					leftIntake.set(leftSpeed / 2);
-					rightIntake.set(-leftSpeed / 2);
-				}
-			} else {
-				if (rightSpeed > 0) {
-					leftIntake.set(rightSpeed / 2);
-					rightIntake.set(-rightSpeed / 2);
-				}
-			}
-		}
 		SmartDashboard.putNumber("Arm PID ", RotationalArm.armPID.getError());
 		SmartDashboard.putNumber("Intake PID ", intakePID.getError());
 		Logging.logf(
@@ -450,7 +431,8 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 						+ " Intake Potentiometer value: (abs: %.2f) (rel: %.2f)",
 				armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get(), intakePotentiometer.get(),
 				INTAKE_PID_BOTTOM - intakePotentiometer.get());
-	}
+        //Logging.logf("Encoder value: (left: %.2f) (right: %.2f) (encoder: %.2f)", leftEncoder.get(), rightEncoder.get(), encoderInput.get());
+    }
 
 	// Runs at the end of teleop
 	@Override

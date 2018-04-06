@@ -2,6 +2,7 @@ package main.java.ca.fourthreethreefour.commands;
 
 import edu.first.command.Command;
 import edu.first.module.actuators.DualActionSolenoid;
+import edu.first.module.actuators.Solenoid;
 
 /**
  * Reverses the specified solenoid.
@@ -9,17 +10,27 @@ import edu.first.module.actuators.DualActionSolenoid;
  *
  */
 public final class ReverseSolenoid implements Command {
-	
+
+	private final DualActionSolenoid.Direction defaultDirection;
 	private final DualActionSolenoid solenoid;
-	
-	//Constructor for the command
+
 	public ReverseSolenoid (DualActionSolenoid solenoid) {
 		this.solenoid = solenoid;
+		this.defaultDirection = DualActionSolenoid.Direction.RIGHT;
+	}
+
+	public ReverseSolenoid(DualActionSolenoid solenoid, DualActionSolenoid.Direction defaultDirection) {
+		this.solenoid = solenoid;
+		this.defaultDirection = defaultDirection;
 	}
 	
 	//Reverses the specified solenoid.
 	@Override
 	public void run() {
-		solenoid.reverse();
+		if (solenoid.get() == DualActionSolenoid.Direction.OFF) {
+			solenoid.set(defaultDirection);
+		} else {
+			solenoid.reverse();
+		}
 	}
 }
