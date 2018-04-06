@@ -18,11 +18,12 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
-import main.java.ca.fourthreethreefour.subsystems.Intake;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 
@@ -43,6 +44,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	 * receive information (not controller inputs) from the driver station.
 	 */
 	DriverStation ds = DriverStation.getInstance();
+	SendableChooser autoChooser = new SendableChooser();
 
 	/*
 	 * Constructor for the custom Robot class. Needed because IterativeRobotAdapter
@@ -53,7 +55,19 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 	}
 
 	String settingsActive = settingsFile.toString();
-	boolean intakeActive = false;
+	boolean intakeActive = true;
+
+    private Command // Declares these as Command
+            commandTwoCube,
+            commandRRRScale,
+            commandRRRSwitch,
+            commandLLLSwitch,
+            commandLLLScale,
+            commandAutoRun,
+            commandTest;
+
+    private boolean settingsOverride = false;
+    private String overrideType, overrideTarget;
 
 	// runs when the robot is first turned on
 	@Override
@@ -65,10 +79,56 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		turnPID.setTolerance(TURN_TOLERANCE);
 		intakePID.setTolerance(INTAKE_TOLERANCE);
 
-		// Initializes the CameraServer twice. That's how it's done
         CameraServer.getInstance().startAutomaticCapture();
-        //CameraServer.getInstance().startAutomaticCapture();
-        
+
+        autoChooser.addDefault("Settings File", new Command() {
+			@Override
+			public void run() {
+				settingsOverride = false;
+			}
+		});
+        autoChooser.addObject("Center Switch", new Command() {
+			@Override
+			public void run() {
+				settingsOverride = true;
+				overrideType = "center";
+				overrideTarget = "switch";
+			}
+		});
+        autoChooser.addObject("Right Switch", new Command() {
+			@Override
+			public void run() {
+				settingsOverride = true;
+				overrideType = "right";
+				overrideTarget = "switch";
+			}
+		});
+        autoChooser.addObject("Right Scale", new Command() {
+			@Override
+			public void run() {
+				settingsOverride = true;
+				overrideType = "right";
+				overrideTarget = "scale";
+			}
+		});
+        autoChooser.addObject("Left Switch", new Command() {
+			@Override
+			public void run() {
+				settingsOverride = true;
+				overrideType = "left";
+				overrideTarget = "switch";
+			}
+		});
+        autoChooser.addObject("Left Scale", new Command() {
+			@Override
+			public void run() {
+				settingsOverride = true;
+				overrideType = "left";
+				overrideTarget = "scale";
+			}
+		});
+        SmartDashboard.putData(autoChooser);
+
 		// Controller 1/driver
 		/*
 		 * Sets the deadband for LEFT_FROM_MIDDLE and RIGHT_X. If the input value from
@@ -211,19 +271,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		controller2.addWhenPressed(XboxController.Y, new SetOutput(intakePID, INTAKE_PID_SHOOTING));
 	}
 
-	private Command // Declares these as Command
-		commandTwoCube,
-		commandRRRScale,
-		commandRRRSwitch,
-		commandLLLSwitch,
-		commandLLLScale,
-		//commandRLRSwitch,
-		//commandRLRScale,
-		//commandLRLSwitch,
-		//commandLRLScale,
-		commandAutoRun,
-		commandTest;
-
 	@Override
 	public void initDisabled() {
 		ALL_MODULES.disable();
@@ -240,7 +287,9 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 				armPotentiometer.get(), ARM_PID_TOP - armPotentiometer.get(), intakePotentiometer.get(),
 				INTAKE_PID_BOTTOM - intakePotentiometer.get());
 		Timer.delay(0.25);
-		
+
+        Scheduler.getInstance().run();
+
 		try {
 			settingsFile.reload();
 		} catch (NullPointerException e) {
@@ -264,7 +313,42 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			} catch (IOException e) {
 				throw new Error(e.getMessage());
 			}
-		} else {
+		} else if (settingsOverride) {
+			try {
+				commandTwoCube = new AutoFile(new File("twocube.txt")).toCommand();
+			} catch (IOException e) {
+				commandTwoCube = null;
+			}
+			try {
+				commandRRRScale = new AutoFile(new File("rrr" + overrideType + "scale.txt")).toCommand();
+			} catch (IOException e) {
+				commandRRRScale = null;
+			}
+
+			try {
+				commandRRRSwitch = new AutoFile(new File("rrr" + overrideType + "switch.txt")).toCommand();
+			} catch (IOException e) {
+				commandRRRSwitch = null;
+			}
+
+			try {
+				commandLLLScale = new AutoFile(new File("lll" + overrideType + "scale.txt")).toCommand();
+			} catch (IOException e) {
+				commandLLLScale = null;
+			}
+
+			try {
+				commandLLLSwitch = new AutoFile(new File("lll" + overrideType + "switch.txt")).toCommand();
+			} catch (IOException e) {
+				commandLLLSwitch = null;
+			}
+
+			try {
+				commandAutoRun = new AutoFile(new File("autorun.txt")).toCommand();
+			} catch (IOException e) {
+				commandAutoRun = null;
+			}
+		} else { // settingsOverride = false
 			try {
 				commandTwoCube = new AutoFile(new File("twocube.txt")).toCommand();
 			} catch (IOException e) {
@@ -294,30 +378,6 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 			} catch (IOException e) {
 				commandLLLSwitch = null;
 			}
-			
-			/*try {
-				commandRLRScale = new AutoFile(new File("rlr" + AUTO_TYPE + "scale.txt")).toCommand();
-			} catch (IOException e) {
-				commandRLRScale = null;
-			}
-
-			try {
-				commandRLRSwitch = new AutoFile(new File("rlr" + AUTO_TYPE + "switch.txt")).toCommand();
-			} catch (IOException e) {
-				commandRLRSwitch = null;
-			}
-			
-			try {
-				commandLRLScale = new AutoFile(new File("lrl" + AUTO_TYPE + "scale.txt")).toCommand();
-			} catch (IOException e) {
-				commandLRLScale = null;
-			}
-
-			try {
-				commandLRLSwitch = new AutoFile(new File("lrl" + AUTO_TYPE + "switch.txt")).toCommand();
-			} catch (IOException e) {
-				commandLRLSwitch = null;
-			}*/
 
 			try {
 				commandAutoRun = new AutoFile(new File("autorun.txt")).toCommand();
@@ -335,15 +395,61 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 		AUTO_MODULES.enable();
 		
 		gearShifter.set(LOW_GEAR);
-
 		// Gets game-specific information (switch and scale orientations) from FMS.
 		String gameData = ds.getGameSpecificMessage().toUpperCase();
 		drivetrain.setSafetyEnabled(false); // WE DON'T NEED SAFETY
+        Logging.log("Auto type: " + AUTO_TYPE + " Auto target: " + AUTO_TARGET);
 		if (AUTO_TYPE.contains("test")) {
 			Commands.run(commandTest);
 		} else {
-			if (gameData.length() > 0) {
-				switch (AUTO_TYPE.toLowerCase()) {
+		    if (settingsOverride) {
+		        switch (overrideType) {
+                    case "center":
+                        if (gameData.charAt(0) == 'R') {
+                            Commands.run(commandRRRSwitch);
+                        } else {
+                            Commands.run(commandLLLSwitch);
+                        }
+                        break;
+                    case "right":
+                        if (overrideTarget.equals("scale")) {
+                            if (gameData.charAt(1) == 'R') {
+                                Commands.run(commandRRRScale);
+                                if (gameData.charAt(0) == 'R') {
+                                    Commands.run(commandTwoCube);
+                                }
+                            } else {
+                                Commands.run(commandLLLScale);
+                            }
+                        } else {
+                            if (gameData.charAt(0) == 'R') {
+                                Commands.run(commandRRRSwitch);
+                            } else {
+                                Commands.run(commandLLLSwitch);
+                            }
+                        }
+                        break;
+                    case "left":
+                        if (overrideTarget.equals("scale")) {
+                            if (gameData.charAt(1) == 'R') {
+                                Commands.run(commandRRRScale);
+                            } else {
+                                Commands.run(commandLLLScale);
+                            }
+                        } else {
+                            if (gameData.charAt(0) == 'R') {
+                                Commands.run(commandRRRSwitch);
+                            } else {
+                                Commands.run(commandLLLSwitch);
+                            }
+                        }
+                        break;
+                    default:
+                        Commands.run(commandAutoRun);
+                        break;
+                }
+            } else if (gameData.length() > 0 && !settingsOverride) {
+				switch (AUTO_TYPE) {
 				case "center":
 					if (gameData.charAt(0) == 'R') {
 						Commands.run(commandRRRSwitch);
@@ -388,7 +494,7 @@ public class Robot extends IterativeRobotAdapter implements Constants {
 					Commands.run(commandAutoRun);
 					break;
 				}
-			} else {
+            } else {
 				// if there's no game-specific data
 				Commands.run(commandAutoRun);
 			}
