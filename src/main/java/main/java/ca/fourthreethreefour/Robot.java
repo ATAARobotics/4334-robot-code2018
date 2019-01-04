@@ -7,7 +7,6 @@ import edu.first.command.Command;
 import edu.first.command.Commands;
 import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
-import edu.first.lang.OutOfSyncException;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
 import edu.first.module.joysticks.BindingJoystick.DualAxisBind;
@@ -17,12 +16,10 @@ import edu.first.robot.IterativeRobotAdapter;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.ca.fourthreethreefour.commands.ReverseSolenoid;
 import main.java.ca.fourthreethreefour.commands.debug.Logging;
 import main.java.ca.fourthreethreefour.settings.AutoFile;
-import main.java.ca.fourthreethreefour.subsystems.Intake;
 import main.java.ca.fourthreethreefour.subsystems.RotationalArm;
 
 

@@ -4,19 +4,18 @@ import edu.first.identifiers.Function;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
-import edu.first.module.actuators.DualActionSolenoidModule;
-import edu.first.module.controllers.PIDController;
 import edu.first.module.actuators.DualActionSolenoid.Direction;
+import edu.first.module.controllers.PIDController;
 import edu.first.module.sensors.AnalogInput;
 import edu.first.module.subsystems.Subsystem;
 import main.java.ca.fourthreethreefour.module.actuators.MotorModule;
 import main.java.ca.fourthreethreefour.settings.Settings;
 
 public interface Intake extends Settings {
-	
+
 	MotorModule // Creates a TalonSRXModule for the left side and right
-		leftIntake = new MotorModule(TYPE_INTAKE_LEFT, INTAKE_LEFT),
-		rightIntake = new MotorModule(TYPE_INTAKE_RIGHT, INTAKE_RIGHT),
+	leftIntake = new MotorModule(TYPE_INTAKE_LEFT, INTAKE_LEFT),
+			rightIntake = new MotorModule(TYPE_INTAKE_RIGHT, INTAKE_RIGHT),
 		armIntake = new MotorModule(TYPE_INTAKE_ARM, INTAKE_ARM);
 	
     AnalogInput intakePotentiometer = new AnalogInput(INTAKE_POTENTIOMETER);
