@@ -1,5 +1,0 @@
-drivestraight(7500)
-setarm(medium)
-turn(-90)
-drivestraight(600, 50, 1000)
-setarm(open)
