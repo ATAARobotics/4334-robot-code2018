@@ -8,6 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.subsystems.Drive;
+import frc.robot.teleop.Teleop;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,8 +23,11 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
+  Drive drive = new Drive();
+  Teleop teleop;
   @Override
   public void robotInit() {
+    teleop = new Teleop(drive);
   }
 
   @Override
@@ -35,10 +40,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    teleop.teleopInit();
   }
 
   @Override
   public void teleopPeriodic() {
+    teleop.teleopPeriodic();
   }
 
   @Override
