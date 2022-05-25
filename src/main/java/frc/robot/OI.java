@@ -33,7 +33,7 @@ public class OI {
     }
 
     public void checkInputs() {
-        velocity = driveStick.getAnalog("Velocity");
+        velocity = -driveStick.getAnalog("Velocity");
         rotation = driveStick.getAnalog("Rotation");
     }
 
