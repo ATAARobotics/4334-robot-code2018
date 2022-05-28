@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 
@@ -62,5 +63,9 @@ public class Arm extends SubsystemBase {
             return ArmDirection.UP;
         }
         return ArmDirection.MIDDLE;
+    }
+
+    public void log() {
+        SmartDashboard.putNumber("Arm Potentiometer", armPotentiometer.getAverageVoltage());
     }
 }
