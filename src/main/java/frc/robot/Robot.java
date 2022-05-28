@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Arm;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,8 +22,9 @@ public class Robot extends TimedRobot {
 
     private Drivetrain drivetrain = new Drivetrain();
     private OI joysticks = new OI();
+    private Arm arm = new Arm();
 
-    private Teleop teleop = new Teleop(drivetrain, joysticks);
+    private Teleop teleop = new Teleop(drivetrain, arm, joysticks);
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -54,6 +56,7 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        arm.log();
     }
 
     /** This function is called once each time the robot enters Disabled mode. */

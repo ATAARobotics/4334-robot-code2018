@@ -20,6 +20,5 @@ public class Teleop {
 
     public void teleopPeriodic() {
         joysticks.checkInputs();
-        arm.log();
     }
 }

@@ -13,6 +13,6 @@ public class RobotMap {
 
     // Sensors
     public static final int ARM_POTENTIOMETER = 1;
-    public static final double ARM_DOWN_POS = -999.99;
-    public static final double ARM_UP_POS = 999.99;
+    public static final double ARM_DOWN_POS = 0.5;
+    public static final double ARM_UP_POS = 1.0;
 }
