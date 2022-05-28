@@ -16,7 +16,7 @@ public class Drivetrain extends SubsystemBase {
     private VictorSPX secondaryLeftMotor;
     private VictorSPX secondaryRightMotor;
 
-    // private DoubleSolenoid gearShift;
+    private DoubleSolenoid gearShift;
     private boolean shiftedForward = true;
 
     public Drivetrain() {
@@ -25,8 +25,8 @@ public class Drivetrain extends SubsystemBase {
         secondaryLeftMotor = new VictorSPX(RobotMap.LEFT_DRIVE_MOTORS[1]);
         secondaryRightMotor = new VictorSPX(RobotMap.RIGHT_DRIVE_MOTORS[1]);
 
-        // gearShift = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
-        // RobotMap.GEAR_SHIFT[0], RobotMap.GEAR_SHIFT[1]);
+        gearShift = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+                RobotMap.GEAR_SHIFT[0], RobotMap.GEAR_SHIFT[1]);
 
         secondaryLeftMotor.follow(primaryLeftMotor);
         secondaryRightMotor.follow(primaryRightMotor);
@@ -34,7 +34,7 @@ public class Drivetrain extends SubsystemBase {
         primaryLeftMotor.setInverted(true);
         secondaryLeftMotor.setInverted(true);
 
-        // gearShift.set(Value.kForward);
+        gearShift.set(Value.kForward);
     }
 
     public void setMotion(double speed, double rotation) {
@@ -42,14 +42,12 @@ public class Drivetrain extends SubsystemBase {
         primaryRightMotor.set(ControlMode.PercentOutput, MathUtil.clamp(speed - rotation, -1.0, 1.0));
     }
 
-    /*
-     * public void shiftGears() {
-     * if (shiftedForward) {
-     * gearShift.set(Value.kReverse);
-     * } else {
-     * gearShift.set(Value.kForward);
-     * }
-     * shiftedForward = !shiftedForward;
-     * }
-     */
+    public void shiftGears() {
+        if (shiftedForward) {
+            gearShift.set(Value.kReverse);
+        } else {
+            gearShift.set(Value.kForward);
+        }
+        shiftedForward = !shiftedForward;
+    }
 }
