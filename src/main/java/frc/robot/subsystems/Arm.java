@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -22,26 +23,23 @@ public class Arm extends SubsystemBase {
     private TalonSRX armMotor;
 
     private DoubleSolenoid armElbow;
-    private ArmDirection armElbowPos = ArmDirection.DOWN;
-
-    private DoubleSolenoid clawPinch;
+    private ArmDirection armMotion = ArmDirection.DOWN;
 
     private AnalogInput armPotentiometer;
 
     public Arm() {
         armMotor = new TalonSRX(RobotMap.ARM_MOTOR);
+        armMotor.setNeutralMode(NeutralMode.Brake);
 
         armElbow = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotMap.ARM_ELBOW[0], RobotMap.ARM_ELBOW[1]);
-        clawPinch = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotMap.CLAW_PINCH[0], RobotMap.CLAW_PINCH[1]);
 
         armPotentiometer = new AnalogInput(RobotMap.ARM_POTENTIOMETER);
 
         armElbow.set(Value.kForward);
-        clawPinch.set(Value.kReverse);
     }
 
     public void setElbow(ArmDirection direction) {
-        if (armElbowPos != direction) {
+        if (getArmPos() != direction) {
             if (direction == ArmDirection.UP) {
                 armElbow.set(Value.kReverse);
             } else {
@@ -51,9 +49,19 @@ public class Arm extends SubsystemBase {
     }
 
     public void moveArm(ArmDirection direction) {
-        double speed = direction == ArmDirection.UP ? -0.1 : 0.1;
+        if (direction != getArmPos()) {
+            double speed = direction == ArmDirection.UP ? -0.8 : 0.4;
 
-        armMotor.set(ControlMode.PercentOutput, speed);
+            armMotor.set(ControlMode.PercentOutput, speed);
+        } else {
+            stopArm();
+        }
+
+        armMotion = direction;
+    }
+
+    public void stopArm() {
+        armMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
     public ArmDirection getArmPos() {
@@ -61,8 +69,13 @@ public class Arm extends SubsystemBase {
             return ArmDirection.DOWN;
         } else if (armPotentiometer.getAverageVoltage() >= RobotMap.ARM_UP_POS) {
             return ArmDirection.UP;
+        } else {
+            return ArmDirection.MIDDLE;
         }
-        return ArmDirection.MIDDLE;
+    }
+
+    public ArmDirection getArmMotion() {
+        return armMotion;
     }
 
     public void log() {

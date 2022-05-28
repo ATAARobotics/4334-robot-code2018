@@ -8,11 +8,11 @@ public class RobotMap {
 
     // Pneumatics
     public static final int[] GEAR_SHIFT = { 0, 1 };
-    public static final int[] ARM_ELBOW = { 6, 7 };
-    public static final int[] CLAW_PINCH = { 4, 5 };
+    public static final int[] ARM_ELBOW = { 4, 5 };
+    public static final int[] CLAW_PINCH = { 6, 7 };
 
     // Sensors
     public static final int ARM_POTENTIOMETER = 1;
-    public static final double ARM_DOWN_POS = 0.5;
-    public static final double ARM_UP_POS = 1.0;
+    public static final double ARM_DOWN_POS = 0.6;
+    public static final double ARM_UP_POS = 0.75;
 }

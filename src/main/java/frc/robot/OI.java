@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class OI {
 
@@ -14,6 +15,9 @@ public class OI {
 
     public double velocity;
     public double rotation;
+
+    public JoystickButton armToggle;
+    public JoystickButton clawToggle;
 
     public OI() {
         // Configure the button bindings
@@ -30,11 +34,21 @@ public class OI {
         } catch (IOException e) {
             DriverStation.reportError("IOException on button binding file", false);
         }
+
+        armToggle = driveStick.getWPIJoystickButton("ToggleArm");
+        clawToggle = driveStick.getWPIJoystickButton("ToggleClaw");
     }
 
     public void checkInputs() {
         velocity = -driveStick.getAnalog("Velocity");
         rotation = driveStick.getAnalog("Rotation");
+
+        if (Math.abs(velocity) < 0.2) {
+            velocity = 0;
+        }
+        if (Math.abs(rotation) < 0.2) {
+            rotation = 0;
+        }
     }
 
     public double getSpeed() {
