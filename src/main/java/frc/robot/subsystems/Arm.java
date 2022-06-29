@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -22,6 +24,8 @@ public class Arm extends SubsystemBase {
 
     private TalonSRX armMotor;
 
+    private PIDController armPID = new PIDController(0.007, 0.0, 0.0);
+
     private DoubleSolenoid armElbow;
     private ArmDirection armMotion = ArmDirection.DOWN;
 
@@ -29,6 +33,7 @@ public class Arm extends SubsystemBase {
 
     public Arm() {
         armMotor = new TalonSRX(RobotMap.ARM_MOTOR);
+        armMotor.setInverted(true);
         armMotor.setNeutralMode(NeutralMode.Brake);
 
         armElbow = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotMap.ARM_ELBOW[0], RobotMap.ARM_ELBOW[1]);
@@ -36,6 +41,16 @@ public class Arm extends SubsystemBase {
         armPotentiometer = new AnalogInput(RobotMap.ARM_POTENTIOMETER);
 
         armElbow.set(Value.kForward);
+
+        armPID.setSetpoint(RobotMap.ARM_UP_POS * RobotMap.PID_SCALE_FACTOR);
+    }
+
+    public void periodic() {
+        if (armMotion == ArmDirection.UP) {
+            armMotor.set(ControlMode.PercentOutput,
+                    armPID.calculate(armPotentiometer.getAverageVoltage() * RobotMap.PID_SCALE_FACTOR));
+            System.out.println("PID");
+        }
     }
 
     public void setElbow(ArmDirection direction) {
@@ -49,12 +64,12 @@ public class Arm extends SubsystemBase {
     }
 
     public void moveArm(ArmDirection direction) {
-        if (direction != getArmPos()) {
-            double speed = direction == ArmDirection.UP ? -0.8 : 0.4;
-
-            armMotor.set(ControlMode.PercentOutput, speed);
-        } else {
-            stopArm();
+        if (direction != ArmDirection.UP) {
+            if (direction != getArmPos()) {
+                armMotor.set(ControlMode.PercentOutput, RobotMap.ARM_DOWN_SPEED);
+            } else {
+                stopArm();
+            }
         }
 
         armMotion = direction;
@@ -65,9 +80,9 @@ public class Arm extends SubsystemBase {
     }
 
     public ArmDirection getArmPos() {
-        if (armPotentiometer.getAverageVoltage() <= RobotMap.ARM_DOWN_POS) {
+        if (armPotentiometer.getAverageVoltage() <= RobotMap.ARM_DOWN_POS + RobotMap.ARM_TOLERANCE / 2) {
             return ArmDirection.DOWN;
-        } else if (armPotentiometer.getAverageVoltage() >= RobotMap.ARM_UP_POS) {
+        } else if (armPotentiometer.getAverageVoltage() >= RobotMap.ARM_UP_POS - RobotMap.ARM_TOLERANCE) {
             return ArmDirection.UP;
         } else {
             return ArmDirection.MIDDLE;
