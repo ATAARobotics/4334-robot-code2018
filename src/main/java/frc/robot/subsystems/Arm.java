@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotMap;
+import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
 
@@ -31,23 +31,23 @@ public class Arm extends SubsystemBase {
     private AnalogInput armPotentiometer;
 
     public Arm() {
-        armMotor = new TalonSRX(RobotMap.ARM_MOTOR);
+        armMotor = new TalonSRX(Constants.ARM_MOTOR);
         armMotor.setInverted(true);
         armMotor.setNeutralMode(NeutralMode.Brake);
 
-        armElbow = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotMap.ARM_ELBOW[0], RobotMap.ARM_ELBOW[1]);
+        armElbow = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.ARM_ELBOW[0], Constants.ARM_ELBOW[1]);
 
-        armPotentiometer = new AnalogInput(RobotMap.ARM_POTENTIOMETER);
+        armPotentiometer = new AnalogInput(Constants.ARM_POTENTIOMETER);
 
         armElbow.set(Value.kForward);
 
-        armPID.setSetpoint(RobotMap.ARM_UP_POS * RobotMap.PID_SCALE_FACTOR);
+        armPID.setSetpoint(Constants.ARM_UP_POS * Constants.PID_SCALE_FACTOR);
     }
 
     public void periodic() {
         if (armMotion == ArmDirection.UP) {
             armMotor.set(ControlMode.PercentOutput,
-                    armPID.calculate(armPotentiometer.getAverageVoltage() * RobotMap.PID_SCALE_FACTOR));
+                    armPID.calculate(armPotentiometer.getAverageVoltage() * Constants.PID_SCALE_FACTOR));
         }
     }
 
@@ -64,7 +64,7 @@ public class Arm extends SubsystemBase {
     public void moveArm(ArmDirection direction) {
         if (direction != ArmDirection.UP) {
             if (direction != getArmPos()) {
-                armMotor.set(ControlMode.PercentOutput, RobotMap.ARM_DOWN_SPEED);
+                armMotor.set(ControlMode.PercentOutput, Constants.ARM_DOWN_SPEED);
             } else {
                 stopArm();
             }
@@ -78,9 +78,9 @@ public class Arm extends SubsystemBase {
     }
 
     public ArmDirection getArmPos() {
-        if (armPotentiometer.getAverageVoltage() <= RobotMap.ARM_DOWN_POS + RobotMap.ARM_TOLERANCE / 2) {
+        if (armPotentiometer.getAverageVoltage() <= Constants.ARM_DOWN_POS + Constants.ARM_TOLERANCE / 2) {
             return ArmDirection.DOWN;
-        } else if (armPotentiometer.getAverageVoltage() >= RobotMap.ARM_UP_POS - RobotMap.ARM_TOLERANCE) {
+        } else if (armPotentiometer.getAverageVoltage() >= Constants.ARM_UP_POS - Constants.ARM_TOLERANCE) {
             return ArmDirection.UP;
         } else {
             return ArmDirection.MIDDLE;

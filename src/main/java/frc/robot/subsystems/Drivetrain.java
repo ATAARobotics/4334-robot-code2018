@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotMap;
+import frc.robot.Constants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -20,13 +20,13 @@ public class Drivetrain extends SubsystemBase {
     private boolean shiftedForward = true;
 
     public Drivetrain() {
-        primaryLeftMotor = new VictorSPX(RobotMap.LEFT_DRIVE_MOTORS[0]);
-        primaryRightMotor = new VictorSPX(RobotMap.RIGHT_DRIVE_MOTORS[0]);
-        secondaryLeftMotor = new VictorSPX(RobotMap.LEFT_DRIVE_MOTORS[1]);
-        secondaryRightMotor = new VictorSPX(RobotMap.RIGHT_DRIVE_MOTORS[1]);
+        primaryLeftMotor = new VictorSPX(Constants.LEFT_DRIVE_MOTORS[0]);
+        primaryRightMotor = new VictorSPX(Constants.RIGHT_DRIVE_MOTORS[0]);
+        secondaryLeftMotor = new VictorSPX(Constants.LEFT_DRIVE_MOTORS[1]);
+        secondaryRightMotor = new VictorSPX(Constants.RIGHT_DRIVE_MOTORS[1]);
 
         gearShift = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
-                RobotMap.GEAR_SHIFT[0], RobotMap.GEAR_SHIFT[1]);
+                Constants.GEAR_SHIFT[0], Constants.GEAR_SHIFT[1]);
 
         secondaryLeftMotor.follow(primaryLeftMotor);
         secondaryRightMotor.follow(primaryRightMotor);
