@@ -48,7 +48,6 @@ public class Arm extends SubsystemBase {
         if (armMotion == ArmDirection.UP) {
             armMotor.set(ControlMode.PercentOutput,
                     armPID.calculate(armPotentiometer.getAverageVoltage() * RobotMap.PID_SCALE_FACTOR));
-            System.out.println("PID");
         }
     }
 
