@@ -87,6 +87,19 @@ public class Arm extends SubsystemBase {
         }
     }
 
+    public double getArmPercent() {
+        double min = Constants.ARM_DOWN_POS + Constants.ARM_TOLERANCE / 2;
+        double max = Constants.ARM_UP_POS - Constants.ARM_TOLERANCE;
+        if (armPotentiometer.getAverageVoltage() <= Constants.ARM_DOWN_POS + Constants.ARM_TOLERANCE / 2) {
+            return 0;
+        } else if (armPotentiometer.getAverageVoltage() >= Constants.ARM_UP_POS - Constants.ARM_TOLERANCE) {
+            return 1;
+        } else {
+            //System.out.println((armPotentiometer.getAverageVoltage() - min)/(max-min));
+            return (armPotentiometer.getAverageVoltage() - min)/(max-min);
+        }
+    }
+
     public ArmDirection getArmMotion() {
         return armMotion;
     }

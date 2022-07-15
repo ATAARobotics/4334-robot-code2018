@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.LightingSubsystem;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 
@@ -25,8 +26,9 @@ public class Robot extends TimedRobot {
     private OI joysticks = new OI();
     private Arm arm = new Arm();
     private Claw claw = new Claw();
+    private LightingSubsystem lightingSubsystem = new LightingSubsystem();
 
-    private Teleop teleop = new Teleop(drivetrain, arm, claw, joysticks);
+    private Teleop teleop = new Teleop(drivetrain, arm, claw, joysticks, lightingSubsystem);
 
     /**
      * This function is run when the robot is first started up and should be used
