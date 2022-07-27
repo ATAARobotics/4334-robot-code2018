@@ -25,14 +25,14 @@ public class LightingSubsystem extends SubsystemBase {
         config.brightnessScalar = 1;
         candle.configAllSettings(config);
 
-        colorList = generateGradient(20, new int[] { 255, 0, 0 }, new int[] { 0, 255, 0 },
-                new int[] { 0, 0, 255 });
+        colorList = generateGradient(20, new int[] { 255, 0, 0 }, new int[] { 0, 80, 0 },
+                new int[] { 0, 0, 20 });
 
         candle.setLEDs(0, 0, 0);
     }
 
     private int[][] generateGradient(int step, int[]... colors) {
-        int[][] newColorList = new int[step * colors.length][3];
+        int[][] newColorList = new int[step * colors.length / 2][3];
         for (int color = 0; color < colors.length; color++) {
             int[] thisColor = colors[color];
             int[] nextColor;
@@ -43,7 +43,7 @@ public class LightingSubsystem extends SubsystemBase {
             }
             int[] distance = { nextColor[0] - thisColor[0], nextColor[1] - thisColor[1], nextColor[2] - thisColor[2] };
 
-            for (int i = 0; i < step; i++) {
+            for (int i = 0; i < step; i += 2) {
                 newColorList[color * step + i] = new int[] {
                         (int) ((double) thisColor[0] + ((double) distance[0] * ((double) i / (double) step))),
                         (int) ((double) thisColor[1] + ((double) distance[1] * ((double) i / (double) step))),
@@ -63,19 +63,17 @@ public class LightingSubsystem extends SubsystemBase {
         }
 
         int count = (int) Math.floor(50 * lightPercent);
+
         candle.setLEDs(0, 0, 0, 0, 8 + count, 50 - count);
         candle.setLEDs(0, 0, 0, 0, 78, 50 - count);
-        // candle.setLEDs(0, (int) Math.round(230*lightPercent)+25, (int)
-        // Math.round(230*(-lightPercent+1))+25, 0, 8, count);
-        // candle.setLEDs(0, (int) Math.round(230*lightPercent)+25, (int)
-        // Math.round(230*(-lightPercent+1))+25, 0, 128-count, count);
-        for (int i = 0; i < count - 2; i++) {
-            candle.setLEDs(colorList[(i - offset + colorList.length) % colorList.length][0],
-                    colorList[(i - offset + colorList.length) % colorList.length][1],
-                    colorList[(i - offset + colorList.length) % colorList.length][2], 0, i + 8, 1);
-            candle.setLEDs(colorList[(i - offset + colorList.length) % colorList.length][0],
-                    colorList[(i - offset + colorList.length) % colorList.length][1],
-                    colorList[(i - offset + colorList.length) % colorList.length][2], 0, 127 - i, 1);
+
+        for (int i = 0; i < count; i += 2) {
+            candle.setLEDs(colorList[((i - offset + colorList.length) % colorList.length) / 2][0],
+                    colorList[((i - offset + colorList.length) % colorList.length) / 2][1],
+                    colorList[((i - offset + colorList.length) % colorList.length) / 2][2], 0, i + 8, 2);
+            candle.setLEDs(colorList[((i - offset + colorList.length) % colorList.length) / 2][0],
+                    colorList[((i - offset + colorList.length) % colorList.length) / 2][1],
+                    colorList[((i - offset + colorList.length) % colorList.length) / 2][2], 0, 127 - i - 1, 2);
         }
     }
 }
