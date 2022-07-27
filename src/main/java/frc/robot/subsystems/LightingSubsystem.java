@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Arrays;
+
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdleConfiguration;
 import com.ctre.phoenix.led.RainbowAnimation;
@@ -23,13 +25,14 @@ public class LightingSubsystem extends SubsystemBase {
         config.brightnessScalar = 1;
         candle.configAllSettings(config);
 
-        colorList = generateGradient(5, new int[] { 255, 0, 0 }, new int[] { 0, 255, 0 }, new int[] { 0, 0, 255 });
+        colorList = generateGradient(20, new int[] { 255, 0, 0 }, new int[] { 0, 255, 0 },
+                new int[] { 0, 0, 255 });
 
         candle.setLEDs(0, 0, 0);
     }
 
     private int[][] generateGradient(int step, int[]... colors) {
-        int[][] newColorList = new int[3][step * colors.length];
+        int[][] newColorList = new int[step * colors.length][3];
         for (int color = 0; color < colors.length; color++) {
             int[] thisColor = colors[color];
             int[] nextColor;
@@ -41,8 +44,11 @@ public class LightingSubsystem extends SubsystemBase {
             int[] distance = { nextColor[0] - thisColor[0], nextColor[1] - thisColor[1], nextColor[2] - thisColor[2] };
 
             for (int i = 0; i < step; i++) {
-                newColorList[color + i] = new int[] { (int) distance[0] * (i / step), (int) distance[1] * (i / step),
-                        (int) distance[2] * (i / step) };
+                newColorList[color * step + i] = new int[] {
+                        (int) ((double) thisColor[0] + ((double) distance[0] * ((double) i / (double) step))),
+                        (int) ((double) thisColor[1] + ((double) distance[1] * ((double) i / (double) step))),
+                        (int) ((double) thisColor[2] + ((double) distance[2] * ((double) i / (double) step)))
+                };
             }
         }
         return newColorList;
