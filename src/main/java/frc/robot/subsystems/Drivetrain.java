@@ -1,53 +1,33 @@
-package frc.robot.subsystems;
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Drivetrain extends SubsystemBase {
-    private VictorSPX primaryLeftMotor;
-    private VictorSPX primaryRightMotor;
-    private VictorSPX secondaryLeftMotor;
-    private VictorSPX secondaryRightMotor;
+  // initialize variables
+    private VictorSPX frontLeftMotor;
+    private VictorSPX frontRightMotor;
+    private VictorSPX backLeftMotor;
+    private VictorSPX backRightMotor;
+  
+  
+  public Drivetrain() {
+    // where the magic happens
+    
 
-    private DoubleSolenoid gearShift;
-    private boolean shiftedForward = true;
+  }
 
-    public Drivetrain() {
-        primaryLeftMotor = new VictorSPX(Constants.LEFT_DRIVE_MOTORS[0]);
-        primaryRightMotor = new VictorSPX(Constants.RIGHT_DRIVE_MOTORS[0]);
-        secondaryLeftMotor = new VictorSPX(Constants.LEFT_DRIVE_MOTORS[1]);
-        secondaryRightMotor = new VictorSPX(Constants.RIGHT_DRIVE_MOTORS[1]);
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
 
-        gearShift = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
-                Constants.GEAR_SHIFT[0], Constants.GEAR_SHIFT[1]);
-
-        secondaryLeftMotor.follow(primaryLeftMotor);
-        secondaryRightMotor.follow(primaryRightMotor);
-
-        primaryLeftMotor.setInverted(true);
-        secondaryLeftMotor.setInverted(true);
-
-        gearShift.set(Value.kForward);
-    }
-
-    public void setMotion(double speed, double rotation) {
-        primaryLeftMotor.set(ControlMode.PercentOutput, MathUtil.clamp(speed + rotation, -1.0, 1.0));
-        primaryRightMotor.set(ControlMode.PercentOutput, MathUtil.clamp(speed - rotation, -1.0, 1.0));
-    }
-
-    public void shiftGears() {
-        if (shiftedForward) {
-            gearShift.set(Value.kReverse);
-        } else {
-            gearShift.set(Value.kForward);
-        }
-        shiftedForward = !shiftedForward;
-    }
+  @Override
+  public void simulationPeriodic() {
+    // This method will be called once per scheduler run during simulation
+  }
 }
