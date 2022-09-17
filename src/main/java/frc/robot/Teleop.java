@@ -37,6 +37,12 @@ public class Teleop {
     configureButtonBindings();
   }
 
+  public void teleopPeriodic() {
+    controller.checkInputs();
+    // driveCommand.execute();
+    drivetrain.setMotion(controller.velocity, controller.rotation);
+  }
+
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -44,6 +50,5 @@ public class Teleop {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {}
-
 
 }

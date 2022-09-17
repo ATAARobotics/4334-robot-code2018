@@ -11,8 +11,8 @@ public class OI {
 
 
     public void checkInputs() {
-        velocity = -controller.getRightX();
-        rotation = controller.getRightY();
+        velocity = -controller.getRightY();
+        rotation = controller.getRightX();
 
         if (Math.abs(velocity) < 0.2) {
             velocity = 0;
