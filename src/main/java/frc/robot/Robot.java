@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.OI;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -17,9 +19,13 @@ import frc.robot.subsystems.Drivetrain;
  */
 public class Robot extends TimedRobot {
 
-  private OI controlleroi = new OI();
-  private Drivetrain drivetrain = new Drivetrain();
-  private Teleop teleop = new Teleop(drivetrain, controlleroi);
+  private OI controlleroi;
+  private Drivetrain drivetrain;
+  private Arm arm;
+  private Claw claw;
+  private Teleop teleop;
+
+  
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -28,6 +34,10 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     controlleroi = new OI();
     drivetrain = new Drivetrain();
+    arm = new Arm();
+    claw = new Claw();
+
+    teleop = new Teleop(drivetrain, controlleroi, arm, claw);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     

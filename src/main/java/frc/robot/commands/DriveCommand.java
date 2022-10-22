@@ -33,6 +33,8 @@ public class DriveCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    drivetrain.setMotion(speedSupplier.getAsDouble(), rotationSupplier.getAsDouble());
+  }
 
 }
