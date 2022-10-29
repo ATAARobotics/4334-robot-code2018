@@ -59,8 +59,8 @@ public class Teleop {
     armCommand.execute();
     clawCommand.execute();
     SmartDashboard.putNumber("ArmSpeed", controlleroi.getArmSpeed());
-    SmartDashboard.putBoolean("Y Button", controlleroi.armUp);
-    SmartDashboard.putBoolean("A Button", controlleroi.armDown);
+    SmartDashboard.putBoolean("Y Button", controlleroi.ToggleArmUp);
+    SmartDashboard.putBoolean("A Button", controlleroi.ToggleArmDown);
     SmartDashboard.putNumber("ArmPotent", arm.getPotentioValue());
     SmartDashboard.putNumber("PID Value", arm.getPIDvalue());
     SmartDashboard.putString("Claw Position", claw.ClawPosition());
@@ -72,6 +72,6 @@ public class Teleop {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
-
+  private void configureButtonBindings() {
+  }
 }
