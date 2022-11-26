@@ -4,6 +4,8 @@ public class Constants {
     // Motors
     public static final int[] LEFT_DRIVE_MOTORS = { 0, 1 };
     public static final int[] RIGHT_DRIVE_MOTORS = { 2, 3 };
+    public static final int INTAKE_ARM = 4;
+    public static final int[] INTAKE_WHEEL = { 5, 6 };
     public static final int ARM_MOTOR = 7;
 
     // Pneumatics

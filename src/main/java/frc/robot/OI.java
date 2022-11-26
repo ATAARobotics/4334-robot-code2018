@@ -11,8 +11,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.ClawCommand;
-import frc.robot.subsystems.Arm;
 
 public class OI {
     // private XboxController controller = new XboxController(0);
@@ -27,12 +25,17 @@ public class OI {
     public boolean ToggleArmUp;
     public boolean ToggleArmDown;
     public boolean setMid;
+    public boolean goMid = false;
     public boolean ClawToggle;
+    public boolean IntakeToggle;
+    public boolean InvIntakeToggle;
 
     public JoystickButton armUp;
     public JoystickButton armDown;
     public JoystickButton armToggle;
     public JoystickButton clawToggle;
+    public JoystickButton intakeToggle;
+    public JoystickButton invIntakeToggle;
 
     public OI() {
         try (InputStream input = new FileInputStream("/home/lvuser/deploy/bindings.properties")) {
@@ -52,6 +55,7 @@ public class OI {
         armUp = driveStick.getWPIJoystickButton("ArmUp");
         armDown = driveStick.getWPIJoystickButton("ArmDown");
         clawToggle = driveStick.getWPIJoystickButton("ToggleClaw");
+        intakeToggle = driveStick.getWPIJoystickButton("ToggleIntake");
     }
 
     public void checkInputs() {
@@ -80,7 +84,7 @@ public class OI {
 
         ToggleArmUp = driveStick.getButton("ArmUp");
         ToggleArmDown = driveStick.getButton("ArmDown");
-        // setMid = controller.getBButton();
+        setMid = driveStick.getButton("GoMid");
 
         if (ToggleArmUp) {
             armVelocity = 0.6;
@@ -88,18 +92,31 @@ public class OI {
         else if (ToggleArmDown) {
             armVelocity = -0.2;
         }
-        // else if (setMid) {
-            // Arm.goToPosition();
-        // }
+        else if (setMid) {
+            goMid = true;
+        }
         else {
             armVelocity = SmartDashboard.getNumber("IDLE_SPEED", 0.1);
         }
 
     }
 
+    public boolean GoMid() {
+        return goMid;
+    }
+
     public boolean checkClaw() {
         ClawToggle = driveStick.getButton("ToggleClaw");
         return ClawToggle;
+    }
+
+    public boolean checkIntake() {
+        IntakeToggle = driveStick.getButton("ToggleIntake");
+        return IntakeToggle;
+    }
+    public boolean checkInvIntake() {
+        InvIntakeToggle = driveStick.getButton("ToggleInvIntake");
+        return InvIntakeToggle;
     }
 
     public double getArmSpeed() {

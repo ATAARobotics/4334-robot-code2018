@@ -11,6 +11,7 @@ import frc.robot.OI;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -23,6 +24,7 @@ public class Robot extends TimedRobot {
   private Drivetrain drivetrain;
   private Arm arm;
   private Claw claw;
+  private Intake intake;
   private Teleop teleop;
 
   
@@ -36,8 +38,9 @@ public class Robot extends TimedRobot {
     drivetrain = new Drivetrain();
     arm = new Arm();
     claw = new Claw();
+    intake = new Intake();
 
-    teleop = new Teleop(drivetrain, controlleroi, arm, claw);
+    teleop = new Teleop(drivetrain, controlleroi, arm, claw, intake);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     

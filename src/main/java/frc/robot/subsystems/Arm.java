@@ -23,9 +23,9 @@ public class Arm extends SubsystemBase{
     private TalonSRX armMotor;
     private DoubleSolenoid armElbow;
     private ArmDirection armMotion = ArmDirection.DOWN;
-
+    // top pos claw = 120   low pos claw = 0   mid = 60, wanted mid position = 50
     private PIDController armPID = new PIDController(0.02, 0, 0);
-    private AnalogPotentiometer ArmPotentiometer = new AnalogPotentiometer(1, 1000, -90);
+    private AnalogPotentiometer ArmPotentiometer = new AnalogPotentiometer(1, 1000, -566);
 
     public double setPoint = 50;
 
@@ -45,10 +45,16 @@ public class Arm extends SubsystemBase{
 
     }
 
+    public void GotoMid(){
+        setPoint = 60;
+        armPID.setSetpoint(setPoint);
+
+    }
+
     public ArmDirection getArmPos() {
-        if (ArmPotentiometer.get() <= Constants.ARM_DOWN_POS + Constants.ARM_TOLERANCE / 2) {
+        if (ArmPotentiometer.get() <= 55) {
             return ArmDirection.DOWN;
-        } else if (ArmPotentiometer.get() >= Constants.ARM_UP_POS - Constants.ARM_TOLERANCE) {
+        } else if (ArmPotentiometer.get() >= 65) {
             return ArmDirection.UP;
         } else {
             return ArmDirection.MID;
@@ -60,6 +66,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void moveArm(double speed){
+        
         if (speed > 0.1) {
             this.armMotion = ArmDirection.UP;
         } else if (speed < 0.1) {
@@ -93,6 +100,10 @@ public class Arm extends SubsystemBase{
 
     public double getPotentioValue() {
         return ArmPotentiometer.get();
+    }
+
+    public String EnumToString() {
+        return armMotion.toString();
     }
 
 }

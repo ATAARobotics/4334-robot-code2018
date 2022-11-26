@@ -18,15 +18,15 @@ public class Claw extends SubsystemBase{
     public Claw() {
         clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.CLAW_PINCH[0], Constants.CLAW_PINCH[1]);
 
-        clawSolenoid.set(Value.kReverse);
+        clawSolenoid.set(Value.kForward);
     }
 
     public void toggleClaw() {
         if (currentPosition == ClawAction.OPEN) {
-            clawSolenoid.set(Value.kForward);
+            clawSolenoid.set(Value.kReverse);
             currentPosition = ClawAction.CLOSED;
         } else {
-            clawSolenoid.set(Value.kReverse);
+            clawSolenoid.set(Value.kForward);
             currentPosition = ClawAction.OPEN;
         }
     }

@@ -12,9 +12,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ArmCommand;
 import frc.robot.commands.ClawCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
 /**
@@ -29,23 +31,27 @@ public class Teleop {
   private ArmCommand armCommand;
   private Drivetrain drivetrain;
   private ClawCommand clawCommand;
+  private IntakeCommand intakeCommand;
   private OI controlleroi;
   private Arm arm;
   private Claw claw;
+  private Intake intake;
   // private final Drivetrain drivetrain = new Drivetrain();
   
 
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public Teleop(Drivetrain drivetrain, OI controller, Arm arm, Claw claw) {
+  public Teleop(Drivetrain drivetrain, OI controller, Arm arm, Claw claw, Intake intake) {
     this.drivetrain = drivetrain;
     this.controlleroi = controller;
     this.arm = arm;
     this.claw = claw;
+    this.intake = intake;
     driveCommand = new DriveCommand(drivetrain, controller::getSpeed, controller::getRotation);
     armCommand = new ArmCommand(arm, controller::getArmSpeed);
     clawCommand = new ClawCommand(claw, controller::checkClaw);
+    intakeCommand = new IntakeCommand(intake, controller::checkIntake, controller::checkInvIntake);
     SmartDashboard.setDefaultNumber("IDLE_SPEED", 0.1);
 
     // Configure the button bindings
@@ -58,6 +64,9 @@ public class Teleop {
     driveCommand.execute();
     armCommand.execute();
     clawCommand.execute();
+    intakeCommand.execute();
+    
+    
     SmartDashboard.putNumber("ArmSpeed", controlleroi.getArmSpeed());
     SmartDashboard.putBoolean("Y Button", controlleroi.ToggleArmUp);
     SmartDashboard.putBoolean("A Button", controlleroi.ToggleArmDown);
