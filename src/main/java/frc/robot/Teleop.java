@@ -51,7 +51,7 @@ public class Teleop {
     driveCommand = new DriveCommand(drivetrain, controller::getSpeed, controller::getRotation);
     armCommand = new ArmCommand(arm, controller::getArmSpeed);
     clawCommand = new ClawCommand(claw, controller::checkClaw);
-    intakeCommand = new IntakeCommand(intake, controller::checkIntake, controller::checkInvIntake);
+    intakeCommand = new IntakeCommand(intake, controller::checkIntake, controller::checkInvIntake, controller::getIntakeSpeed);
     SmartDashboard.setDefaultNumber("IDLE_SPEED", 0.1);
 
     // Configure the button bindings
@@ -61,6 +61,7 @@ public class Teleop {
   public void teleopPeriodic() {
     controlleroi.checkInputs();
     controlleroi.checkArm();
+    controlleroi.checkIntakeMotor();
     driveCommand.execute();
     armCommand.execute();
     clawCommand.execute();

@@ -21,6 +21,7 @@ public class OI {
     public double rotation;
 
     public double armVelocity;
+    public double intakeVelocity;
 
     public boolean ToggleArmUp;
     public boolean ToggleArmDown;
@@ -29,6 +30,8 @@ public class OI {
     public boolean ClawToggle;
     public boolean IntakeToggle;
     public boolean InvIntakeToggle;
+    public boolean ToggleIntakeUp;
+    public boolean ToggleIntakeDown;
 
     public JoystickButton armUp;
     public JoystickButton armDown;
@@ -36,6 +39,8 @@ public class OI {
     public JoystickButton clawToggle;
     public JoystickButton intakeToggle;
     public JoystickButton invIntakeToggle;
+    public JoystickButton toggleIntakeUp;
+    public JoystickButton toggleIntakeDown;
 
     public OI() {
         try (InputStream input = new FileInputStream("/home/lvuser/deploy/bindings.properties")) {
@@ -56,6 +61,9 @@ public class OI {
         armDown = driveStick.getWPIJoystickButton("ArmDown");
         clawToggle = driveStick.getWPIJoystickButton("ToggleClaw");
         intakeToggle = driveStick.getWPIJoystickButton("ToggleIntake");
+        toggleIntakeUp = driveStick.getWPIJoystickButton("IntakeUp");
+        toggleIntakeDown = driveStick.getWPIJoystickButton("IntakeDown");
+
     }
 
     public void checkInputs() {
@@ -119,7 +127,27 @@ public class OI {
         return InvIntakeToggle;
     }
 
+    public void checkIntakeMotor() {
+        ToggleIntakeUp = driveStick.getButton("IntakeUp");
+        ToggleIntakeDown = driveStick.getButton("IntakeDown"); 
+
+        if (ToggleIntakeUp) {
+            intakeVelocity = 0.8;
+        }
+        else if (ToggleIntakeDown) {
+            intakeVelocity = -0.4;
+        }
+        else {
+            intakeVelocity = 0.0;
+        }
+
+    }
+
     public double getArmSpeed() {
         return armVelocity;
+    }
+
+    public double getIntakeSpeed() {
+        return intakeVelocity;
     }
 }
