@@ -1,23 +1,23 @@
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import java.util.function.IntSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Arm.ArmDirection;
 
 public class ArmCommand extends CommandBase{
     private Arm arm;
     private DoubleSupplier speedSupplier;
-    private double speedConst = 1.0;
+    private Supplier<Arm.ArmDirection> armDirection;
+    private double speedConst = 0.7;
 
     // ToDo
-    public ArmCommand(Arm arm, DoubleSupplier speedSupplier) {//, Arm.ArmDirection armDirection) { // add supplier to armDirection
+    public ArmCommand(Arm arm, DoubleSupplier speedSupplier, Supplier<Arm.ArmDirection> armDirection) { // add supplier to armDirection
         this.arm = arm;
         this.speedSupplier = speedSupplier;
+        this.armDirection = armDirection;
         addRequirements(this.arm);
     }
 
@@ -30,10 +30,16 @@ public class ArmCommand extends CommandBase{
     public void execute() {
         SmartDashboard.putString("currPos", arm.getArmPos().toString());
         // SmartDashboard.putString("targetPos", direction.toString());
+        arm.checkPosition(armDirection.get());
+        arm.setElbow(armDirection.get());
         arm.goToPosition();
+        arm.moveArm(clamp(speedConst * arm.getPIDvalue(), -0.5, 0.5)); //speedSupplier.getAsDouble()
 
-        arm.moveArm(speedSupplier.getAsDouble());//speedConst * arm.getPIDvalue());
-
+        arm.changePID();
         
+    }
+
+    private double clamp(double d, double i, double j) {
+        return Math.max(i, Math.min(j, d));
     }
 }

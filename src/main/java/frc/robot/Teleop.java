@@ -17,6 +17,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Arm.ArmDirection;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
 /**
@@ -49,7 +50,7 @@ public class Teleop {
     this.claw = claw;
     this.intake = intake;
     driveCommand = new DriveCommand(drivetrain, controller::getSpeed, controller::getRotation);
-    armCommand = new ArmCommand(arm, controller::getArmSpeed);
+    armCommand = new ArmCommand(arm, controller::getArmSpeed, controller::getDirection);
     clawCommand = new ClawCommand(claw, controller::checkClaw);
     intakeCommand = new IntakeCommand(intake, controller::checkIntake, controller::checkInvIntake, controller::getIntakeSpeed);
     SmartDashboard.setDefaultNumber("IDLE_SPEED", 0.1);

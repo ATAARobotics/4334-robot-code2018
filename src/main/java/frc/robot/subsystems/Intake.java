@@ -20,12 +20,12 @@ public class Intake extends SubsystemBase{
     }
 
     public void runIntakeWheel() {
-        IntakeWheelLeft.set(ControlMode.PercentOutput, 0.3);
-        IntakeWheelRight.set(ControlMode.PercentOutput, 0.3);
+        IntakeWheelLeft.set(ControlMode.PercentOutput, 0.5);
+        IntakeWheelRight.set(ControlMode.PercentOutput, 0.5);
     }
     public void runInvIntakeWheel() {
-        IntakeWheelLeft.set(ControlMode.PercentOutput, -0.3);
-        IntakeWheelRight.set(ControlMode.PercentOutput, -0.3);
+        IntakeWheelLeft.set(ControlMode.PercentOutput, -0.5);
+        IntakeWheelRight.set(ControlMode.PercentOutput, -0.5);
     }
     public void stopIntakeWheel() {
         IntakeWheelLeft.set(ControlMode.PercentOutput, 0.0);

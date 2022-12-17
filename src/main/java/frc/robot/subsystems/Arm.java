@@ -23,38 +23,59 @@ public class Arm extends SubsystemBase{
     private TalonSRX armMotor;
     private DoubleSolenoid armElbow;
     private ArmDirection armMotion = ArmDirection.DOWN;
-    // top pos claw = 120   low pos claw = 0   mid = 60, wanted mid position = 50
+    // top pos claw = 120   low pos claw = 0   mid = 60, wanted mid position = 60
     private PIDController armPID = new PIDController(0.02, 0, 0);
-    private AnalogPotentiometer ArmPotentiometer = new AnalogPotentiometer(1, 1000, -566);
+    private AnalogPotentiometer ArmPotentiometer = new AnalogPotentiometer(1, 1000, -25);
 
     public double setPoint = 50;
+    public double PID_P = 0.07;
+    public double PID_I = 0.00;
+    public double PID_D = 0.01;
 
     
     public Arm() {
         armMotor = new TalonSRX(Constants.ARM_MOTOR);
         armMotor.setInverted(true);
-        SmartDashboard.setDefaultNumber("SetPoint", 50); // from 0 to 100
+        SmartDashboard.setDefaultNumber("SetPoint", 10); // from 0 to 100
+
+        // smartdashboard PID
+        SmartDashboard.setDefaultNumber("PID-P", 0.07);
+        SmartDashboard.setDefaultNumber("PID-I", 0);
+        SmartDashboard.setDefaultNumber("PID-D", 0.01);
 
         armElbow = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.ARM_ELBOW[0], Constants.ARM_ELBOW[1]);
         armElbow.set(Value.kForward);
     }
 
     public void goToPosition(){
-        setPoint = SmartDashboard.getNumber("SetPoint", 50);
+        SmartDashboard.putNumber("SetPoint", setPoint);
         armPID.setSetpoint(setPoint);
 
     }
 
-    public void GotoMid(){
-        setPoint = 60;
-        armPID.setSetpoint(setPoint);
-
+    public void checkPosition(ArmDirection pos){
+        // up to down
+        if (pos == ArmDirection.UP){
+            armMotion = ArmDirection.UP;
+            setPoint = Constants.HIGH_POS;
+            armPID.setSetpoint(setPoint);
+        }
+        else if (pos == ArmDirection.MID){
+            armMotion = ArmDirection.MID;
+            setPoint = Constants.MID_POS;
+            armPID.setSetpoint(setPoint);
+        }
+        else {
+            armMotion = ArmDirection.DOWN;
+            setPoint = Constants.LOW_POS;
+            armPID.setSetpoint(setPoint);
+        }
     }
 
     public ArmDirection getArmPos() {
-        if (ArmPotentiometer.get() <= 55) {
+        if (ArmPotentiometer.get() <= 40) {
             return ArmDirection.DOWN;
-        } else if (ArmPotentiometer.get() >= 65) {
+        } else if (ArmPotentiometer.get() >= 60) {
             return ArmDirection.UP;
         } else {
             return ArmDirection.MID;
@@ -66,13 +87,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void moveArm(double speed){
-        
-        if (speed > 0.1) {
-            this.armMotion = ArmDirection.UP;
-        } else if (speed < 0.1) {
-            this.armMotion = ArmDirection.DOWN;
-        }
-
+        // sets and gets speed
         SmartDashboard.putString("ARM MOTION", this.armMotion.toString());
 
         armMotor.set(ControlMode.PercentOutput, speed);
@@ -83,10 +98,11 @@ public class Arm extends SubsystemBase{
     }
 
     public void setElbow(ArmDirection direction) {
-        if (direction == ArmDirection.UP) {
+        if (direction == ArmDirection.MID) {
             armElbow.set(Value.kReverse);
         } else {
             armElbow.set(Value.kForward);
+            armElbow.notify();
         }
     }
 
@@ -98,12 +114,19 @@ public class Arm extends SubsystemBase{
         return armPID.getP();
     }
 
-    public double getPotentioValue() {
-        return ArmPotentiometer.get();
+    public void changePID() {
+        double newP = SmartDashboard.getNumber("PID-P", PID_P);
+        double newI = SmartDashboard.getNumber("PID-I", PID_I);
+        double newD = SmartDashboard.getNumber("PID-D", PID_D);
+        
+        armPID.setP(newP);
+        armPID.setI(newI);
+        armPID.setD(newD);
+        // armPID = new PIDController(newP, newI, newD);
     }
 
-    public String EnumToString() {
-        return armMotion.toString();
+    public double getPotentioValue() {
+        return ArmPotentiometer.get();
     }
 
 }

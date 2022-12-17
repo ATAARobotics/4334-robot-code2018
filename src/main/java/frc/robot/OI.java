@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.Arm;
 
 public class OI {
     // private XboxController controller = new XboxController(0);
@@ -26,12 +27,20 @@ public class OI {
     public boolean ToggleArmUp;
     public boolean ToggleArmDown;
     public boolean setMid;
-    public boolean goMid = false;
     public boolean ClawToggle;
     public boolean IntakeToggle;
     public boolean InvIntakeToggle;
     public boolean ToggleIntakeUp;
     public boolean ToggleIntakeDown;
+
+
+    // PID values
+    public Arm.ArmDirection armMotion;
+
+    // PID Booleans
+    public boolean GoDown;
+    public boolean GoMid;
+    public boolean GoUp;
 
     public JoystickButton armUp;
     public JoystickButton armDown;
@@ -41,6 +50,11 @@ public class OI {
     public JoystickButton invIntakeToggle;
     public JoystickButton toggleIntakeUp;
     public JoystickButton toggleIntakeDown;
+
+    // PID Buttons
+    public JoystickButton goDown;
+    public JoystickButton goMid;
+    public JoystickButton goUp;
 
     public OI() {
         try (InputStream input = new FileInputStream("/home/lvuser/deploy/bindings.properties")) {
@@ -57,12 +71,17 @@ public class OI {
             DriverStation.reportError("IOException on button binding file", false);
         }
 
-        armUp = driveStick.getWPIJoystickButton("ArmUp");
-        armDown = driveStick.getWPIJoystickButton("ArmDown");
+        // armUp = driveStick.getWPIJoystickButton("ArmUp");
+        // armDown = driveStick.getWPIJoystickButton("ArmDown");
         clawToggle = driveStick.getWPIJoystickButton("ToggleClaw");
         intakeToggle = driveStick.getWPIJoystickButton("ToggleIntake");
         toggleIntakeUp = driveStick.getWPIJoystickButton("IntakeUp");
         toggleIntakeDown = driveStick.getWPIJoystickButton("IntakeDown");
+
+        // PID Buttons
+        goDown = driveStick.getWPIJoystickButton("GoDown");
+        goMid = driveStick.getWPIJoystickButton("GoMid");
+        goUp = driveStick.getWPIJoystickButton("GoUp");
 
     }
 
@@ -90,28 +109,35 @@ public class OI {
 
     public void checkArm() {
 
-        ToggleArmUp = driveStick.getButton("ArmUp");
-        ToggleArmDown = driveStick.getButton("ArmDown");
-        setMid = driveStick.getButton("GoMid");
+        // ToggleArmUp = driveStick.getButton("ArmUp");
+        // ToggleArmDown = driveStick.getButton("ArmDown");
 
-        if (ToggleArmUp) {
-            armVelocity = 0.6;
+        // if (ToggleArmUp) {
+        //     armVelocity = 0.6;
+        // }
+        // else if (ToggleArmDown) {
+        //     armVelocity = -0.2;
+        // }
+        // else {
+        //     armVelocity = SmartDashboard.getNumber("IDLE_SPEED", 0.1);
+        // }
+
+        GoDown = driveStick.getButton("GoDown");
+        GoMid = driveStick.getButton("GoMid");
+        GoUp = driveStick.getButton("GoUp");
+
+        if (GoDown) {
+            armMotion = Arm.ArmDirection.DOWN;
         }
-        else if (ToggleArmDown) {
-            armVelocity = -0.2;
+        if (GoMid) {
+            armMotion = Arm.ArmDirection.MID;
         }
-        else if (setMid) {
-            goMid = true;
-        }
-        else {
-            armVelocity = SmartDashboard.getNumber("IDLE_SPEED", 0.1);
+        if (GoUp) {
+            armMotion = Arm.ArmDirection.UP;
         }
 
     }
 
-    public boolean GoMid() {
-        return goMid;
-    }
 
     public boolean checkClaw() {
         ClawToggle = driveStick.getButton("ToggleClaw");
@@ -149,5 +175,9 @@ public class OI {
 
     public double getIntakeSpeed() {
         return intakeVelocity;
+    }
+
+    public Arm.ArmDirection getDirection() {
+        return armMotion;
     }
 }

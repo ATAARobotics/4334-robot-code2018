@@ -23,4 +23,10 @@ public class Constants {
     // Multiply potentiometer readings by this value to keep it in a decently high
     // range to avoid floating-point stuff
     public static final double PID_SCALE_FACTOR = 1000;
+
+    // PID positions
+    public static final double LOW_POS = 20;
+    public static final double MID_POS = 60;
+    public static final double HIGH_POS = 110;
+
 }
