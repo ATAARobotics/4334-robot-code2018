@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 public class Arm extends SubsystemBase{
@@ -22,7 +23,9 @@ public class Arm extends SubsystemBase{
 
     private TalonSRX armMotor;
     private DoubleSolenoid armElbow;
-    private ArmDirection armMotion = ArmDirection.DOWN;
+    // assuming claw starts from the bottom
+    private boolean armGoingUp = false;
+    private boolean elbowExtended = true;
     // top pos claw = 120   low pos claw = 0   mid = 60, wanted mid position = 60
     private PIDController armPID = new PIDController(0.02, 0, 0);
     private AnalogPotentiometer ArmPotentiometer = new AnalogPotentiometer(1, 1000, -25);
@@ -56,19 +59,25 @@ public class Arm extends SubsystemBase{
     public void checkPosition(ArmDirection pos){
         // up to down
         if (pos == ArmDirection.UP){
-            armMotion = ArmDirection.UP;
             setPoint = Constants.HIGH_POS;
             armPID.setSetpoint(setPoint);
         }
         else if (pos == ArmDirection.MID){
-            armMotion = ArmDirection.MID;
             setPoint = Constants.MID_POS;
             armPID.setSetpoint(setPoint);
         }
         else {
-            armMotion = ArmDirection.DOWN;
             setPoint = Constants.LOW_POS;
             armPID.setSetpoint(setPoint);
+        }
+    }
+
+    public void goingUp(double speed) {
+        if (speed >= 0.3) {
+            armGoingUp = true;
+        }
+        else if (speed < -0.1) {
+            armGoingUp = false;
         }
     }
 
@@ -82,13 +91,9 @@ public class Arm extends SubsystemBase{
         }
     }
 
-    public ArmDirection getArmMotion() {
-        return armMotion;
-    }
-
     public void moveArm(double speed){
         // sets and gets speed
-        SmartDashboard.putString("ARM MOTION", this.armMotion.toString());
+        SmartDashboard.putBoolean("ARM MOTION", armGoingUp);
 
         armMotor.set(ControlMode.PercentOutput, speed);
     }
@@ -99,10 +104,11 @@ public class Arm extends SubsystemBase{
 
     public void setElbow(ArmDirection direction) {
         if (direction == ArmDirection.MID) {
+            elbowExtended = false;
             armElbow.set(Value.kReverse);
         } else {
+            elbowExtended = true;
             armElbow.set(Value.kForward);
-            armElbow.notify();
         }
     }
 
@@ -122,11 +128,20 @@ public class Arm extends SubsystemBase{
         armPID.setP(newP);
         armPID.setI(newI);
         armPID.setD(newD);
-        // armPID = new PIDController(newP, newI, newD);
     }
 
     public double getPotentioValue() {
         return ArmPotentiometer.get();
+    }
+
+    public boolean armUpMotion(){
+        // TODO: depends on the position when going up
+        if (armGoingUp) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
 }

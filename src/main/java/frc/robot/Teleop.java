@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ArmCommand;
+import frc.robot.commands.ArmCommandGroup;
 import frc.robot.commands.ClawCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ElbowCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -19,6 +21,8 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Arm.ArmDirection;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.OI;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,10 +37,13 @@ public class Teleop {
   private Drivetrain drivetrain;
   private ClawCommand clawCommand;
   private IntakeCommand intakeCommand;
+  private ElbowCommand elbowCommand;
+  private ArmCommandGroup armCommandGroup;
   private OI controlleroi;
   private Arm arm;
   private Claw claw;
   private Intake intake;
+  private CommandScheduler commandScheduler;
   // private final Drivetrain drivetrain = new Drivetrain();
   
 
@@ -53,21 +60,46 @@ public class Teleop {
     armCommand = new ArmCommand(arm, controller::getArmSpeed, controller::getDirection);
     clawCommand = new ClawCommand(claw, controller::checkClaw);
     intakeCommand = new IntakeCommand(intake, controller::checkIntake, controller::checkInvIntake, controller::getIntakeSpeed);
+    elbowCommand = new ElbowCommand(arm, controller::getDirection);
+    // TODO: Probably need to check this bottom line
+    armCommandGroup = new ArmCommandGroup(armCommand, elbowCommand, 0.5, arm.armUpMotion());
     SmartDashboard.setDefaultNumber("IDLE_SPEED", 0.1);
-
+    commandScheduler = CommandScheduler.getInstance();
     // Configure the button bindings
     configureButtonBindings();
   }
 
+
   public void teleopPeriodic() {
+
     controlleroi.checkInputs();
-    controlleroi.checkArm();
     controlleroi.checkIntakeMotor();
-    driveCommand.execute();
-    armCommand.execute();
-    clawCommand.execute();
-    intakeCommand.execute();
+
+    // arm
+    if (controlleroi.checkArm()) {
+      commandScheduler.schedule(armCommandGroup);
+    }
     
+    // drive
+    if ((Math.abs(controlleroi.getSpeed()) > 0.2) || (Math.abs(controlleroi.getRotation()) > 0.2)) {
+      commandScheduler.schedule(driveCommand);
+    }
+
+    // claw
+    if (controlleroi.checkClaw()) {
+      commandScheduler.schedule(clawCommand);
+    }
+
+    // intake
+    
+    if (controlleroi.checkIntake()) {
+      commandScheduler.schedule(intakeCommand);
+    }
+
+    // scehduling
+    commandScheduler.run();
+    
+
     
     SmartDashboard.putNumber("ArmSpeed", controlleroi.getArmSpeed());
     SmartDashboard.putBoolean("Y Button", controlleroi.ToggleArmUp);

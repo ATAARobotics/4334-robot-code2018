@@ -11,9 +11,9 @@ public class ArmCommand extends CommandBase{
     private Arm arm;
     private DoubleSupplier speedSupplier;
     private Supplier<Arm.ArmDirection> armDirection;
-    private double speedConst = 0.7;
+    private double speedConst = 0.2;
 
-    // ToDo
+
     public ArmCommand(Arm arm, DoubleSupplier speedSupplier, Supplier<Arm.ArmDirection> armDirection) { // add supplier to armDirection
         this.arm = arm;
         this.speedSupplier = speedSupplier;
@@ -29,11 +29,10 @@ public class ArmCommand extends CommandBase{
     @Override
     public void execute() {
         SmartDashboard.putString("currPos", arm.getArmPos().toString());
-        // SmartDashboard.putString("targetPos", direction.toString());
         arm.checkPosition(armDirection.get());
         arm.setElbow(armDirection.get());
         arm.goToPosition();
-        arm.moveArm(clamp(speedConst * arm.getPIDvalue(), -0.5, 0.5)); //speedSupplier.getAsDouble()
+        arm.moveArm(clamp(speedConst * arm.getPIDvalue(), -0.2, 0.5)); //speedSupplier.getAsDouble()
 
         arm.changePID();
         

@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Arm;
 
@@ -56,6 +57,9 @@ public class OI {
     public JoystickButton goMid;
     public JoystickButton goUp;
 
+    // Command Scheduler
+    private CommandScheduler commandScheduler;
+
     public OI() {
         try (InputStream input = new FileInputStream("/home/lvuser/deploy/bindings.properties")) {
             Properties bindings = new Properties();
@@ -78,6 +82,9 @@ public class OI {
         toggleIntakeUp = driveStick.getWPIJoystickButton("IntakeUp");
         toggleIntakeDown = driveStick.getWPIJoystickButton("IntakeDown");
 
+        // command scheduler
+        commandScheduler = CommandScheduler.getInstance();
+
         // PID Buttons
         goDown = driveStick.getWPIJoystickButton("GoDown");
         goMid = driveStick.getWPIJoystickButton("GoMid");
@@ -91,12 +98,6 @@ public class OI {
         velocity = -driveStick.getAnalog("Velocity");
         rotation = driveStick.getAnalog("Rotation");
       
-        if (Math.abs(velocity) < 0.2) {
-            velocity = 0;
-        }
-        if (Math.abs(rotation) < 0.2) {
-            rotation = 0;
-        }
     }
 
     public double getSpeed() {
@@ -107,7 +108,7 @@ public class OI {
         return rotation;
     }
 
-    public void checkArm() {
+    public boolean checkArm() {
 
         // ToggleArmUp = driveStick.getButton("ArmUp");
         // ToggleArmDown = driveStick.getButton("ArmDown");
@@ -128,14 +129,18 @@ public class OI {
 
         if (GoDown) {
             armMotion = Arm.ArmDirection.DOWN;
+            return true;    
         }
         if (GoMid) {
             armMotion = Arm.ArmDirection.MID;
+            return true; 
         }
         if (GoUp) {
             armMotion = Arm.ArmDirection.UP;
+            return true; 
         }
 
+        return false;
     }
 
 
